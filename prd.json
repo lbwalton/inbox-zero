@@ -359,8 +359,8 @@
         "Typecheck passes"
       ],
       "priority": 24,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created POST /api/emails/signal with upsert and QStash scoring dispatch."
     },
     {
       "id": "US-025",
@@ -375,8 +375,8 @@
         "Typecheck passes"
       ],
       "priority": 25,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created tone-scanner.ts using Gmail API + LLM abstraction. Extracts openers, signoffs, formality, phrases. Upserts ToneProfile."
     },
     {
       "id": "US-026",
