@@ -101,6 +101,7 @@ model User {
   junkAutoPurge       Boolean          @default(false)
   junkAutoPurgeDays   Int              @default(30)
   notificationView    NotificationView @default(COMBINED)
+  themePreference     String           @default("light")
 
   // Bntly relations
   pushSubscriptions PushSubscription[]
