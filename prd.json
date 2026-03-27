@@ -220,8 +220,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 15,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created ThemePicker component with 5 swatches, keyboard a11y, and PUT /api/user/theme integration. Added AppearanceSection to settings page."
     },
     {
       "id": "US-016",
