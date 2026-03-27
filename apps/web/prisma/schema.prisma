@@ -946,6 +946,7 @@ model EmailSignal {
   signal         EmailSignalType
   taggedAt       DateTime        @default(now())
 
+  @@unique([emailAccountId, threadId])
   @@index([emailAccountId])
 }
 

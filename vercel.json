@@ -1,5 +1,11 @@
 {
   "buildCommand": "cd ../.. && turbo run build --filter={apps/web}...",
   "installCommand": "cd ../.. && bash clone-marketing.sh && pnpm install",
-  "ignoreCommand": ""
+  "ignoreCommand": "",
+  "crons": [
+    {
+      "path": "/api/contact-scoring/run",
+      "schedule": "0 2 * * 0"
+    }
+  ]
 }
