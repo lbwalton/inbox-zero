@@ -144,8 +144,24 @@ model EmailAccount {
   knowledge      Knowledge[]
   chats          Chat[]
   digests        Digest[]
+  contactScores  ContactScore[]
 
   @@index([lastSummaryEmailAt])
+}
+
+model ContactScore {
+  id                String   @id @default(cuid())
+  emailAccountId    String
+  emailAccount      EmailAccount @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  contactEmail      String
+  priorityScore     Float    @default(0)
+  replyRate         Float    @default(0)
+  avgReplyTimeHours Float    @default(0)
+  manualOverride    Boolean  @default(false)
+  autoDraftEnabled  Boolean  @default(true)
+  lastUpdated       DateTime @default(now()) @updatedAt
+
+  @@unique([emailAccountId, contactEmail])
 }
 
 model Digest {

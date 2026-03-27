@@ -29,8 +29,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added ContactScore model with unique constraint on (emailAccountId, contactEmail). Relation added to EmailAccount."
     },
     {
       "id": "US-003",
