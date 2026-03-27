@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import { CheckIcon, ChevronsUpDown, Plus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,25 +20,32 @@ import {
 } from "@/components/ui/sidebar";
 import { useAccounts } from "@/hooks/useAccounts";
 import type { GetEmailAccountsResponse } from "@/app/api/user/email-accounts/route";
-import { useModifierKey } from "@/hooks/useModifierKey";
 import { useAccount } from "@/providers/EmailAccountProvider";
 import { ProfileImage } from "@/components/ProfileImage";
+import { cn } from "@/utils";
 
 export function AccountSwitcher() {
   const { data: accountsData } = useAccounts();
 
   if (!accountsData) return null;
 
-  return <AccountSwitcherInternal emailAccounts={accountsData.emailAccounts} />;
+  return (
+    <AccountSwitcherInternal
+      emailAccounts={accountsData.emailAccounts}
+      focusMode={accountsData.focusMode ?? null}
+    />
+  );
 }
 
 export function AccountSwitcherInternal({
   emailAccounts,
+  focusMode,
 }: {
   emailAccounts: GetEmailAccountsResponse["emailAccounts"];
+  focusMode: GetEmailAccountsResponse["focusMode"];
 }) {
   const { isMobile } = useSidebar();
-  const { symbol: modifierSymbol } = useModifierKey();
+  const router = useRouter();
 
   const {
     emailAccountId: activeEmailAccountId,
@@ -66,7 +73,26 @@ export function AccountSwitcherInternal({
     [pathname, activeEmailAccountId, searchParams],
   );
 
+  const handleAccountSelect = useCallback(
+    async (accountId: string) => {
+      try {
+        await fetch(`/api/user/email-accounts/${accountId}/activate`, {
+          method: "PUT",
+        });
+      } catch {
+        // Best-effort activation call; navigation handles the switch
+      }
+
+      router.push(getHref(accountId));
+      router.refresh();
+    },
+    [getHref, router],
+  );
+
   if (isLoading) return null;
+
+  const isFocusActive = focusMode?.isActive ?? false;
+  const focusedAccountId = focusMode?.focusedAccountId ?? null;
 
   return (
     <SidebarMenu>
@@ -76,26 +102,34 @@ export function AccountSwitcherInternal({
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              aria-label="Switch account"
             >
               {activeEmailAccount ? (
                 <>
-                  <div className="flex aspect-square size-8 items-center justify-center">
+                  <div className="relative flex aspect-square size-8 items-center justify-center">
                     <ProfileImage
                       image={activeEmailAccount.image}
                       label={
                         activeEmailAccount.name || activeEmailAccount.email
                       }
                     />
+                    {isFocusActive &&
+                      focusedAccountId === activeEmailAccountId && (
+                        <span
+                          className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full border-2 border-sidebar bg-violet-500"
+                          aria-label="Focus Mode active"
+                        />
+                      )}
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">
-                      {activeEmailAccount.name || activeEmailAccount.email}
+                      {activeEmailAccount.accountLabel ||
+                        activeEmailAccount.name ||
+                        activeEmailAccount.email}
                     </span>
-                    {activeEmailAccount.name && (
-                      <span className="truncate text-xs text-muted-foreground">
-                        {activeEmailAccount.email}
-                      </span>
-                    )}
+                    <span className="truncate text-xs text-muted-foreground">
+                      {activeEmailAccount.email}
+                    </span>
                   </div>
                 </>
               ) : (
@@ -113,26 +147,49 @@ export function AccountSwitcherInternal({
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Accounts
             </DropdownMenuLabel>
-            {emailAccounts.map((emailAccount, index) => (
-              <Link href={getHref(emailAccount.id)} key={emailAccount.id}>
-                <DropdownMenuItem key={emailAccount.id} className="gap-2 p-2">
-                  <ProfileImage
-                    image={emailAccount.image}
-                    label={emailAccount.name || emailAccount.email}
-                  />
-                  <div className="flex flex-col">
-                    <span className="truncate font-medium">
-                      {emailAccount.name || emailAccount.email}
-                    </span>
-                    {emailAccount.name && (
-                      <span className="truncate text-xs text-muted-foreground">
-                        {emailAccount.email}
-                      </span>
+            {emailAccounts.map((emailAccount) => {
+              const isActive = emailAccount.id === activeEmailAccountId;
+              const isFocused =
+                isFocusActive && focusedAccountId === emailAccount.id;
+
+              return (
+                <DropdownMenuItem
+                  key={emailAccount.id}
+                  className="gap-2 p-2"
+                  onSelect={() => {
+                    if (!isActive) {
+                      handleAccountSelect(emailAccount.id);
+                    }
+                  }}
+                >
+                  <div className="relative flex items-center justify-center">
+                    <ProfileImage
+                      image={emailAccount.image}
+                      label={emailAccount.name || emailAccount.email}
+                    />
+                    {isFocused && (
+                      <span
+                        className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full border-2 border-popover bg-violet-500"
+                        aria-label="Focused account"
+                      />
                     )}
                   </div>
+                  <div className="flex flex-1 flex-col">
+                    <span className="truncate font-medium">
+                      {emailAccount.accountLabel ||
+                        emailAccount.name ||
+                        emailAccount.email}
+                    </span>
+                    <span className="truncate text-xs text-muted-foreground">
+                      {emailAccount.email}
+                    </span>
+                  </div>
+                  {isActive && (
+                    <CheckIcon className="ml-auto size-4 shrink-0 text-primary" />
+                  )}
                 </DropdownMenuItem>
-              </Link>
-            ))}
+              );
+            })}
             <DropdownMenuSeparator />
             <Link href="/accounts">
               <DropdownMenuItem className="gap-2 p-2">

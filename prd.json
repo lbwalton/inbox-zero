@@ -296,8 +296,8 @@
         "Typecheck passes"
       ],
       "priority": 20,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created PUT /api/accounts/[id]/activate (transaction-based default switching), GET/PUT /api/focus-mode (Zod validation, upsert)."
     },
     {
       "id": "US-021",
@@ -313,8 +313,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 21,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Enhanced AccountSwitcher in SideNav header with: accountLabel/isDefault display, checkmark on active account, violet dot on focused account when Focus Mode active, PUT /api/user/email-accounts/[id]/activate stub route, Add account link to /accounts. DropdownMenu from shadcn/ui provides full keyboard accessibility. Updated email-accounts API to return accountLabel, isDefault, and focusMode data."
     },
     {
       "id": "US-022",
