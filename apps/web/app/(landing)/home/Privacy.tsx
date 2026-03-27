@@ -11,7 +11,7 @@ export function Privacy() {
             host it yourself.
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Inbox Zero has undergone a thorough security process with Google to
+            Bntly has undergone a thorough security process with Google to
             ensure the protection of your emails. You can even self-host Inbox
             Zero on your own infrastructure.
           </p>

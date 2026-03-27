@@ -133,7 +133,7 @@ export const useNavigation = () => {
 const bottomLinks: NavItem[] = [
   {
     name: "Help Center",
-    href: "https://docs.getinboxzero.com",
+    href: "https://docs.getbntly.com",
     target: "_blank",
     icon: BookIcon,
   },

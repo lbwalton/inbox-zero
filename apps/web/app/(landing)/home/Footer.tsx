@@ -20,17 +20,17 @@ const navigation = {
   ],
   support: [
     { name: "Pricing", href: "/#pricing" },
-    { name: "Contact", href: "mailto:elie@getinboxzero.com", target: "_blank" },
+    { name: "Contact", href: "mailto:support@getbntly.com", target: "_blank" },
     {
       name: "Documentation",
-      href: "https://docs.getinboxzero.com",
+      href: "https://docs.getbntly.com",
       target: "_blank",
     },
     { name: "Feature Requests", href: "/feature-requests", target: "_blank" },
     { name: "Changelog", href: "/changelog", target: "_blank" },
     {
       name: "Status",
-      href: "https://inbox-zero.openstatus.dev/",
+      href: "https://bntly.openstatus.dev/",
       target: "_blank",
     },
   ],
@@ -128,7 +128,7 @@ export function Footer() {
           ))}
         </div>
         <p className="mt-10 text-center text-xs leading-5 text-gray-500">
-          &copy; {new Date().getFullYear()} Inbox Zero Inc. All rights reserved.
+          &copy; {new Date().getFullYear()} Bntly Inc. All rights reserved.
         </p>
       </div>
     </footer>

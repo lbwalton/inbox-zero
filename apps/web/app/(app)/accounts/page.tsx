@@ -80,7 +80,7 @@ export default function AccountsPage() {
                       </Button>
                     }
                     title="Delete Account"
-                    description={`Are you sure you want to delete "${emailAccount.email}"? This will delete all data for it on Inbox Zero.`}
+                    description={`Are you sure you want to delete "${emailAccount.email}"? This will delete all data for it on Bntly.`}
                     confirmText="Delete"
                     onConfirm={() => {
                       execute({ emailAccountId: emailAccount.id });

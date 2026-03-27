@@ -97,7 +97,7 @@ export function Header({ className }: { className?: string }) {
       >
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
-            <span className="sr-only">Inbox Zero</span>
+            <span className="sr-only">Bntly</span>
             <Logo className="h-4 w-auto" />
           </Link>
         </div>
@@ -198,7 +198,7 @@ export function Header({ className }: { className?: string }) {
         <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <Link href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Inbox Zero</span>
+              <span className="sr-only">Bntly</span>
               <Logo className="h-4 w-auto" />
             </Link>
             <button

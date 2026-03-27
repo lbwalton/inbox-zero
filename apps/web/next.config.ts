@@ -41,7 +41,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "images.getinboxzero.com",
+        hostname: "images.getbntly.com",
       },
     ],
   },
@@ -93,52 +93,52 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/feature-requests",
-        destination: "https://go.getinboxzero.com/feature-requests",
+        destination: "https://go.getbntly.com/feature-requests",
         permanent: true,
       },
       {
         source: "/feedback",
-        destination: "https://go.getinboxzero.com/feedback",
+        destination: "https://go.getbntly.com/feedback",
         permanent: true,
       },
       {
         source: "/changelog",
-        destination: "https://go.getinboxzero.com/changelog",
+        destination: "https://go.getbntly.com/changelog",
         permanent: true,
       },
       {
         source: "/twitter",
-        destination: "https://go.getinboxzero.com/x",
+        destination: "https://go.getbntly.com/x",
         permanent: true,
       },
       {
         source: "/github",
-        destination: "https://go.getinboxzero.com/github",
+        destination: "https://go.getbntly.com/github",
         permanent: true,
       },
       {
         source: "/discord",
-        destination: "https://go.getinboxzero.com/discord",
+        destination: "https://go.getbntly.com/discord",
         permanent: true,
       },
       {
         source: "/linkedin",
-        destination: "https://go.getinboxzero.com/linkedin",
+        destination: "https://go.getbntly.com/linkedin",
         permanent: true,
       },
       {
         source: "/waitlist",
-        destination: "https://go.getinboxzero.com/waitlist",
+        destination: "https://go.getbntly.com/waitlist",
         permanent: true,
       },
       {
         source: "/waitlist-other",
-        destination: "https://go.getinboxzero.com/waitlist-other",
+        destination: "https://go.getbntly.com/waitlist-other",
         permanent: false,
       },
       {
         source: "/affiliates",
-        destination: "https://go.getinboxzero.com/affiliate",
+        destination: "https://go.getbntly.com/affiliate",
         permanent: true,
       },
       {
@@ -158,12 +158,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/game",
-        destination: "https://go.getinboxzero.com/game",
+        destination: "https://go.getbntly.com/game",
         permanent: false,
       },
       {
         source: "/soc2",
-        destination: "https://go.getinboxzero.com/soc2",
+        destination: "https://go.getbntly.com/soc2",
         permanent: true,
       },
     ];

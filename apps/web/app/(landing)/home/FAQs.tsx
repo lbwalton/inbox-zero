@@ -1,8 +1,8 @@
 const faqs = [
   {
-    question: "Can I still use Inbox Zero alongside my current email client?",
+    question: "Can I still use Bntly alongside my current email client?",
     answer:
-      "Yes! Inbox Zero is intended to be used alongside your existing email client.",
+      "Yes! Bntly is intended to be used alongside your existing email client.",
   },
   {
     question: "Is the code open-source?",
@@ -36,7 +36,7 @@ const faqs = [
         </a>{" "}
         or{" "}
         <a
-          href="mailto:elie@getinboxzero.com"
+          href="mailto:support@getbntly.com"
           target="_blank"
           className="font-semibold hover:underline"
           rel="noreferrer"
@@ -48,7 +48,7 @@ const faqs = [
     ),
   },
   {
-    question: "Which email providers does Inbox Zero support?",
+    question: "Which email providers does Bntly support?",
     answer:
       "We only support Gmail and Google Workspace email accounts today. Outlook support is coming soon.",
   },
@@ -58,7 +58,7 @@ const faqs = [
       <>
         If you don{"'"}t think we provided you with value send us an{" "}
         <a
-          href="mailto:elie@getinboxzero.com"
+          href="mailto:support@getbntly.com"
           target="_blank"
           className="font-semibold hover:underline"
           rel="noreferrer"
