@@ -32,10 +32,10 @@ type DigestItem = {
 
 const colorClasses = {
   blue: {
-    bg: "bg-blue-50",
-    text: "text-blue-800",
-    border: "border-blue-200",
-    bgAccent: "bg-blue-100",
+    bg: "bg-amber-50",
+    text: "text-amber-800",
+    border: "border-amber-200",
+    bgAccent: "bg-amber-100",
   },
   green: {
     bg: "bg-green-50",
@@ -90,7 +90,7 @@ export interface DigestEmailProps {
 
 export default function DigestEmail(props: DigestEmailProps) {
   const {
-    baseUrl = "https://www.getinboxzero.com",
+    baseUrl = "https://www.getbntly.com",
     newsletter = [],
     receipt = [],
     marketing = [],
@@ -474,7 +474,7 @@ export default function DigestEmail(props: DigestEmailProps) {
     <Html>
       <Head />
       <Tailwind>
-        <Body className="bg-white font-sans">
+        <Body className="bg-[#F9F6F1] font-sans">
           <Container className="mx-auto w-full max-w-[600px] p-0">
             <Section className="p-4 text-center">
               <Link href={baseUrl} className="text-[15px]">
@@ -511,7 +511,7 @@ export default function DigestEmail(props: DigestEmailProps) {
             <CategorySection categoryKey="notification" items={notification} />
             <CategorySection categoryKey="toReply" items={toReply} />
 
-            <Hr className="border-solid border-gray-200 my-[24px]" />
+            <Hr className="border-solid border-amber-200 my-[24px]" />
             <Footer baseUrl={baseUrl} unsubscribeToken={unsubscribeToken} />
           </Container>
         </Body>
@@ -521,7 +521,7 @@ export default function DigestEmail(props: DigestEmailProps) {
 }
 
 DigestEmail.PreviewProps = {
-  baseUrl: "https://www.getinboxzero.com",
+  baseUrl: "https://www.getbntly.com",
   unsubscribeToken: "123",
   newsletter: [
     {

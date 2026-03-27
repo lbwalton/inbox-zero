@@ -235,8 +235,8 @@
         "Typecheck passes"
       ],
       "priority": 16,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Updated email templates with warm amber/cream colors. Replaced blue tones with #C96B16 amber. Updated URLs to getbntly.com."
     },
     {
       "id": "US-017",

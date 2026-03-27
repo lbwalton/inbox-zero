@@ -37,7 +37,7 @@ export interface SummaryEmailProps {
 
 export default function SummaryEmail(props: SummaryEmailProps) {
   const {
-    baseUrl = "https://www.getinboxzero.com",
+    baseUrl = "https://www.getbntly.com",
     coldEmailers,
     pendingCount,
     needsReplyCount,
@@ -56,7 +56,7 @@ export default function SummaryEmail(props: SummaryEmailProps) {
         See your follow-ups, cold emails and pending items for this week
       </Preview>
       <Tailwind>
-        <Body className="bg-white font-sans">
+        <Body className="bg-[#F9F6F1] font-sans">
           <Container className="mx-auto w-full max-w-[600px] p-0">
             <Section className="p-8 text-center">
               <Link href={baseUrl} className="text-[15px]">
@@ -104,7 +104,7 @@ export default function SummaryEmail(props: SummaryEmailProps) {
 }
 
 SummaryEmail.PreviewProps = {
-  baseUrl: "https://www.getinboxzero.com",
+  baseUrl: "https://www.getbntly.com",
   pendingCount: 23,
   coldEmailers: [
     {
@@ -241,7 +241,7 @@ function ReplyTracker({
           <Button
             href={`${baseUrl}/reply-tracker`}
             style={{
-              background: "#000",
+              background: "#C96B16",
               color: "#fff",
               padding: "12px 20px",
               borderRadius: "5px",
@@ -265,8 +265,8 @@ function ColdEmails({
   if (!coldEmailers.length) return null;
 
   return (
-    <Section className="my-6 rounded-2xl bg-[#3b82f6]/5 bg-[radial-gradient(circle_at_bottom_right,#3b82f6_0%,transparent_60%)] p-8 text-center">
-      <Heading className="m-0 text-3xl font-medium text-[#1e40af]">
+    <Section className="my-6 rounded-2xl bg-[#C96B16]/5 bg-[radial-gradient(circle_at_bottom_right,#C96B16_0%,transparent_60%)] p-8 text-center">
+      <Heading className="m-0 text-3xl font-medium text-[#a63b00]">
         Cold Emails
       </Heading>
       <Text className="my-4 text-5xl font-bold text-gray-900">
@@ -283,7 +283,7 @@ function ColdEmails({
           <Button
             href={`${baseUrl}/cold-email-blocker`}
             style={{
-              background: "#000",
+              background: "#C96B16",
               color: "#fff",
               padding: "12px 20px",
               borderRadius: "5px",
@@ -307,8 +307,8 @@ function PendingEmails({
   if (!pendingCount) return null;
 
   return (
-    <Section className="my-6 rounded-2xl bg-[#22c55e]/5 bg-[radial-gradient(circle_at_bottom_right,#22c55e_0%,transparent_60%)] p-8 text-center">
-      <Heading className="m-0 text-3xl font-medium text-[#166534]">
+    <Section className="my-6 rounded-2xl bg-[#C96B16]/10 bg-[radial-gradient(circle_at_bottom_right,#C96B16_0%,transparent_60%)] p-8 text-center">
+      <Heading className="m-0 text-3xl font-medium text-[#a63b00]">
         Pending Emails
       </Heading>
       <Text className="my-4 text-lg leading-5 text-gray-900">

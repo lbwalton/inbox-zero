@@ -39,7 +39,7 @@ const sendEmail = async ({
     react,
     text,
     headers: {
-      "List-Unsubscribe": `<https://www.getinboxzero.com/api/unsubscribe?token=${unsubscribeToken}>`,
+      "List-Unsubscribe": `<https://www.getbntly.com/api/unsubscribe?token=${unsubscribeToken}>`,
       // From Feb 2024 Google requires this for bulk senders
       "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
       // Prevent threading on Gmail
