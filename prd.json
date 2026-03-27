@@ -170,8 +170,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Replaced SVG wordmark in Logo.tsx, updated email template logos in digest.tsx and summary.tsx."
     },
     {
       "id": "US-013",

@@ -479,18 +479,16 @@ export default function DigestEmail(props: DigestEmailProps) {
             <Section className="p-4 text-center">
               <Link href={baseUrl} className="text-[15px]">
                 <Img
-                  src={"https://www.getinboxzero.com/icon.png"}
+                  src={`${baseUrl}/icon.png`}
                   width="40"
                   height="40"
-                  alt="Inbox Zero"
+                  alt="Bntly"
                   className="mx-auto my-0"
                 />
               </Link>
 
               <Text className="mx-0 mb-8 mt-4 p-0 text-center text-2xl font-normal">
-                <span className="font-semibold tracking-tighter">
-                  Inbox Zero
-                </span>
+                <span className="font-semibold tracking-tighter">Bntly</span>
               </Text>
 
               <Heading className="my-4 text-4xl font-medium leading-tight">
@@ -768,7 +766,7 @@ function Footer({
     <Section className="mt-8 text-center text-sm text-gray-500">
       <Text className="m-0">
         You're receiving this email because you enabled digest emails in your
-        Inbox Zero settings.
+        Bntly settings.
       </Text>
       <Text className="m-0">
         <Link
