@@ -330,8 +330,8 @@
         "Typecheck passes"
       ],
       "priority": 22,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created contact-scoring.ts with weighted scoring (reply rate 35%, reply time 25%, frequency 25%, signals +/-). Skips manual overrides. Upserts ContactScore."
     },
     {
       "id": "US-023",
