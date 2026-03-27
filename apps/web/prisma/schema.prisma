@@ -101,6 +101,9 @@ model EmailAccount {
   name  String? // Name associated with the Google account
   image String? // Profile image URL from the Google account
 
+  accountLabel String?               // User-facing nickname (e.g. "Work", "Personal")
+  isDefault    Boolean @default(false) // Whether this is the user's default active account
+
   about                     String?
   writingStyle              String?
   signature                 String?
