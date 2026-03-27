@@ -17,6 +17,7 @@ import { encryptToken } from "@/utils/encryption";
 import { updateAccountSeats } from "@/utils/premium/server";
 import { createReferral } from "@/utils/referral/referral-code";
 import { trackDubSignUp } from "@/utils/dub";
+import { dispatchOnboardingScans } from "@/utils/onboarding/dispatch-scans";
 
 const logger = createScopedLogger("auth");
 
@@ -121,6 +122,13 @@ export const getAuthOptions: (options?: {
 
         // --- Step 3: Create/Update the corresponding EmailAccount record ---
         const userId = createdAccount.userId;
+
+        // Check if this is the user's first EmailAccount to set isDefault
+        const existingAccountCount = await prisma.emailAccount.count({
+          where: { userId },
+        });
+        const shouldBeDefault = existingAccountCount === 0;
+
         const emailAccountData: Prisma.EmailAccountUpsertArgs = {
           where: { email: primaryEmail },
           update: {
@@ -128,6 +136,7 @@ export const getAuthOptions: (options?: {
             accountId: createdAccount.id,
             name: primaryName,
             image: primaryPhotoUrl,
+            ...(shouldBeDefault ? { isDefault: true } : {}),
           },
           create: {
             email: primaryEmail,
@@ -135,9 +144,26 @@ export const getAuthOptions: (options?: {
             accountId: createdAccount.id,
             name: primaryName,
             image: primaryPhotoUrl,
+            isDefault: shouldBeDefault,
           },
         };
-        await prisma.emailAccount.upsert(emailAccountData);
+        const emailAccount = await prisma.emailAccount.upsert(emailAccountData);
+
+        // --- Step 4: Dispatch onboarding scan jobs (non-blocking) ---
+        dispatchOnboardingScans({ emailAccountId: emailAccount.id }).catch(
+          (error) => {
+            logger.error("[linkAccount] Error dispatching onboarding scans:", {
+              emailAccountId: emailAccount.id,
+              error,
+            });
+            captureException(error, {
+              extra: {
+                emailAccountId: emailAccount.id,
+                location: "linkAccount.dispatchOnboardingScans",
+              },
+            });
+          },
+        );
 
         // Handle premium account seats
         await updateAccountSeats({ userId }).catch((error) => {

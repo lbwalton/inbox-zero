@@ -282,8 +282,8 @@
         "Typecheck passes"
       ],
       "priority": 19,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Modified linkAccount in utils/auth.ts to check existing EmailAccount count and set isDefault=true for first account. EmailAccount model already has accountLabel (String?) field from US-001 for optional labeling. Created utils/onboarding/dispatch-scans.ts that dispatches calculateContactScores and scanToneProfile via QStash publishToQstash. The upsert returns EmailAccount record (no raw tokens exposed). Pre-existing test TS errors only."
     },
     {
       "id": "US-020",
