@@ -1,5 +1,3 @@
-import Link from "next/link";
-import Image from "next/image";
 import { CTAButtons } from "@/app/(landing)/home/CTAButtons";
 import { SquaresPattern } from "@/app/(landing)/home/SquaresPattern";
 import { cn } from "@/utils";
@@ -36,7 +34,6 @@ export function Hero(props: {
   subtitle?: React.ReactNode;
   image?: string;
   CTAComponent?: React.ComponentType;
-  hideProductHuntBadge?: boolean;
   video?: React.ReactNode;
 }) {
   const CTAComponent = props.CTAComponent || CTAButtons;
@@ -46,20 +43,11 @@ export function Hero(props: {
       <SquaresPattern />
       <div className="pt-24 sm:pb-12 sm:pt-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          {!props.hideProductHuntBadge && (
-            <div className="mb-10">
-              <ProductHuntBadge />
-            </div>
-          )}
-
           <div className="mx-auto max-w-xl text-center">
-            <HeroText>
-              {props.title ||
-                "Meet Your AI Email Assistant That Actually Works"}
-            </HeroText>
+            <HeroText>{props.title || "Your Inbox, Handled."}</HeroText>
             <HeroSubtitle>
               {props.subtitle ||
-                "Cut your email time in half. Bntly intelligently automates responses, organizes your inbox, and helps you reach inbox zero in record time."}
+                "Bntly is your personal email assistant that quietly takes care of the busywork — smart replies, a tidy inbox, and fewer distractions so you can focus on what matters."}
             </HeroSubtitle>
             <CTAComponent />
           </div>
@@ -75,32 +63,12 @@ export function Hero(props: {
                 thumbnailSrc={
                   props.image || "/images/home/bulk-unsubscriber.png"
                 }
-                thumbnailAlt="Bulk Unsubscriber Screenshot"
+                thumbnailAlt="Bntly email assistant in action"
               />
             )}
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function ProductHuntBadge() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
-      <Link
-        href="https://www.producthunt.com/posts/inbox-zero-2?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-inbox&#0045;zero&#0045;2"
-        target="_blank"
-        rel="noreferrer"
-      >
-        <Image
-          src="/images/home/product-hunt-badge.svg"
-          alt="Inbox&#0032;Zero | Product Hunt"
-          className="h-[54px] w-[250px]"
-          width="250"
-          height="54"
-        />
-      </Link>
     </div>
   );
 }

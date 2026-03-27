@@ -124,12 +124,12 @@ function discount(monthly: number, annually: number) {
 
 const aiAssistantFeature = {
   text: "AI personal assistant",
-  tooltip: "AI assistant that drafts replies and organizes your inbox",
+  tooltip: "Your Bntly assistant drafts replies and keeps your inbox organized",
 };
 
 const replyZeroFeature = {
   text: "Auto drafted replies",
-  tooltip: "Prewritten drafts ready to send in your inbox",
+  tooltip: "Thoughtful drafts waiting in your inbox, ready to review and send",
 };
 
 const coldEmailBlockerFeature = {
@@ -144,7 +144,7 @@ const coldEmailBlockerFeature = {
 
 const bulkUnsubscribeFeature = {
   text: "Bulk unsubscriber",
-  tooltip: "Bulk unsubscribe from emails in one-click",
+  tooltip: "Clear out subscriptions you never read, in one click",
 };
 
 const analyticsFeature = { text: "Email analytics" };
@@ -195,7 +195,7 @@ const businessTier: Tier = {
     annually: discount(pricing.BUSINESS_MONTHLY, pricing.BUSINESS_ANNUALLY),
   },
   description:
-    "For individuals and businesses that want to get their email under control.",
+    "For anyone ready to hand their inbox over to a calm, capable assistant.",
   features: [
     aiAssistantFeature,
     replyZeroFeature,
@@ -235,7 +235,7 @@ const businessPlusTier: Tier = {
     ),
   },
   description:
-    "For teams handling high email volumes: streamline repetitive tasks, outreach, and support.",
+    "For power users and teams who need Bntly working harder — more intelligence, more support, more peace of mind.",
   features: [
     aiAssistantFeature,
     replyZeroFeature,

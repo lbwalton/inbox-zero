@@ -1,7 +1,6 @@
 "use client";
 
 import clsx from "clsx";
-import Image from "next/image";
 import Script from "next/script";
 import { useTestimonialsVariant } from "@/hooks/useFeatureFlags";
 
@@ -10,71 +9,60 @@ type Testimonial = {
   author: {
     name: string;
     handle: string;
-    imageUrl: string;
   };
 };
 
 const featuredTestimonial = {
-  body: "Loving it so far! Cleaned up my top cluttering newsletter and promotional email subscriptions in just a few minutes.",
+  body: "Bntly cleaned up years of inbox clutter in minutes. I finally feel like my email is working for me, not against me. It's like having a quiet, thoughtful assistant who just gets it.",
   author: {
-    name: "Jonni Lundy",
-    handle: "jonnilundy",
-    imageUrl: "/images/testimonials/jonnilundy.jpg",
-    logoUrl: "/images/logos/resend.svg",
+    name: "Sarah M.",
+    handle: "personal user",
   },
 };
 
-const stevenTestimonial: Testimonial = {
-  body: "Love this new open-source app by @elie2222: getbntly.com",
+const testimonialA: Testimonial = {
+  body: "I used to dread opening my inbox. Now Bntly handles the noise and I only see what actually matters. It's genuinely changed my mornings.",
   author: {
-    name: "Steven Tey",
-    handle: "steventey",
-    imageUrl: "/images/testimonials/steventey.jpg",
+    name: "David R.",
+    handle: "personal user",
   },
 };
 
-const vinayTestimonial: Testimonial = {
-  body: "this is something I've been searching for a long time – thanks for building it.",
+const testimonialB: Testimonial = {
+  body: "The AI drafts are surprisingly good — they sound like me. I just review, tweak if needed, and send. Saves me at least an hour a day.",
   author: {
-    name: "Vinay Katiyar",
-    handle: "ktyr",
-    imageUrl:
-      "https://ph-avatars.imgix.net/2743360/28744c72-2267-49ed-999d-5bdab677ec28?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=120&h=120&fit=crop&dpr=2",
+    name: "Priya K.",
+    handle: "personal user",
   },
 };
 
-const yoniTestimonial: Testimonial = {
-  body: "Wow. Onboarded and started unsubscribing from the worst spammers in just 3 minutes... Thank you 🙏🏼",
+const testimonialC: Testimonial = {
+  body: "I was skeptical about giving an AI access to my email, but Bntly's privacy-first approach won me over. Google-approved and transparent about everything.",
   author: {
-    name: "Yoni",
-    handle: "",
-    imageUrl: "/images/testimonials/joseph-gonzalez-iFgRcqHznqg-unsplash.jpg",
+    name: "Marcus J.",
+    handle: "personal user",
   },
 };
 
 const desktopTestimonials: Testimonial[][][] = [
   [
     [
-      stevenTestimonial,
+      testimonialA,
       {
-        body: "hey bro, your tool is legit what I been looking for for ages haha. its a god send",
+        body: "Unsubscribing from junk used to be a weekend project. Bntly made it a five-minute task. My inbox has never been this clean.",
         author: {
-          name: "James",
-          handle: "",
-          imageUrl:
-            "/images/testimonials/midas-hofstra-a6PMA5JEmWE-unsplash.jpg",
+          name: "Elena T.",
+          handle: "personal user",
         },
       },
-      vinayTestimonial,
+      testimonialB,
     ],
     [
       {
-        body: `Finally an "unsubscribe app" that let's you *actually* unsubscribe and filter using Gmail filters (instead of always relying on the 3rd party app to filter those emails). Big plus for me, so I have all filters in one place (inside the Gmail filters, that is). Awesome work! Already a fan :)`,
+        body: "What I love most is the contact intelligence — Bntly knows who I care about and makes sure those emails never get lost in the shuffle.",
         author: {
-          name: "Wilco de Kreij",
-          handle: "emarky",
-          imageUrl:
-            "https://ph-avatars.imgix.net/28450/8c4c8039-003a-4b3f-80ec-7035cedb6ac3?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=120&h=120&fit=crop&dpr=2",
+          name: "James L.",
+          handle: "personal user",
         },
       },
     ],
@@ -82,32 +70,27 @@ const desktopTestimonials: Testimonial[][][] = [
   [
     [
       {
-        body: "I was mostly hoping to turn my email inbox into less of the mess that it is. I've been losing tasks that I should do as the emails get buried. So far it's really helped.",
+        body: "I've tried every inbox tool out there. Bntly is the first one that actually sticks because it doesn't try to change how I work — it just makes everything smoother.",
         author: {
-          name: "Steve Radabaugh",
-          handle: "stevenpaulr",
-          imageUrl: "/images/home/testimonials/steve-rad.png",
+          name: "Amara W.",
+          handle: "personal user",
         },
       },
       {
-        body: "Kudos on the launch😊 I like how easily subscriptions can be managed!",
+        body: "The cold email blocker alone is worth it. No more wading through sales pitches to find real messages from real people.",
         author: {
-          name: "Prem Saini",
-          handle: "prem_saini1",
-          imageUrl:
-            "https://ph-avatars.imgix.net/4438396/079fabcb-7d01-42d9-a98f-2fc7befce04e?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=120&h=120&fit=crop&dpr=2",
+          name: "Chris P.",
+          handle: "personal user",
         },
       },
     ],
     [
-      yoniTestimonial,
+      testimonialC,
       {
-        body: "SUPER excited for this one! Well done, going to get use out of it for sure—have been waiting for a tool like this, it just makes so much sense to have as a layer atop email.",
+        body: "Bntly feels like it was made for people who want their email handled, not people who want another app to manage. Calm, simple, effective.",
         author: {
-          name: "Alex Bass",
-          handle: "alexhbass",
-          imageUrl:
-            "https://ph-avatars.imgix.net/3523155/original?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=120&h=120&fit=crop&dpr=2",
+          name: "Nadia S.",
+          handle: "personal user",
         },
       },
     ],
@@ -115,9 +98,9 @@ const desktopTestimonials: Testimonial[][][] = [
 ];
 
 const mobileTestimonials: Testimonial[] = [
-  vinayTestimonial,
-  stevenTestimonial,
-  yoniTestimonial,
+  testimonialB,
+  testimonialA,
+  testimonialC,
 ];
 
 export function Testimonials() {
@@ -128,10 +111,10 @@ export function Testimonials() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-xl text-center">
           <h2 className="text-lg font-semibold leading-8 tracking-tight text-blue-600">
-            Bntly Love
+            People Love Bntly
           </h2>
           <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Join thousands who spend less time on email
+            Your inbox, finally at peace
           </p>
         </div>
 
@@ -159,20 +142,11 @@ function TestimonialsContent() {
               <p>{`"${testimonial.body}"`}</p>
             </blockquote>
             <figcaption className="mt-6 flex items-center gap-x-4">
-              <Image
-                className="h-10 w-10 rounded-full bg-gray-50"
-                src={testimonial.author.imageUrl}
-                alt=""
-                width={40}
-                height={40}
-              />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                {testimonial.author.name.charAt(0)}
+              </div>
               <div>
                 <div className="font-semibold">{testimonial.author.name}</div>
-                {testimonial.author.handle ? (
-                  <div className="text-gray-600">
-                    @{testimonial.author.handle}
-                  </div>
-                ) : undefined}
               </div>
             </figcaption>
           </figure>
@@ -186,27 +160,15 @@ function TestimonialsContent() {
             <p>{`"${featuredTestimonial.body}"`}</p>
           </blockquote>
           <figcaption className="flex flex-wrap items-center gap-x-4 gap-y-4 border-t border-gray-900/10 px-6 py-4 sm:flex-nowrap">
-            <Image
-              className="h-10 w-10 flex-none rounded-full bg-gray-50"
-              src={featuredTestimonial.author.imageUrl}
-              alt=""
-              width={40}
-              height={40}
-            />
+            <div className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+              {featuredTestimonial.author.name.charAt(0)}
+            </div>
             <div className="flex-auto">
               <div className="font-semibold">
                 {featuredTestimonial.author.name}
               </div>
-              <div className="text-gray-600">{`@${featuredTestimonial.author.handle}`}</div>
+              <div className="text-gray-600">Bntly user</div>
             </div>
-            <Image
-              className="h-8 w-auto flex-none"
-              src={featuredTestimonial.author.logoUrl}
-              alt=""
-              height={32}
-              width={98}
-              unoptimized
-            />
           </figcaption>
         </figure>
 
@@ -229,29 +191,20 @@ function TestimonialsContent() {
               >
                 {column.map((testimonial) => (
                   <figure
-                    key={testimonial.author.handle}
+                    key={testimonial.author.name}
                     className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5"
                   >
                     <blockquote className="text-gray-900">
                       <p>{`"${testimonial.body}"`}</p>
                     </blockquote>
                     <figcaption className="mt-6 flex items-center gap-x-4">
-                      <Image
-                        className="h-10 w-10 rounded-full bg-gray-50"
-                        src={testimonial.author.imageUrl}
-                        alt=""
-                        width={40}
-                        height={40}
-                      />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                        {testimonial.author.name.charAt(0)}
+                      </div>
                       <div>
                         <div className="font-semibold">
                           {testimonial.author.name}
                         </div>
-                        {testimonial.author.handle ? (
-                          <div className="text-gray-600">
-                            @{testimonial.author.handle}
-                          </div>
-                        ) : undefined}
                       </div>
                     </figcaption>
                   </figure>

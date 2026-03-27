@@ -15,14 +15,14 @@ const copy: {
   };
 } = {
   control: {
-    title: "Meet Your AI Email Assistant That Actually Works",
+    title: "Your Inbox, Handled.",
     subtitle:
-      "Cut your email time in half. Bntly intelligently automates responses, organizes your inbox, and helps you reach inbox zero in record time.",
+      "Bntly is your personal email assistant that quietly takes care of the busywork — smart replies, a tidy inbox, and fewer distractions so you can focus on what matters.",
   },
   "clean-up-in-minutes": {
-    title: "Clean Up Your Inbox In Minutes",
+    title: "Less Email, More Life.",
     subtitle:
-      "Bulk unsubscribe from newsletters, automate your emails with AI, block cold emails, and view your analytics. Open-source.",
+      "Unsubscribe from noise, get smart replies drafted for you, and finally enjoy a calm inbox. Bntly handles the busywork so you don't have to.",
   },
 };
 
