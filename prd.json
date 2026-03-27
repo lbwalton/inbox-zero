@@ -43,8 +43,8 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added EmailSignal model with EmailSignalType enum (IMPORTANT/NOT_IMPORTANT)."
     },
     {
       "id": "US-004",
@@ -57,8 +57,8 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added ToneProfile model with unique emailAccountId constraint."
     },
     {
       "id": "US-005",
@@ -71,8 +71,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added NudgeLog model with NudgeType and NudgeStatus enums."
     },
     {
       "id": "US-006",
@@ -85,8 +85,8 @@
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added TrustedSender model with TrustedSenderType enum."
     },
     {
       "id": "US-007",
@@ -98,8 +98,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added SuggestedLabel model with SuggestedLabelStatus enum."
     },
     {
       "id": "US-008",
@@ -111,8 +111,8 @@
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added PushSubscription model related to User."
     },
     {
       "id": "US-009",
@@ -124,8 +124,8 @@
         "Typecheck passes"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added FocusMode model with one-to-one User relation and optional EmailAccount FK."
     },
     {
       "id": "US-010",
@@ -137,8 +137,8 @@
         "Typecheck passes"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added 14 personalization fields and NotificationView enum to User model."
     },
     {
       "id": "US-011",
