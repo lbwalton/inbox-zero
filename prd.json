@@ -390,8 +390,8 @@
         "Typecheck passes"
       ],
       "priority": 26,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created GET/PUT /api/tone-profile routes. Created /api/tone-profile/scan cron dispatcher + worker via QStash. Added monthly cron to vercel.json."
     },
     {
       "id": "US-027",
@@ -407,8 +407,8 @@
         "Typecheck passes"
       ],
       "priority": 27,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created auto-draft.ts with generateAutoDraft. Checks user.autoDraftEnabled, ContactScore threshold, ToneProfile for LLM context, creates Gmail draft."
     },
     {
       "id": "US-028",
@@ -422,8 +422,8 @@
         "Typecheck passes"
       ],
       "priority": 28,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Modified /api/google/webhook/route.ts to look up EmailAccount by email, dispatch auto-draft (if autoDraftEnabled) and filter-inbound via QStash using Promise.allSettled fire-and-forget pattern. Webhook returns 200 immediately."
     },
     {
       "id": "US-029",
@@ -435,8 +435,8 @@
         "Typecheck passes"
       ],
       "priority": 29,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created outbound-nudge.ts using ThreadTracker (unresolved threads past outboundNudgeDays) and inbound-nudge.ts using EmailMessage (unread inbox messages past inboundNudgeDays with LLM classification via chatCompletionObject). Both enforce 24hr NudgeLog deduplication."
     },
     {
       "id": "US-030",
@@ -448,8 +448,8 @@
         "Typecheck passes"
       ],
       "priority": 30,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created POST /api/nudge/detect cron dispatcher + /api/nudge/outbound and /api/nudge/inbound worker routes. Added daily cron to vercel.json."
     },
     {
       "id": "US-031",
@@ -465,8 +465,8 @@
         "Typecheck passes"
       ],
       "priority": 31,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created focus-mode-check.ts with shouldSuppressNudge. Checks FocusMode.isActive, schedule window, focused account, and breakthrough threshold."
     },
     {
       "id": "US-032",
