@@ -1066,3 +1066,15 @@ model ContactAlias {
   @@unique([userId, phrase])
   @@index([userId])
 }
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  action       String
+  targetUserId String?
+  adminUserId  String
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@index([adminUserId])
+  @@index([createdAt])
+}
