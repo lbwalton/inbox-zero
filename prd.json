@@ -996,8 +996,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 64,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Horizontal category tab bar on mail page. Uses existing Gmail category labels via ?type= param. Active tab highlighted with primary color."
     },
     {
       "id": "US-065",
