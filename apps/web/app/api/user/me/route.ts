@@ -11,11 +11,13 @@ async function getUser({ userId }: { userId: string }) {
     where: { id: userId },
     select: {
       id: true,
+      role: true,
       aiProvider: true,
       aiModel: true,
       aiApiKey: true,
       webhookSecret: true,
       referralCode: true,
+      showHelpfulTips: true,
       premium: {
         select: {
           lemonSqueezyCustomerId: true,

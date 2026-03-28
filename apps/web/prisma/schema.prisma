@@ -10,6 +10,11 @@ generator client {
   previewFeatures = ["postgresqlExtensions"]
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 // Account, User, Session, and VerificationToken based on: https://authjs.dev/reference/adapter/prisma
 model Account {
   id                String   @id @default(cuid())
@@ -104,6 +109,8 @@ model User {
   junkAutoPurgeDays   Int              @default(30)
   notificationView    NotificationView @default(COMBINED)
   themePreference     String           @default("light")
+  showHelpfulTips     Boolean          @default(true)
+  role                Role             @default(USER)
 
   // Bntly relations
   pushSubscriptions PushSubscription[]
