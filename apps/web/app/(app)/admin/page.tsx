@@ -5,6 +5,7 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { ErrorPage } from "@/components/ErrorPage";
 import { isAdmin } from "@/utils/admin";
 import { AdminSyncStripe } from "@/app/(app)/admin/AdminSyncStripe";
+import prisma from "@/utils/prisma";
 
 // NOTE: Turn on Fluid Compute on Vercel to allow for 800 seconds max duration
 export const maxDuration = 800;
@@ -12,7 +13,14 @@ export const maxDuration = 800;
 export default async function AdminPage() {
   const session = await auth();
 
-  if (!isAdmin({ email: session?.user.email })) {
+  const user = session?.user?.id
+    ? await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { role: true },
+      })
+    : null;
+
+  if (!isAdmin({ email: session?.user.email, role: user?.role })) {
     return (
       <ErrorPage
         title="No Access"

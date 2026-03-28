@@ -55,6 +55,8 @@ import { AccountSwitcher } from "@/components/AccountSwitcher";
 import { useAccount } from "@/providers/EmailAccountProvider";
 import { prefixPath } from "@/utils/path";
 import { ReferralDialog } from "@/components/ReferralDialog";
+import { useUser } from "@/hooks/useUser";
+import { UserBadges } from "@/components/UserBadge";
 
 type NavItem = {
   name: string;
@@ -82,6 +84,11 @@ export const useNavigation = () => {
         name: "Reply Zero",
         href: prefixPath(emailAccountId, "/reply-zero"),
         icon: MessageCircleReplyIcon,
+      },
+      {
+        name: "Inbox",
+        href: prefixPath(emailAccountId, "/mail"),
+        icon: InboxIcon,
       },
       {
         name: "Cold Emails",
@@ -238,6 +245,9 @@ export function SideNav({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navigation = useNavigation();
   const path = usePathname();
   const showMailNav = path.includes("/mail") || path.includes("/compose");
+  const { data: userData } = useUser();
+  const userRole = userData?.role;
+  const userTier = userData?.premium?.tier;
 
   const visibleBottomLinks = useMemo(
     () =>
@@ -254,6 +264,20 @@ export function SideNav({ ...props }: React.ComponentProps<typeof Sidebar>) {
     [showMailNav],
   );
 
+  const adminLink: NavItem[] = useMemo(
+    () =>
+      userRole === "ADMIN"
+        ? [
+            {
+              name: "Admin",
+              href: "/admin",
+              icon: ShieldCheckIcon,
+            },
+          ]
+        : [],
+    [userRole],
+  );
+
   const { state } = useSidebar();
 
   return (
@@ -267,6 +291,11 @@ export function SideNav({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </Link>
         ) : null}
         <AccountSwitcher />
+        {state === "expanded" && (userRole === "ADMIN" || userTier) ? (
+          <div className="px-3 pb-2">
+            <UserBadges role={userRole} tier={userTier} />
+          </div>
+        ) : null}
       </SidebarHeader>
 
       <SidebarContent>
@@ -301,6 +330,9 @@ export function SideNav({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <ReferralDialog />
         </ClientOnly>
 
+        {adminLink.length > 0 && (
+          <SideNavMenu items={adminLink} activeHref={path} />
+        )}
         <SideNavMenu items={visibleBottomLinks} activeHref={path} />
       </SidebarFooter>
     </Sidebar>
