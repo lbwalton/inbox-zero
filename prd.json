@@ -962,8 +962,8 @@
         "Typecheck passes"
       ],
       "priority": 62,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created utils/prisma-rls.ts with createRlsClient(). RLS enforced when RLS_DATABASE_URL is set. Graceful fallback to default client otherwise."
     },
     {
       "id": "US-063",
