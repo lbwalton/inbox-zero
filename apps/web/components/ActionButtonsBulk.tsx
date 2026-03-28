@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { ButtonGroup } from "@/components/ButtonGroup";
+import { HelpTooltipContent } from "@/components/HelpTooltipContent";
 import { LoadingMiniSpinner } from "@/components/Loading";
+import { useHelpfulTips } from "@/hooks/useHelpfulTips";
 import {
   ArchiveIcon,
   CheckCircleIcon,
@@ -27,17 +29,26 @@ export function ActionButtonsBulk(props: {
     isDeleting,
     isApproving,
     isRejecting,
-    onPlanAiAction,
     onArchive,
+    onPlanAiAction,
     onDelete,
     onApprove,
     onReject,
   } = props;
 
+  const showTips = useHelpfulTips();
+
   const buttons = useMemo(
     () => [
       {
         tooltip: "Process with assistant",
+        contentComponent: showTips ? (
+          <HelpTooltipContent
+            title="AI Assist"
+            description="Runs your automation rules on the selected emails. The assistant decides what to do based on the rules you've set up."
+            example="If you have a rule to archive newsletters, clicking this will archive all selected newsletter emails."
+          />
+        ) : undefined,
         onClick: onPlanAiAction,
         icon: isPlanning ? (
           <LoadingMiniSpinner />
@@ -47,6 +58,13 @@ export function ActionButtonsBulk(props: {
       },
       {
         tooltip: "Approve AI Action",
+        contentComponent: showTips ? (
+          <HelpTooltipContent
+            title="Approve AI Action"
+            description="Executes the action the AI has already planned for these emails. The AI suggests; you approve."
+            example="If the AI planned to label an email as 'Client', clicking Approve applies that label now."
+          />
+        ) : undefined,
         onClick: onApprove,
         icon: isApproving ? (
           <LoadingMiniSpinner />
@@ -59,6 +77,13 @@ export function ActionButtonsBulk(props: {
       },
       {
         tooltip: "Reject AI Action",
+        contentComponent: showTips ? (
+          <HelpTooltipContent
+            title="Reject AI Action"
+            description="Cancels the AI's planned action without applying it. The email stays as-is."
+            example="If the AI planned to archive an email you want to keep, click Reject to dismiss that suggestion."
+          />
+        ) : undefined,
         onClick: onReject,
         icon: isRejecting ? (
           <LoadingMiniSpinner />
@@ -68,6 +93,13 @@ export function ActionButtonsBulk(props: {
       },
       {
         tooltip: "Archive",
+        contentComponent: showTips ? (
+          <HelpTooltipContent
+            title="Archive"
+            description="Moves selected emails out of your inbox without deleting them. You can find them in Gmail's Archive."
+            example="Select 5 old newsletters and click Archive to clear them from your inbox."
+          />
+        ) : undefined,
         onClick: onArchive,
         icon: isArchiving ? (
           <LoadingMiniSpinner />
@@ -77,6 +109,13 @@ export function ActionButtonsBulk(props: {
       },
       {
         tooltip: "Delete",
+        contentComponent: showTips ? (
+          <HelpTooltipContent
+            title="Delete"
+            description="Permanently deletes the selected emails. This cannot be undone."
+            example="Select spam emails and click Delete to remove them forever."
+          />
+        ) : undefined,
         onClick: onDelete,
         icon: isDeleting ? (
           <LoadingMiniSpinner />
@@ -86,6 +125,7 @@ export function ActionButtonsBulk(props: {
       },
     ],
     [
+      showTips,
       isArchiving,
       isPlanning,
       isDeleting,

@@ -1,11 +1,18 @@
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 // Account, User, Session, and VerificationToken based on: https://authjs.dev/reference/adapter/prisma
@@ -63,7 +70,7 @@ model User {
   surveyFeatures     String[] // multiple choice: features user is interested in
   surveyRole         String? // single choice: user's role
   surveyGoal         String? // single choice: what user wants to achieve
-  surveySource       String? // single choice: how user heard about Inbox Zero
+  surveySource       String? // single choice: how user heard about Bntly
   surveyImprovements String? // open text: what user wants to improve
 
   // settings
@@ -86,6 +93,30 @@ model User {
 
   emailAccounts EmailAccount[]
 
+  // Bntly personalization settings
+  slackEnabled        Boolean          @default(false)
+  slackWebhookUrl     String?
+  smsEnabled          Boolean          @default(false)
+  smsPhoneEncrypted   String?
+  emailDigestEnabled  Boolean          @default(true)
+  emailDigestTimeUtc  Int              @default(14)
+  pushEnabled         Boolean          @default(false)
+  autoDraftEnabled    Boolean          @default(true)
+  autoDraftThreshold  Int              @default(70)
+  outboundNudgeDays   Int              @default(3)
+  inboundNudgeDays    Int              @default(2)
+  junkAutoPurge       Boolean          @default(false)
+  junkAutoPurgeDays   Int              @default(30)
+  notificationView    NotificationView @default(COMBINED)
+  themePreference     String           @default("light")
+  showHelpfulTips     Boolean          @default(true)
+  role                Role             @default(USER)
+
+  // Bntly relations
+  pushSubscriptions PushSubscription[]
+  focusMode         FocusMode?
+  contactAliases    ContactAlias[]
+
   // Referral relationships
   referralsMade    Referral[] @relation("ReferrerUser")
   referralReceived Referral?  @relation("ReferredUser")
@@ -100,6 +131,9 @@ model EmailAccount {
 
   name  String? // Name associated with the Google account
   image String? // Profile image URL from the Google account
+
+  accountLabel String?               // User-facing nickname (e.g. "Work", "Personal")
+  isDefault    Boolean @default(false) // Whether this is the user's default active account
 
   about                     String?
   writingStyle              String?
@@ -141,8 +175,31 @@ model EmailAccount {
   knowledge      Knowledge[]
   chats          Chat[]
   digests        Digest[]
+  contactScores   ContactScore[]
+  emailSignals    EmailSignal[]
+  toneProfile     ToneProfile?
+  nudgeLogs       NudgeLog[]
+  trustedSenders  TrustedSender[]
+  suggestedLabels SuggestedLabel[]
+  focusModes          FocusMode[]
+  contactEmbeddings   ContactEmbedding[]
 
   @@index([lastSummaryEmailAt])
+}
+
+model ContactScore {
+  id                String   @id @default(cuid())
+  emailAccountId    String
+  emailAccount      EmailAccount @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  contactEmail      String
+  priorityScore     Float    @default(0)
+  replyRate         Float    @default(0)
+  avgReplyTimeHours Float    @default(0)
+  manualOverride    Boolean  @default(false)
+  autoDraftEnabled  Boolean  @default(true)
+  lastUpdated       DateTime @default(now()) @updatedAt
+
+  @@unique([emailAccountId, contactEmail])
 }
 
 model Digest {
@@ -851,4 +908,161 @@ enum DigestStatus {
   PROCESSING
   SENT
   FAILED
+}
+
+// ──────────────────────────────────────────────
+// Bntly: Email Assistant Models & Enums
+// ──────────────────────────────────────────────
+
+enum EmailSignalType {
+  IMPORTANT
+  NOT_IMPORTANT
+}
+
+enum NudgeType {
+  OUTBOUND
+  INBOUND
+}
+
+enum NudgeStatus {
+  PENDING
+  DISMISSED
+  SNOOZED
+  ACTIONED
+}
+
+enum TrustedSenderType {
+  CONTACT
+  TEAM_DOMAIN
+  CLIENT_DOMAIN
+}
+
+enum SuggestedLabelStatus {
+  PENDING
+  APPROVED
+  DISMISSED
+}
+
+enum NotificationView {
+  COMBINED
+  PER_ACCOUNT
+}
+
+model EmailSignal {
+  id             String          @id @default(cuid())
+  emailAccountId String
+  emailAccount   EmailAccount    @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  threadId       String
+  senderEmail    String
+  signal         EmailSignalType
+  taggedAt       DateTime        @default(now())
+
+  @@unique([emailAccountId, threadId])
+  @@index([emailAccountId])
+}
+
+model ToneProfile {
+  id                String       @id @default(cuid())
+  emailAccountId    String       @unique
+  emailAccount      EmailAccount @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  avgSentenceLength Float        @default(0)
+  commonOpeners     Json         @default("[]")
+  commonSignoffs    Json         @default("[]")
+  formalityScore    Int          @default(3)
+  commonPhrases     Json         @default("[]")
+  lastScanned       DateTime     @default(now())
+}
+
+model NudgeLog {
+  id             String      @id @default(cuid())
+  emailAccountId String
+  emailAccount   EmailAccount @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  threadId       String
+  nudgeType      NudgeType
+  sentAt         DateTime    @default(now())
+  status         NudgeStatus @default(PENDING)
+  snoozeUntil    DateTime?
+
+  @@unique([emailAccountId, threadId, nudgeType])
+  @@index([emailAccountId])
+}
+
+model TrustedSender {
+  id             String            @id @default(cuid())
+  emailAccountId String
+  emailAccount   EmailAccount      @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  type           TrustedSenderType
+  value          String
+  addedManually  Boolean           @default(true)
+  addedAt        DateTime          @default(now())
+
+  @@index([emailAccountId])
+}
+
+model SuggestedLabel {
+  id             String               @id @default(cuid())
+  emailAccountId String
+  emailAccount   EmailAccount         @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  labelName      String
+  reasoning      String
+  status         SuggestedLabelStatus @default(PENDING)
+  gmailLabelId   String?
+  createdAt      DateTime             @default(now())
+
+  @@index([emailAccountId])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String
+  p256dhKey String
+  authKey   String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model FocusMode {
+  id                    String        @id @default(cuid())
+  userId                String        @unique
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  focusedAccountId      String?
+  focusedAccount        EmailAccount? @relation(fields: [focusedAccountId], references: [id], onDelete: SetNull)
+  isActive              Boolean       @default(false)
+  scheduleEnabled       Boolean       @default(false)
+  scheduleStartHour     Int?
+  scheduleEndHour       Int?
+  scheduleTimezone      String?
+  breakthroughThreshold Int           @default(80)
+  updatedAt             DateTime      @default(now()) @updatedAt
+}
+
+model ContactEmbedding {
+  id             String                          @id @default(cuid())
+  emailAccountId String
+  emailAccount   EmailAccount                    @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  contactEmail   String
+  contactName    String?
+  embedding      Unsupported("vector(1536)")
+  updatedAt      DateTime                        @default(now()) @updatedAt
+
+  @@unique([emailAccountId, contactEmail])
+  @@index([emailAccountId])
+}
+
+model ContactAlias {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phrase         String
+  resolvedEmail  String
+  resolvedName   String?
+  emailAccountId String
+  confirmedAt    DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@unique([userId, phrase])
+  @@index([userId])
 }

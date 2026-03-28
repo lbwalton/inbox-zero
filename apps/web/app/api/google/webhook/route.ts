@@ -3,6 +3,8 @@ import { withError } from "@/utils/middleware";
 import { env } from "@/env";
 import { processHistoryForUser } from "@/app/api/google/webhook/process-history";
 import { logger } from "@/app/api/google/webhook/logger";
+import prisma from "@/utils/prisma";
+import { publishToQstash } from "@/utils/upstash";
 
 export const maxDuration = 120;
 
@@ -30,6 +32,54 @@ export const POST = withError(async (request) => {
     emailAddress: decodedData.emailAddress,
     historyId: decodedData.historyId,
   });
+
+  // Identify EmailAccount by Gmail address and dispatch Bntly jobs (non-blocking)
+  const emailAddress = decodedData.emailAddress.toLowerCase();
+  const emailAccount = await prisma.emailAccount.findUnique({
+    where: { email: emailAddress },
+    select: {
+      id: true,
+      userId: true,
+      user: {
+        select: { autoDraftEnabled: true },
+      },
+    },
+  });
+
+  if (emailAccount) {
+    const dispatches: Promise<unknown>[] = [];
+
+    // Dispatch auto-draft generation if user has autoDraftEnabled
+    if (emailAccount.user.autoDraftEnabled) {
+      dispatches.push(
+        publishToQstash("/api/google/webhook/auto-draft", {
+          emailAccountId: emailAccount.id,
+          emailAddress,
+        }).catch((err) =>
+          logger.error("Failed to dispatch generateAutoDraft", {
+            emailAccountId: emailAccount.id,
+            error: err,
+          }),
+        ),
+      );
+    }
+
+    // Dispatch inbound email filter for every inbound email
+    dispatches.push(
+      publishToQstash("/api/google/webhook/filter-inbound", {
+        emailAccountId: emailAccount.id,
+        emailAddress,
+      }).catch((err) =>
+        logger.error("Failed to dispatch filterInboundEmail", {
+          emailAccountId: emailAccount.id,
+          error: err,
+        }),
+      ),
+    );
+
+    // Fire-and-forget: do not await — webhook returns 200 immediately
+    void Promise.allSettled(dispatches);
+  }
 
   return await processHistoryForUser(decodedData);
 });

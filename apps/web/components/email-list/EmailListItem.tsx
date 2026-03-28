@@ -21,6 +21,9 @@ import { Button } from "@/components/ui/button";
 import { findCtaLink } from "@/utils/parse/parseHtml.client";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { internalDateToDate } from "@/utils/date";
+import { PriorityBadge } from "@/components/email-list/PriorityBadge";
+import { SignalButtons } from "@/components/email-list/SignalButtons";
+import { getAccountColorClass } from "@/utils/account-colors";
 
 export const EmailListItem = forwardRef(
   (
@@ -39,7 +42,9 @@ export const EmailListItem = forwardRef(
       rejectingPlan: boolean;
       executePlan: (thread: Thread) => Promise<void>;
       rejectPlan: (thread: Thread) => Promise<void>;
-
+      priorityScore?: number | null;
+      signal?: "IMPORTANT" | "NOT_IMPORTANT" | null;
+      emailAccountId?: string;
       refetch: () => void;
     },
     ref: ForwardedRef<HTMLLIElement>,
@@ -70,18 +75,28 @@ export const EmailListItem = forwardRef(
 
     const cta = findCtaLink(lastMessage.textHtml);
 
+    const accountColorClass = props.emailAccountId
+      ? getAccountColorClass(props.emailAccountId)
+      : "border-l-transparent";
+
+    const senderEmail = participant(lastMessage, props.userEmail);
+
     return (
       <ErrorBoundary extra={{ props, cta, decodedSnippet }}>
         <li
           ref={ref}
-          className={clsx("group relative cursor-pointer border-l-4 py-3", {
-            "hover:bg-slate-50 dark:hover:bg-slate-950":
-              !props.selected && !props.opened,
-            "bg-blue-50 dark:bg-blue-950": props.selected,
-            "bg-blue-100 dark:bg-blue-900": props.opened,
-            "bg-slate-100 dark:bg-background":
-              !isUnread && !props.selected && !props.opened,
-          })}
+          className={clsx(
+            "group relative cursor-pointer border-l-4 py-3",
+            accountColorClass,
+            {
+              "hover:bg-slate-50 dark:hover:bg-slate-950":
+                !props.selected && !props.opened,
+              "bg-blue-50 dark:bg-blue-950": props.selected,
+              "bg-blue-100 dark:bg-blue-900": props.opened,
+              "bg-slate-100 dark:bg-background":
+                !isUnread && !props.selected && !props.opened,
+            },
+          )}
           onClick={props.onClick}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {

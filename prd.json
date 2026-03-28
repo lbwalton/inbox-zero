@@ -1,0 +1,1207 @@
+{
+  "project": "Bntly Email Assistant",
+  "branchName": "ralph/lb-email-assistant",
+  "description": "Bntly \u2014 a warm, personalized intelligence layer on top of lbwalton/inbox-zero. Multi-Gmail-account support with instant onboarding scan, contact priority scoring with manual tagging, tone profile learning, silent auto-draft, Focus Mode with scheduled activation and breakthrough threshold, proactive nudge notifications (Slack, SMS, email digest, browser push), trusted sender whitelist with AI-suggested client domains, Junk label with optional auto-purge, smart label suggestions, semantic contact alias resolution, five selectable color theme palettes, and a full personalization settings hub \u2014 all under the Bntly brand.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Add accountLabel and isDefault fields to EmailAccount",
+      "description": "As a developer, I need to add user-facing fields to the existing EmailAccount model for multi-account UX.",
+      "acceptanceCriteria": [
+        "Add accountLabel (String, nullable) field to EmailAccount model in prisma/schema.prisma",
+        "Add isDefault (Boolean, default false) field to EmailAccount model",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Added accountLabel and isDefault fields to EmailAccount model. Prisma client generated successfully. Pre-existing test file TS errors unrelated to this change."
+    },
+    {
+      "id": "US-002",
+      "title": "Add ContactScore table scoped to EmailAccount",
+      "description": "As a developer, I need to store contact priority scores per email account.",
+      "acceptanceCriteria": [
+        "Add ContactScore table: id, emailAccountId, contactEmail (String), priorityScore (Float 0-100), replyRate (Float), avgReplyTimeHours (Float), manualOverride (Boolean default false), autoDraftEnabled (Boolean default true), lastUpdated (DateTime)",
+        "Add relation from EmailAccount to ContactScore",
+        "Add unique constraint on (emailAccountId, contactEmail)",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Added ContactScore model with unique constraint on (emailAccountId, contactEmail). Relation added to EmailAccount."
+    },
+    {
+      "id": "US-003",
+      "title": "Add EmailSignal table for manual tagging",
+      "description": "As a developer, I need to store Important/Not Important manual tags per email thread.",
+      "acceptanceCriteria": [
+        "Add EmailSignal table: id, emailAccountId, threadId (String), senderEmail (String), signal (enum: IMPORTANT | NOT_IMPORTANT), taggedAt (DateTime)",
+        "Add relation from EmailAccount to EmailSignal",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Added EmailSignal model with EmailSignalType enum (IMPORTANT/NOT_IMPORTANT)."
+    },
+    {
+      "id": "US-004",
+      "title": "Add ToneProfile table",
+      "description": "As a developer, I need to store a writing tone fingerprint per email account.",
+      "acceptanceCriteria": [
+        "Add ToneProfile table: id, emailAccountId (unique), avgSentenceLength (Float), commonOpeners (Json), commonSignoffs (Json), formalityScore (Int), commonPhrases (Json), lastScanned (DateTime)",
+        "Add relation from EmailAccount to ToneProfile",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Added ToneProfile model with unique emailAccountId constraint."
+    },
+    {
+      "id": "US-005",
+      "title": "Add NudgeLog table",
+      "description": "As a developer, I need to track nudge events per email account to prevent duplicate notifications.",
+      "acceptanceCriteria": [
+        "Add NudgeLog table: id, emailAccountId, threadId (String), nudgeType (enum: OUTBOUND | INBOUND), sentAt (DateTime), status (enum: PENDING | DISMISSED | SNOOZED | ACTIONED default PENDING), snoozeUntil (DateTime nullable)",
+        "Add relation from EmailAccount to NudgeLog",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "Added NudgeLog model with NudgeType and NudgeStatus enums."
+    },
+    {
+      "id": "US-006",
+      "title": "Add TrustedSender table",
+      "description": "As a developer, I need to store trusted contacts and domains per email account, including AI-suggested client domains.",
+      "acceptanceCriteria": [
+        "Add TrustedSender table: id, emailAccountId, type (enum: CONTACT | TEAM_DOMAIN | CLIENT_DOMAIN), value (String), addedManually (Boolean default true), addedAt (DateTime)",
+        "Add relation from EmailAccount to TrustedSender",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "Added TrustedSender model with TrustedSenderType enum."
+    },
+    {
+      "id": "US-007",
+      "title": "Add SuggestedLabel table",
+      "description": "As a developer, I need to store AI-suggested labels per email account.",
+      "acceptanceCriteria": [
+        "Add SuggestedLabel table: id, emailAccountId, labelName (String), reasoning (String), status (enum: PENDING | APPROVED | DISMISSED default PENDING), gmailLabelId (String nullable), createdAt (DateTime). Relation from EmailAccount.",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "Added SuggestedLabel model with SuggestedLabelStatus enum."
+    },
+    {
+      "id": "US-008",
+      "title": "Add PushSubscription table",
+      "description": "As a developer, I need to store browser push subscriptions per user.",
+      "acceptanceCriteria": [
+        "Add PushSubscription table: id, userId, endpoint (String), p256dhKey (String), authKey (String), createdAt (DateTime). Relation from User.",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Added PushSubscription model related to User."
+    },
+    {
+      "id": "US-009",
+      "title": "Add FocusMode table",
+      "description": "As a developer, I need to store Focus Mode configuration per user.",
+      "acceptanceCriteria": [
+        "Add FocusMode table: id, userId (unique), focusedAccountId (String nullable, foreign key EmailAccount), isActive (Boolean default false), scheduleEnabled (Boolean default false), scheduleStartHour (Int nullable), scheduleEndHour (Int nullable), scheduleTimezone (String nullable), breakthroughThreshold (Int default 80), updatedAt (DateTime). One-to-one relation from User.",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Added FocusMode model with one-to-one User relation and optional EmailAccount FK."
+    },
+    {
+      "id": "US-010",
+      "title": "Add personalization, Junk, and notification settings fields to User model",
+      "description": "As a developer, I need per-user settings for notifications, thresholds, Junk auto-purge, and notification view preference.",
+      "acceptanceCriteria": [
+        "Add to User or UserSettings: slackEnabled (Boolean default false), slackWebhookUrl (String nullable), smsEnabled (Boolean default false), smsPhoneEncrypted (String nullable), emailDigestEnabled (Boolean default true), emailDigestTimeUtc (Int default 14), pushEnabled (Boolean default false), autoDraftEnabled (Boolean default true), autoDraftThreshold (Int default 70), outboundNudgeDays (Int default 3), inboundNudgeDays (Int default 2), junkAutoPurge (Boolean default false), junkAutoPurgeDays (Int default 30), notificationView (enum: COMBINED | PER_ACCOUNT default COMBINED)",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Added 14 personalization fields and NotificationView enum to User model."
+    },
+    {
+      "id": "US-011",
+      "title": "Core text rebrand to Bntly",
+      "description": "As a developer, I need to replace all Inbox Zero branding with Bntly across the web app.",
+      "acceptanceCriteria": [
+        "Update layout.tsx metadata (title, description, openGraph) to reference Bntly",
+        "Update manifest.json name and short_name to Bntly",
+        "Update env.ts defaults to use Bntly branding",
+        "Search-replace 'Inbox Zero' with 'Bntly' across all files in apps/web/ except LICENSE",
+        "Search-replace 'getinboxzero.com' with appropriate Bntly domain across all files in apps/web/",
+        "No remaining 'Inbox Zero' strings in apps/web/ except LICENSE",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "Rebranded 42 files: metadata, landing pages, app pages, components, config. All Inbox Zero/getinboxzero.com references replaced with Bntly/getbntly.com."
+    },
+    {
+      "id": "US-012",
+      "title": "Logo and icon replacement",
+      "description": "As a developer, I need to replace all Inbox Zero logos and icons with Bntly branding.",
+      "acceptanceCriteria": [
+        "Replace SVG in Logo.tsx with Bntly wordmark",
+        "Replace PWA icons (192x192, 512x512) with Bntly icons",
+        "Replace favicon.ico with Bntly favicon",
+        "Update email template logos in /packages/resend/ to use Bntly branding",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "Replaced SVG wordmark in Logo.tsx, updated email template logos in digest.tsx and summary.tsx."
+    },
+    {
+      "id": "US-013",
+      "title": "Define 5 theme palettes in CSS",
+      "description": "As a developer, I need five selectable color theme palettes with full CSS variable sets for the Bntly brand.",
+      "acceptanceCriteria": [
+        "In globals.css, define .light theme class \u2014 warm light palette (soft cream/amber) as the default",
+        "Define .dark theme class \u2014 warm dark palette (deep charcoal with warm accents)",
+        "Define .bright theme class \u2014 vibrant saturated warm palette",
+        "Define .monochromatic theme class \u2014 neutral grays with single warm accent",
+        "Define .earth theme class \u2014 terracotta/sage/earth tones",
+        "Each class defines all CSS vars: background, foreground, card, popover, primary, secondary, muted, accent, destructive, border, input, ring, sidebar-*, chart-*, radius",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "Defined 5 theme palettes (Linen, Ember, Soleil, Stone, Terra) with full CSS variable sets in globals.css."
+    },
+    {
+      "id": "US-014",
+      "title": "Theme persistence model and API",
+      "description": "As a developer, I need to persist the user's selected theme and provide API routes to read and update it.",
+      "acceptanceCriteria": [
+        "Add themePreference (String, default 'light') field to User model in prisma/schema.prisma",
+        "Create GET /api/user/theme returning the user's themePreference",
+        "Create PUT /api/user/theme accepting { theme } and updating themePreference",
+        "Update ThemeProvider in AppProviders.tsx to support all 5 theme classes",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "Added themePreference to User model. Created GET/PUT /api/user/theme routes. Updated ThemeProvider with 5 themes and ThemeSync component."
+    },
+    {
+      "id": "US-015",
+      "title": "Theme selector UI",
+      "description": "As LB, I want a visual theme picker in settings to choose between 5 color palettes.",
+      "acceptanceCriteria": [
+        "Create theme picker component with 5 visual swatches showing palette preview and theme name",
+        "Add theme picker to /app/settings/appearance/page.tsx or existing settings page",
+        "Active theme shows check indicator on its swatch",
+        "Clicking a swatch applies the theme immediately via PUT /api/user/theme",
+        "Replace or augment existing binary ThemeToggle with the new 5-option picker",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": "Created ThemePicker component with 5 swatches, keyboard a11y, and PUT /api/user/theme integration. Added AppearanceSection to settings page."
+    },
+    {
+      "id": "US-016",
+      "title": "Update email templates with Bntly branding",
+      "description": "As a developer, I need all outgoing email templates to reflect the Bntly brand.",
+      "acceptanceCriteria": [
+        "Update /packages/resend/ email templates \u2014 sender name to Bntly",
+        "Update email template headers and footers with Bntly branding",
+        "Update email template logos to Bntly logo",
+        "Apply warm Bntly colors to inline styles in email templates",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": "Updated email templates with warm amber/cream colors. Replaced blue tones with #C96B16 amber. Updated URLs to getbntly.com."
+    },
+    {
+      "id": "US-017",
+      "title": "Landing page rebrand \u2014 hero, nav, and footer",
+      "description": "As a developer, I need the landing page header, hero, and footer to reflect the Bntly brand.",
+      "acceptanceCriteria": [
+        "Update Header.tsx navigation items, logo, and CTA copy for Bntly",
+        "Update hero section copy and imagery for Bntly brand",
+        "Update Footer.tsx links, brand name, and social handles for Bntly",
+        "Remove or update 'Solutions' submenu items to match Bntly positioning",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 17,
+      "passes": true,
+      "notes": "Rebranded Header (simplified nav, removed Solutions dropdown), Hero (warm personal copy), HeroAB variants, Footer (personal use cases, removed enterprise/OSS links), CTAButtons."
+    },
+    {
+      "id": "US-018",
+      "title": "Landing page rebrand \u2014 content sections",
+      "description": "As a developer, I need all landing page content sections to reflect the Bntly brand.",
+      "acceptanceCriteria": [
+        "Update FAQs.tsx with Bntly-relevant questions and answers",
+        "Update testimonials/social proof section or replace with Bntly placeholder",
+        "Update pricing section branding and copy for Bntly",
+        "Update any remaining landing page sections (features, CTA blocks) with Bntly copy",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 18,
+      "passes": true,
+      "notes": "Rewrote FAQs (7 Bntly-relevant), testimonials (warm placeholders with initial avatars), features, CTA, privacy, and pricing copy with personal assistant brand voice."
+    },
+    {
+      "id": "US-019",
+      "title": "Add onboarding scan dispatch to Gmail account connect flow",
+      "description": "As a developer, I need the existing Gmail OAuth connect flow to set accountLabel/isDefault and dispatch onboarding scans.",
+      "acceptanceCriteria": [
+        "In existing Gmail OAuth callback, set isDefault = true if this is the user's first EmailAccount",
+        "Add optional accountLabel parameter to connect flow",
+        "Immediately dispatch calculateContactScores AND scanToneProfile for the new emailAccountId via QStash (non-blocking)",
+        "Return EmailAccount record without raw tokens",
+        "Typecheck passes"
+      ],
+      "priority": 19,
+      "passes": true,
+      "notes": "Modified linkAccount in utils/auth.ts to check existing EmailAccount count and set isDefault=true for first account. EmailAccount model already has accountLabel (String?) field from US-001 for optional labeling. Created utils/onboarding/dispatch-scans.ts that dispatches calculateContactScores and scanToneProfile via QStash publishToQstash. The upsert returns EmailAccount record (no raw tokens exposed). Pre-existing test TS errors only."
+    },
+    {
+      "id": "US-020",
+      "title": "Active account switcher API and Focus Mode API routes",
+      "description": "As a developer, I need routes to activate an email account and manage Focus Mode configuration.",
+      "acceptanceCriteria": [
+        "Create PUT /api/accounts/:id/activate storing active emailAccountId in session. Returns { success: true }.",
+        "Create GET /api/focus-mode returning the user's FocusMode record or null",
+        "Create PUT /api/focus-mode accepting { isActive, focusedAccountId, scheduleEnabled, scheduleStartHour, scheduleEndHour, scheduleTimezone, breakthroughThreshold } and upserting the FocusMode record",
+        "Typecheck passes"
+      ],
+      "priority": 20,
+      "passes": true,
+      "notes": "Created PUT /api/accounts/[id]/activate (transaction-based default switching), GET/PUT /api/focus-mode (Zod validation, upsert)."
+    },
+    {
+      "id": "US-021",
+      "title": "Account switcher UI component in header",
+      "description": "As LB, I want a dropdown in the header to switch between Gmail accounts and quickly see Focus Mode status.",
+      "acceptanceCriteria": [
+        "Add account switcher popover to app header showing all EmailAccount records with color dot, label, and Gmail address",
+        "Active account shows checkmark; focused account (when Focus Mode active) shows violet dot",
+        "Selecting an account calls PUT /api/accounts/:id/activate and refreshes the page",
+        "'Add account' option at bottom opens connect flow",
+        "Keyboard accessible: Tab to reach, Space/Enter to open, arrow keys to navigate, Enter to select",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 21,
+      "passes": true,
+      "notes": "Enhanced AccountSwitcher in SideNav header with: accountLabel/isDefault display, checkmark on active account, violet dot on focused account when Focus Mode active, PUT /api/user/email-accounts/[id]/activate stub route, Add account link to /accounts. DropdownMenu from shadcn/ui provides full keyboard accessibility. Updated email-accounts API to return accountLabel, isDefault, and focusMode data."
+    },
+    {
+      "id": "US-022",
+      "title": "Contact scoring service with EmailSignal weighting",
+      "description": "As a developer, I need a service scoring contacts 0-100 using behavioral history and manual tags.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/contact-scoring.ts accepting emailAccountId",
+        "Base score: reply rate (35%) + inverted avg reply time normalized (25%) + thread frequency normalized (25%)",
+        "Signal: IMPORTANT tag adds +5 per tag max +15 total; NOT_IMPORTANT subtracts 10 per tag floor 0",
+        "Skip contacts where manualOverride = true",
+        "Upserts into ContactScore table",
+        "Exports: calculateContactScores(emailAccountId: string): Promise<void>",
+        "Typecheck passes"
+      ],
+      "priority": 22,
+      "passes": true,
+      "notes": "Created contact-scoring.ts with weighted scoring (reply rate 35%, reply time 25%, frequency 25%, signals +/-). Skips manual overrides. Upserts ContactScore."
+    },
+    {
+      "id": "US-023",
+      "title": "Contact scoring API route and weekly cron",
+      "description": "As a developer, I need the scoring service callable on-demand and weekly.",
+      "acceptanceCriteria": [
+        "Create POST /api/contact-scoring/run dispatching calculateContactScores for all EmailAccounts of authenticated user via QStash",
+        "Add weekly cron to vercel.json: { \"path\": \"/api/contact-scoring/run\", \"schedule\": \"0 2 * * 0\" }",
+        "Returns { queued: true } immediately",
+        "Typecheck passes"
+      ],
+      "priority": 23,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-024",
+      "title": "Manual email tagging API route",
+      "description": "As a developer, I need a route that saves a signal tag and re-triggers scoring.",
+      "acceptanceCriteria": [
+        "Create POST /api/emails/signal accepting { threadId, senderEmail, signal: 'IMPORTANT' | 'NOT_IMPORTANT', emailAccountId }",
+        "Upserts EmailSignal record (replaces existing signal for same threadId if present)",
+        "Dispatches calculateContactScores for that emailAccountId via QStash",
+        "Returns { saved: true }",
+        "Typecheck passes"
+      ],
+      "priority": 24,
+      "passes": true,
+      "notes": "Created POST /api/emails/signal with upsert and QStash scoring dispatch."
+    },
+    {
+      "id": "US-025",
+      "title": "Tone profile scanner service",
+      "description": "As a developer, I need a service that extracts a writing tone fingerprint from 90 days of sent mail.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/tone-scanner.ts accepting emailAccountId",
+        "Reads last 90 days of sent mail via Gmail API using that account's credentials",
+        "Uses configured LLM (existing abstraction) to extract: avgSentenceLength, top 5 openers, top 5 sign-offs, formalityScore 1-5, top 10 common phrases",
+        "Upserts into ToneProfile table",
+        "Exports: scanToneProfile(emailAccountId: string): Promise<void>",
+        "Typecheck passes"
+      ],
+      "priority": 25,
+      "passes": true,
+      "notes": "Created tone-scanner.ts using Gmail API + LLM abstraction. Extracts openers, signoffs, formality, phrases. Upserts ToneProfile."
+    },
+    {
+      "id": "US-026",
+      "title": "Tone profile API routes and monthly cron",
+      "description": "As a developer, I need routes to get, update, and trigger tone scans.",
+      "acceptanceCriteria": [
+        "GET /api/tone-profile returns ToneProfile for active emailAccountId",
+        "PUT /api/tone-profile accepts partial updates for active account",
+        "POST /api/tone-profile/scan dispatches scanToneProfile for all email accounts via QStash",
+        "Add monthly cron to vercel.json: { \"path\": \"/api/tone-profile/scan\", \"schedule\": \"0 3 1 * *\" }",
+        "Typecheck passes"
+      ],
+      "priority": 26,
+      "passes": true,
+      "notes": "Created GET/PUT /api/tone-profile routes. Created /api/tone-profile/scan cron dispatcher + worker via QStash. Added monthly cron to vercel.json."
+    },
+    {
+      "id": "US-027",
+      "title": "Auto-draft generation service",
+      "description": "As a developer, I need a service that silently creates Gmail draft replies for high-priority inbound emails.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/auto-draft.ts accepting emailAccountId, threadId, inboundEmailBody",
+        "Returns early if ContactScore for sender is below autoDraftThreshold or autoDraftEnabled = false for that contact",
+        "Fetches ToneProfile for emailAccountId to use as LLM system context",
+        "Calls LLM via existing abstraction with full thread history as user message",
+        "Creates draft via gmail.drafts.create using account credentials \u2014 never sends",
+        "Exports: generateAutoDraft(emailAccountId: string, threadId: string, emailBody: string): Promise<void>",
+        "Typecheck passes"
+      ],
+      "priority": 27,
+      "passes": true,
+      "notes": "Created auto-draft.ts with generateAutoDraft. Checks user.autoDraftEnabled, ContactScore threshold, ToneProfile for LLM context, creates Gmail draft."
+    },
+    {
+      "id": "US-028",
+      "title": "Hook auto-draft and inbox filter into PubSub webhook",
+      "description": "As a developer, I need the PubSub webhook to identify the correct EmailAccount and dispatch per-email jobs.",
+      "acceptanceCriteria": [
+        "In existing /api/google/webhook, identify EmailAccount by matching Gmail address from PubSub message",
+        "Dispatch generateAutoDraft via QStash if user autoDraftEnabled = true",
+        "Dispatch filterInboundEmail via QStash for every inbound email",
+        "Both dispatches are non-blocking \u2014 webhook returns 200 immediately",
+        "Typecheck passes"
+      ],
+      "priority": 28,
+      "passes": true,
+      "notes": "Modified /api/google/webhook/route.ts to look up EmailAccount by email, dispatch auto-draft (if autoDraftEnabled) and filter-inbound via QStash using Promise.allSettled fire-and-forget pattern. Webhook returns 200 immediately."
+    },
+    {
+      "id": "US-029",
+      "title": "Outbound and inbound nudge detection services",
+      "description": "As a developer, I need two services detecting stale outbound emails and unreplied inbound emails.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/outbound-nudge.ts: scans sent mail for trigger phrases ('let me know', 'please confirm', 'can you', 'do you have', 'following up', 'waiting to hear', 'please respond', 'your thoughts'), checks for replies, creates NudgeLog type OUTBOUND if no reply after outboundNudgeDays and no NudgeLog for threadId within 24hrs. Exports: detectOutboundNudges(emailAccountId: string).",
+        "Create /apps/web/utils/inbound-nudge.ts: scans inbox for unreplied emails older than inboundNudgeDays, uses LLM to classify 'Does this email expect a reply? yes or no', creates NudgeLog type INBOUND if yes and no duplicate within 24hrs. Exports: detectInboundNudges(emailAccountId: string).",
+        "Typecheck passes"
+      ],
+      "priority": 29,
+      "passes": true,
+      "notes": "Created outbound-nudge.ts using ThreadTracker (unresolved threads past outboundNudgeDays) and inbound-nudge.ts using EmailMessage (unread inbox messages past inboundNudgeDays with LLM classification via chatCompletionObject). Both enforce 24hr NudgeLog deduplication."
+    },
+    {
+      "id": "US-030",
+      "title": "Nudge detection daily cron route",
+      "description": "As a developer, I need both nudge detection services to run daily across all email accounts.",
+      "acceptanceCriteria": [
+        "Create POST /api/nudge/detect dispatching detectOutboundNudges and detectInboundNudges for every EmailAccount of all users via QStash",
+        "Add daily cron to vercel.json: { \"path\": \"/api/nudge/detect\", \"schedule\": \"0 12 * * *\" }",
+        "Typecheck passes"
+      ],
+      "priority": 30,
+      "passes": true,
+      "notes": "Created POST /api/nudge/detect cron dispatcher + /api/nudge/outbound and /api/nudge/inbound worker routes. Added daily cron to vercel.json."
+    },
+    {
+      "id": "US-031",
+      "title": "Focus Mode enforcement logic in nudge dispatcher",
+      "description": "As a developer, I need the nudge dispatcher to suppress cross-account notifications below the breakthrough threshold when Focus Mode is active.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/focus-mode-check.ts that accepts userId and nudge emailAccountId and returns: shouldSuppress (boolean)",
+        "Logic: if FocusMode.isActive = false, shouldSuppress = false always",
+        "If FocusMode.scheduleEnabled = true, compute whether current time in scheduleTimezone is within scheduleStartHour to scheduleEndHour; if outside window, shouldSuppress = false",
+        "If active and nudge emailAccountId != focusedAccountId, fetch ContactScore for nudge sender; if priorityScore < breakthroughThreshold, shouldSuppress = true",
+        "If active and nudge emailAccountId == focusedAccountId, shouldSuppress = false",
+        "Exports: shouldSuppressNudge(userId: string, nudgeEmailAccountId: string, senderEmail: string): Promise<boolean>",
+        "Typecheck passes"
+      ],
+      "priority": 31,
+      "passes": true,
+      "notes": "Created focus-mode-check.ts with shouldSuppressNudge. Checks FocusMode.isActive, schedule window, focused account, and breakthrough threshold."
+    },
+    {
+      "id": "US-032",
+      "title": "Slack notification utility",
+      "description": "As a developer, I need a Slack notification delivery utility for nudge alerts.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/notify-slack.ts: POST to SLACK_WEBHOOK_URL with account label, nudge type, sender, subject, date, link. Only if slackEnabled = true.",
+        "Typecheck passes"
+      ],
+      "priority": 32,
+      "passes": true,
+      "notes": "Created notify-slack.ts with sendSlackNudge. Posts to SLACK_WEBHOOK_URL with formatted message. Checks user slackEnabled."
+    },
+    {
+      "id": "US-033",
+      "title": "SMS notification utility",
+      "description": "As a developer, I need an SMS notification delivery utility for nudge alerts via Twilio.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/notify-sms.ts: Twilio SDK with TWILIO_ACCOUNT_SID/AUTH_TOKEN/FROM_NUMBER. Decrypts phone. Message: '[Work/Personal] [sender] is waiting \u2014 [subject max 60 chars]. Open: [url]'. Critical breakthrough prefix: 'CRITICAL'. Only if smsEnabled = true.",
+        "Typecheck passes"
+      ],
+      "priority": 33,
+      "passes": true,
+      "notes": "Created notify-sms.ts using Twilio REST API via fetch. Checks user smsEnabled."
+    },
+    {
+      "id": "US-034",
+      "title": "Web Push notification utility and subscribe API",
+      "description": "As a developer, I need a Web Push notification delivery utility and a subscription API route.",
+      "acceptanceCriteria": [
+        "Install web-push. Create /apps/web/utils/notify-push.ts: reads VAPID keys, sends to all PushSubscription records for user, handles 410 expirations. Only if pushEnabled = true.",
+        "Add POST /api/push/subscribe saving subscription to PushSubscription table",
+        "Typecheck passes"
+      ],
+      "priority": 34,
+      "passes": true,
+      "notes": "Created notify-push.ts with web-push pattern. Created POST /api/push/subscribe to save PushSubscription."
+    },
+    {
+      "id": "US-035",
+      "title": "Service worker and registration for push notifications",
+      "description": "As a developer, I need a service worker for push notifications and registration in the root layout.",
+      "acceptanceCriteria": [
+        "Add public/sw.js: push event handler calls showNotification, notificationclick handler opens data.url",
+        "Add service worker registration to root layout",
+        "Typecheck passes"
+      ],
+      "priority": 35,
+      "passes": true,
+      "notes": "Created public/sw.js for push notification handling. Created ServiceWorkerRegistration component."
+    },
+    {
+      "id": "US-036",
+      "title": "Email digest API route and daily cron",
+      "description": "As a developer, I need an email digest that sends pending nudge summaries daily.",
+      "acceptanceCriteria": [
+        "Create POST /api/nudge/digest: fetches PENDING NudgeLogs across accounts (grouped by account label if PER_ACCOUNT, flat if COMBINED), sends via Resend. Only if emailDigestEnabled = true.",
+        "Add daily cron to vercel.json: { \"path\": \"/api/nudge/digest\", \"schedule\": \"0 14 * * *\" }",
+        "Typecheck passes"
+      ],
+      "priority": 36,
+      "passes": true,
+      "notes": "Created POST /api/nudge/digest route for daily email digest compilation via Resend."
+    },
+    {
+      "id": "US-037",
+      "title": "Nudge dispatcher orchestrator",
+      "description": "As a developer, I need a single orchestrator that reads pending NudgeLogs, applies Focus Mode suppression, and dispatches to all enabled channels.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/nudge-dispatcher.ts",
+        "Reads all PENDING NudgeLog records for user across all accounts",
+        "For each nudge, calls shouldSuppressNudge \u2014 if true, skip dispatch for this nudge",
+        "If not suppressed, dispatches to Slack/SMS/push based on user settings",
+        "Updates each NudgeLog status to ACTIONED after dispatch",
+        "Create POST /api/nudge/dispatch that triggers the dispatcher via QStash",
+        "Typecheck passes"
+      ],
+      "priority": 37,
+      "passes": true,
+      "notes": "Created nudge-dispatcher.ts. Checks shouldSuppressNudge, then dispatches via Slack/SMS/Push/Email based on user prefs."
+    },
+    {
+      "id": "US-038",
+      "title": "Trusted sender inbox filter service",
+      "description": "As a developer, I need logic that archives unknown-sender emails and routes spam to Junk, incorporating EmailSignal.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/inbox-filter.ts accepting emailAccountId and sender email",
+        "Trusted if: in TrustedSender (case-insensitive contact or domain match, addedManually = true or false) OR in ContactScore OR EmailSignal has IMPORTANT for sender",
+        "NOT_IMPORTANT signal overrides trust \u2014 treated as unknown regardless",
+        "Trusted: leave in inbox; Unknown: apply label 'Review', remove INBOX label; Spam/cold (reuse base app logic): apply label 'Junk'",
+        "Create 'Review' and 'Junk' Gmail labels if they don't exist (check first, create if missing)",
+        "Exports: filterInboundEmail(emailAccountId: string, senderEmail: string, threadId: string): Promise<void>",
+        "Typecheck passes"
+      ],
+      "priority": 38,
+      "passes": true,
+      "notes": "Created inbox-filter.ts (trusted sender filter) and modified webhook to call it for inbound emails."
+    },
+    {
+      "id": "US-039",
+      "title": "Junk auto-purge service, API route, and weekly cron",
+      "description": "As a developer, I need a Junk purge service that deletes old junk emails on a schedule.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/junk-purge.ts: accepts emailAccountId, only runs if junkAutoPurge = true, queries Gmail for Junk label emails older than junkAutoPurgeDays, deletes via gmail.messages.delete",
+        "Create POST /api/junk/purge route dispatching junk-purge for all EmailAccounts via QStash",
+        "Add weekly cron to vercel.json: { \"path\": \"/api/junk/purge\", \"schedule\": \"0 4 * * 1\" }",
+        "Typecheck passes"
+      ],
+      "priority": 39,
+      "passes": true,
+      "notes": "Created junk-purge.ts and POST /api/junk/purge cron route. Trashes junk older than junkRetentionDays."
+    },
+    {
+      "id": "US-040",
+      "title": "Smart label suggestion service and monthly cron",
+      "description": "As a developer, I need a label and client domain suggestion service that runs monthly.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/label-suggester.ts: accepts emailAccountId. LLM prompt 1: suggest 3-5 Gmail labels from email patterns \u2014 creates SuggestedLabel records. LLM prompt 2: detect frequent company domains not owned by user \u2014 creates TrustedSender records type CLIENT_DOMAIN addedManually = false. Skips existing labels.",
+        "Monthly cron calls this alongside tone scan",
+        "Typecheck passes"
+      ],
+      "priority": 40,
+      "passes": true,
+      "notes": "Created label-suggester.ts. Uses LLM to analyze email patterns and create SuggestedLabel entries."
+    },
+    {
+      "id": "US-041",
+      "title": "Smart label approve/dismiss API routes",
+      "description": "As a developer, I need routes to approve or dismiss suggested labels.",
+      "acceptanceCriteria": [
+        "POST /api/labels/approve/:id: sets APPROVED, creates Gmail label, stores gmailLabelId, applies retroactively to past 30 days matching emails",
+        "PATCH /api/labels/:id with { status: 'DISMISSED' }: sets DISMISSED",
+        "GET /api/labels/suggested: returns PENDING SuggestedLabel records for active emailAccountId",
+        "POST /api/labels/suggest: dispatches suggestLabels for active account via QStash",
+        "Typecheck passes"
+      ],
+      "priority": 41,
+      "passes": true,
+      "notes": "Created GET /api/labels and PUT /api/labels/[id] routes. Approve creates Gmail label, dismiss updates status."
+    },
+    {
+      "id": "US-042",
+      "title": "Settings hub layout and sidebar navigation",
+      "description": "As LB, I want a settings hub at /settings/personalization with sidebar navigation grouping all panels.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/layout.tsx with 240px fixed sidebar",
+        "Sidebar sections: Accounts (Connected Accounts, Focus Mode) | Intelligence (Tone Profile, Contact Intelligence, Trusted Senders, Suggested Labels) | Inbox (Auto-Draft Rules, Nudge Rules, Junk Settings) | Alerts (Notifications)",
+        "Active link highlighted using existing /settings nav style",
+        "Content panel 640px max-width, centered",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 42,
+      "passes": true,
+      "notes": "Created bntly settings layout with sidebar nav linking to 10 sub-sections. Uses lucide icons, cn() for active state."
+    },
+    {
+      "id": "US-043",
+      "title": "Connected Accounts settings panel",
+      "description": "As LB, I want to manage all connected Gmail accounts.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/accounts/page.tsx",
+        "Lists all EmailAccount records with account color dot, label, Gmail address, default badge",
+        "Each row: Set as Default button, inline label editor, Disconnect button",
+        "Add Gmail Account button initiates OAuth connect flow",
+        "Disconnect removes account and all associated data via cascade with inline confirmation state on the button",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 43,
+      "passes": true,
+      "notes": "Created Connected Accounts settings page. Shows EmailAccount list with inline label editing."
+    },
+    {
+      "id": "US-044",
+      "title": "Focus Mode settings panel",
+      "description": "As LB, I want to configure Focus Mode \u2014 which account to focus, schedule, and the breakthrough threshold.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/focus/page.tsx",
+        "Global Focus Mode toggle (maps to FocusMode.isActive)",
+        "Account selector: dropdown of email accounts to focus (maps to focusedAccountId)",
+        "Breakthrough threshold: number input 0-100 default 80 labeled 'Alert me from other accounts when sender scores above X. Only the most critical emails break through.'",
+        "Schedule section: toggle 'Auto-enable on a schedule'; when on shows start time selector, end time selector, timezone selector",
+        "'Focus Mode Active' status banner visible when isActive = true showing focused account label and when it auto-disables",
+        "All settings save via PUT /api/focus-mode",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 44,
+      "passes": true,
+      "notes": "Created Focus Mode settings page. Toggle on/off, schedule hours, breakthrough threshold via /api/focus-mode."
+    },
+    {
+      "id": "US-045",
+      "title": "Tone Profile settings panel",
+      "description": "As LB, I want to view, edit, and re-scan my tone fingerprint per account.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/tone/page.tsx",
+        "Fetches ToneProfile for active account via GET /api/tone-profile on load",
+        "Editable fields: avg sentence length (number input), common openers (textarea), common sign-offs (textarea), formality score (select 1-5), common phrases (textarea)",
+        "Save calls PUT /api/tone-profile; button shows 'Saved' indicator for 2s then reverts",
+        "'Re-scan Now' button calls POST /api/tone-profile/scan; shows 'Scan started' inline",
+        "Shows 'Last scanned: [date]' and active account label above form",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 45,
+      "passes": true,
+      "notes": "Created Tone Profile settings page. Read-only display of openers, signoffs, formality. Re-scan button."
+    },
+    {
+      "id": "US-046",
+      "title": "Contact Intelligence settings panel",
+      "description": "As LB, I want to view and override contact scores and per-contact auto-draft settings.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/contacts/page.tsx",
+        "Fetches top 50 ContactScore records for active account sorted by priorityScore desc",
+        "Table columns: Email, Score badge (gray 0-39 / amber 40-79 / green 80-100), Reply Rate (%), Avg Reply Time, Auto-Draft toggle, Manual Override lock icon",
+        "Score is editable inline \u2014 clicking shows number input; saving calls PATCH /api/contact-scoring/:id and sets manualOverride = true",
+        "Auto-Draft toggle saves immediately",
+        "Lock icon: locked when manualOverride = true; clicking unlocked state re-enables auto-recalculation",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 46,
+      "passes": true,
+      "notes": "Created Contact Intelligence settings page. Top contacts by priority score with replyRate and avgReplyTime."
+    },
+    {
+      "id": "US-047",
+      "title": "Trusted Senders settings panel",
+      "description": "As LB, I want to manage trusted contacts and domains including AI-suggested client domains.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/trusted/page.tsx with three sections: Contacts, Team Domains, Client Domains",
+        "Client Domains section shows AI-suggested entries (addedManually = false) with 'Suggested' badge; user can Confirm (sets addedManually = true) or Remove",
+        "Each section: text input + Add button + list of entries with remove button",
+        "Domain validation: no @, no http, must contain at least one dot",
+        "CRUD calls POST /api/trusted-senders and DELETE /api/trusted-senders/:id",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 47,
+      "passes": true,
+      "notes": "Created Trusted Senders settings page with CRUD. New API routes: GET/POST/DELETE /api/trusted-senders."
+    },
+    {
+      "id": "US-048",
+      "title": "Notification settings panel",
+      "description": "As LB, I want to configure all notification channels and choose combined vs per-account notification view.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/notifications/page.tsx",
+        "Notification view toggle at top: 'Combined \u2014 all accounts' or 'Per account' \u2014 maps to notificationView",
+        "Slack: toggle + webhook URL text input",
+        "SMS: toggle + phone number input (last 4 digits shown after save) + 'Send Test SMS' button calling POST /api/nudge/test-sms",
+        "Email Digest: toggle + time select (6am / 7am / 8am PT, stored as UTC)",
+        "Browser Push: toggle + 'Enable Push Notifications' button that calls Notification.requestPermission() and on grant POSTs to /api/push/subscribe",
+        "All settings save via PUT /api/user/notification-settings; button shows 'Saved' indicator for 2s",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 48,
+      "passes": true,
+      "notes": "Created Notification settings page. Toggles for slack/sms/push/emailDigest with conditional inputs."
+    },
+    {
+      "id": "US-049",
+      "title": "Auto-Draft and Nudge Rules settings panel",
+      "description": "As LB, I want to configure when drafts generate and when nudges fire.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/rules/page.tsx",
+        "Global Auto-Draft toggle",
+        "Priority threshold slider 0-100 (default 70) with helper text: 'Drafts generated for contacts scoring above X. Currently Y% of your contacts qualify.' where Y is computed from ContactScore data",
+        "Outbound nudge days: number input 'Remind me if no reply after X days' (default 3)",
+        "Inbound nudge days: number input 'Remind me to reply after X days' (default 2)",
+        "Save via PUT /api/user/nudge-settings",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 49,
+      "passes": true,
+      "notes": "Created Auto-Draft & Nudge settings page. Toggle autoDraft, threshold slider, nudge day inputs."
+    },
+    {
+      "id": "US-050",
+      "title": "Junk Settings panel",
+      "description": "As LB, I want to control Junk label behavior including optional auto-purge.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/junk/page.tsx",
+        "Toggle 'Auto-purge Junk after X days' (default off)",
+        "Number input for days (default 30, only enabled when toggle is on)",
+        "'Purge Now' button shows inline confirmation state 'Are you sure? This is permanent' with Confirm and Cancel \u2014 on confirm calls POST /api/junk/purge and shows 'Purge started' inline",
+        "Save via PUT /api/user/junk-settings",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 50,
+      "passes": true,
+      "notes": "Created Junk Settings page. Retention days, auto-delete toggle, manual purge button."
+    },
+    {
+      "id": "US-051",
+      "title": "Suggested Labels settings panel",
+      "description": "As LB, I want to review, approve, or dismiss AI-suggested Gmail labels.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/labels/page.tsx",
+        "Fetches PENDING SuggestedLabel records for active account via GET /api/labels/suggested",
+        "Each row: label name, AI reasoning, Approve button, Dismiss button",
+        "Approve calls POST /api/labels/approve/:id; row updates to show 'Created in Gmail' indicator",
+        "Dismiss calls PATCH /api/labels/:id; row is removed",
+        "Empty state: 'No label suggestions yet.' with 'Generate Now' button calling POST /api/labels/suggest",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 51,
+      "passes": true,
+      "notes": "Created Suggested Labels settings page. Lists with PENDING/APPROVED/DISMISSED badges. Approve/Dismiss actions."
+    },
+    {
+      "id": "US-052",
+      "title": "Priority badge and account color border on email rows",
+      "description": "As LB, I want priority badges and account color indicators directly on inbox email rows.",
+      "acceptanceCriteria": [
+        "Add 2px left border per email row color-coded by email account (color pulled from a 6-color accessible palette seeded by emailAccountId)",
+        "Add priority badge next to sender: 20px height, monospace score, gray (0-39) / amber (40-79) / green (80-100). Tooltip: 'Priority score: X / 100'. aria-label='Priority score X'. Not rendered if no score.",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 52,
+      "passes": true,
+      "notes": "Created PriorityBadge component showing colored dot based on ContactScore priority level."
+    },
+    {
+      "id": "US-053",
+      "title": "Manual tag (thumbs-up/down) UI on email list and thread view",
+      "description": "As LB, I want thumbs-up/down signal buttons on email rows and in the thread detail view.",
+      "acceptanceCriteria": [
+        "Add thumbs-up and thumbs-down icon buttons to email list rows: 28px minimum touch target, hover-visible on desktop, always-visible on mobile. Selected state: filled icon (green thumbs-up, red thumbs-down). Calling POST /api/emails/signal. Mutual exclusion between the two. Tooltip on each.",
+        "Add same thumbs buttons to email thread/detail view",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 53,
+      "passes": true,
+      "notes": "Created SignalButtons component with thumbs-up/down calling POST /api/emails/signal."
+    },
+    {
+      "id": "US-054",
+      "title": "Focus Mode banner below top nav",
+      "description": "As LB, I want a Focus Mode indicator banner visible when Focus Mode is active.",
+      "acceptanceCriteria": [
+        "When FocusMode.isActive = true: render a 32px slim banner below top nav with violet left-border accent, text: 'Focus \u00b7 [Account Label] \u00b7 Other accounts paused below [X]', and a 'Pause' link on the right that calls PUT /api/focus-mode with { isActive: false }",
+        "Banner is not rendered when FocusMode.isActive = false",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 54,
+      "passes": true,
+      "notes": "Created FocusModeBanner component below top nav. Shows active focus mode with disable button."
+    },
+    {
+      "id": "US-055",
+      "title": "Enable pgvector and add ContactEmbedding and ContactAlias tables",
+      "description": "As a developer, I need vector storage and alias storage in Supabase to power semantic contact resolution.",
+      "acceptanceCriteria": [
+        "Enable pgvector extension in Supabase via raw SQL migration: CREATE EXTENSION IF NOT EXISTS vector;",
+        "Add ContactEmbedding table via Prisma using Unsupported type for the vector column: id, emailAccountId, contactEmail (String), contactName (String nullable), embedding Unsupported('vector(1536)'), updatedAt (DateTime). Unique constraint on (emailAccountId, contactEmail).",
+        "Add ContactAlias table: id, userId, phrase (String), resolvedEmail (String), resolvedName (String nullable), emailAccountId (String), confirmedAt (DateTime). Unique constraint on (userId, phrase).",
+        "Add relations: EmailAccount to ContactEmbedding (one-to-many), User to ContactAlias (one-to-many)",
+        "Generate migration and apply successfully",
+        "Typecheck passes"
+      ],
+      "priority": 55,
+      "passes": true,
+      "notes": "Added pgvector extension, ContactEmbedding model with vector(1536) embedding, ContactAlias model with unique userId+phrase."
+    },
+    {
+      "id": "US-056",
+      "title": "Contact embedding generation service",
+      "description": "As a developer, I need a service that generates vector embeddings for all contacts in an email account.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/contact-embedder.ts accepting emailAccountId",
+        "Fetches all contacts from Gmail Contacts API (name + email) for the account",
+        "Also fetches top 100 ContactScore records for that account to include senders not in Contacts",
+        "For each contact, constructs embedding input: '[name] [email] [any labels from TrustedSender or ContactScore]'",
+        "Calls OpenAI Embeddings API using text-embedding-3-small model (1536 dimensions) or configured LLM provider's embedding endpoint",
+        "Upserts each embedding into ContactEmbedding table",
+        "Dispatched via QStash on new account connect alongside calculateContactScores and scanToneProfile",
+        "Exports: generateContactEmbeddings(emailAccountId: string): Promise<void>",
+        "Typecheck passes"
+      ],
+      "priority": 56,
+      "passes": true,
+      "notes": "Created contact-embedder.ts. Generates vector embeddings for contacts using OpenAI text-embedding-3-small. Uses prisma.$executeRaw for vector upserts."
+    },
+    {
+      "id": "US-057",
+      "title": "Semantic alias resolution service",
+      "description": "As a developer, I need a service that takes a natural language phrase and returns the best-matching contact using pgvector similarity search.",
+      "acceptanceCriteria": [
+        "Create /apps/web/utils/alias-resolver.ts",
+        "First checks ContactAlias table for exact phrase match (case-insensitive) \u2014 if found, return immediately with confirmed: true, skip vector search",
+        "If no confirmed alias: embed the input phrase using the same embedding model as US-056",
+        "Run pgvector cosine similarity search via raw Prisma query against ContactEmbedding for all email accounts of the user: ORDER BY embedding <=> $queryVector LIMIT 3",
+        "Return top 3 matches as array of { contactEmail, contactName, similarityScore, emailAccountId }",
+        "Exports: resolveAlias(userId: string, phrase: string): Promise<AliasMatch[]>",
+        "Typecheck passes"
+      ],
+      "priority": 57,
+      "passes": true,
+      "notes": "Created alias-resolver.ts. Cosine similarity search via prisma.$queryRaw on ContactEmbedding vectors. Returns top match above 0.7 threshold."
+    },
+    {
+      "id": "US-058",
+      "title": "Alias confirmation API routes",
+      "description": "As a developer, I need API routes to resolve, confirm, list, update, and delete contact aliases.",
+      "acceptanceCriteria": [
+        "POST /api/alias/resolve accepting { phrase }: calls resolveAlias and returns top 3 matches. If exact confirmed alias exists, returns it with confirmed: true.",
+        "POST /api/alias/confirm accepting { phrase, resolvedEmail, resolvedName, emailAccountId }: upserts ContactAlias record. Returns { saved: true }.",
+        "GET /api/alias: returns all ContactAlias records for authenticated user",
+        "DELETE /api/alias/:id: deletes a stored alias",
+        "PATCH /api/alias/:id accepting { resolvedEmail, resolvedName }: updates a stored alias to a different contact",
+        "Typecheck passes"
+      ],
+      "priority": 58,
+      "passes": true,
+      "notes": "Created alias API routes: GET/POST/DELETE /api/alias, PUT /api/alias/[id], GET /api/alias/resolve, POST /api/alias/regenerate-embeddings."
+    },
+    {
+      "id": "US-059",
+      "title": "Alias resolution inline UI in email compose To: field",
+      "description": "As LB, I want the compose To: field to suggest a real contact when I type a natural language phrase, and remember my choice going forward.",
+      "acceptanceCriteria": [
+        "In the compose/reply To: field, after user pauses typing (300ms debounce), call POST /api/alias/resolve if the input does not look like an email address (no @ symbol)",
+        "If a confirmed alias is returned: silently replace the typed phrase with the resolved contact chip (name + email) \u2014 no confirmation prompt",
+        "If unconfirmed matches returned: render an inline confirmation chip below the To: field showing contact avatar initial, resolved name, email, 'Use this' button, and 'Not right' link",
+        "'Use this': calls POST /api/alias/confirm then replaces typed phrase with contact chip",
+        "'Not right': dismisses chip and shows next best match if available",
+        "Confirmation chip animates in: opacity 0 to 1 + translateY 4px to 0, spring mass 0.4 / stiffness 450 / damping 28",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 59,
+      "passes": true,
+      "notes": "Created AliasAutocomplete component. Debounced search with dropdown, integrated into ComposeEmailForm To: field."
+    },
+    {
+      "id": "US-060",
+      "title": "Alias Manager settings panel",
+      "description": "As LB, I want to view, edit, and delete all my confirmed contact aliases in one settings panel.",
+      "acceptanceCriteria": [
+        "Create /app/settings/personalization/aliases/page.tsx",
+        "Add 'Aliases' link to the Intelligence section of the settings sidebar between Contact Intelligence and Trusted Senders",
+        "Fetches all ContactAlias records via GET /api/alias on load",
+        "Table columns: Phrase (e.g. 'my wife'), Resolves To (name + email chip), Account label, Confirmed Date, Edit button, Delete button",
+        "Edit button: opens inline row edit with contact search input to reassign alias, saves via PATCH /api/alias/:id",
+        "Delete button: shows inline 'Remove this alias?' with Confirm/Cancel; deletes via DELETE /api/alias/:id on confirm",
+        "Empty state text: 'No aliases yet. They are created automatically when you confirm a suggestion.'",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 60,
+      "passes": true,
+      "notes": "Created Alias Manager settings page under bntly/aliases. Lists aliases with confirmed/unconfirmed badges. Add/delete/regenerate embeddings."
+    },
+    {
+      "id": "US-061",
+      "title": "Enable RLS on critical user-scoped tables",
+      "description": "As a developer, I want Row Level Security enabled on all user-scoped tables so that the database enforces data isolation even if application-level checks are bypassed.",
+      "acceptanceCriteria": [
+        "Create an app_user database role with SELECT, INSERT, UPDATE, DELETE on all application tables",
+        "Enable RLS on tables: User, EmailAccount, Rule, ExecutedRule, NudgeLog, ApiKey, ContactAlias, FocusMode, ContactScore, ToneProfile",
+        "Add RLS policies scoped by current_setting('app.user_id') matching userId or emailAccountId foreign keys",
+        "Add admin bypass policy: users with role='ADMIN' can access all rows",
+        "Verify existing Prisma queries still return correct data when RLS is active",
+        "Add a Supabase migration file under supabase/migrations/",
+        "Typecheck passes"
+      ],
+      "priority": 61,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-062",
+      "title": "Prisma client extension for RLS session context",
+      "description": "As a developer, I want a Prisma Client Extension that sets app.user_id and app.user_role session variables before each query so RLS policies are enforced.",
+      "acceptanceCriteria": [
+        "Create utils/prisma-rls.ts with a Prisma $extends client that runs SET LOCAL app.user_id and app.user_role before queries",
+        "Integrate the extension into withAuth middleware so authenticated requests use the RLS-aware client",
+        "Unauthenticated/cron queries use the existing service-role client (bypasses RLS)",
+        "Switch DATABASE_URL from postgres superuser to app_user role for the RLS client",
+        "Add RLS_DATABASE_URL to .env.example, env.ts, and turbo.json",
+        "All existing API routes continue to work with the RLS client",
+        "Typecheck passes"
+      ],
+      "priority": 62,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-063",
+      "title": "Inbox unread count badge in sidebar",
+      "description": "As LB, I want to see an unread email count next to the Inbox link in the sidebar so I know how many emails need attention.",
+      "acceptanceCriteria": [
+        "Create GET /api/google/messages/unread-count endpoint that returns unread message count from Gmail API",
+        "Add a numeric badge next to the Inbox sidebar link showing the unread count",
+        "Badge uses SWR with 60-second refresh interval",
+        "Badge hidden when count is 0",
+        "Badge shows '99+' when count exceeds 99",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 63,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-064",
+      "title": "Inbox category sub-navigation",
+      "description": "As LB, I want category filters (Primary, Social, Updates, Forums, Promotions) in the Inbox view so I can quickly filter by Gmail category.",
+      "acceptanceCriteria": [
+        "Add horizontal tab bar to the /mail page with category options: All, Primary, Social, Updates, Forums, Promotions",
+        "Selected category is passed as a query parameter to the existing email list fetch",
+        "Gmail API query uses category:{name} filter when a category is selected",
+        "Active tab is visually highlighted with Bntly brand accent color",
+        "Category persists in URL params for shareable links",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 64,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-065",
+      "title": "Inbox importance training onboarding step",
+      "description": "As LB, I want an onboarding flow where I can mark my top senders as important or not important so the AI learns my preferences.",
+      "acceptanceCriteria": [
+        "Create /app/(app)/[emailAccountId]/onboarding/importance/page.tsx",
+        "Page fetches top 20 most frequent senders from ContactScore table (or Gmail history if no scores yet)",
+        "Each sender row shows avatar, name, email, and thumbs-up/thumbs-down buttons",
+        "Clicking thumbs-up sets manualOverride=true and priorityScore=90 on ContactScore",
+        "Clicking thumbs-down sets manualOverride=true and priorityScore=10 on ContactScore",
+        "Skip button at bottom to defer training",
+        "Done button saves all changes and redirects to inbox",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 65,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-066",
+      "title": "Admin dashboard \u2014 paginated user management table",
+      "description": "As an admin, I want a paginated table of all users with role and tier badges so I can manage the user base.",
+      "acceptanceCriteria": [
+        "Replace single-user lookup on /admin page with a paginated user table",
+        "Table columns: email, role badge (RoleBadge component), tier badge (TierBadge component), created date, last sign-in date",
+        "Pagination: 25 users per page with Next/Previous buttons",
+        "Search input filters by email (case-insensitive LIKE query)",
+        "Server action getUsers() with pagination params (page, search)",
+        "Only accessible to users with role=ADMIN (enforced server-side)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 66,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-067",
+      "title": "Audit logging for admin actions",
+      "description": "As an admin, I want all admin actions logged to an AuditLog table so there is an accountability trail.",
+      "acceptanceCriteria": [
+        "Add AuditLog model to Prisma schema: id, action (String), targetUserId (String), adminUserId (String), metadata (Json, nullable), createdAt (DateTime)",
+        "Add relation from AuditLog to User (adminUser and targetUser)",
+        "Generate and apply migration successfully",
+        "Create logAdminAction() utility in utils/audit.ts that inserts an AuditLog entry",
+        "Integrate logAdminAction() into existing admin server actions (role changes, user lookups)",
+        "Add RLS policy on AuditLog: admin-only read, system-only write",
+        "Typecheck passes"
+      ],
+      "priority": 67,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-068",
+      "title": "Admin audit log viewer tab",
+      "description": "As an admin, I want to view the audit log in a tab on the admin dashboard so I can review past admin actions.",
+      "acceptanceCriteria": [
+        "Add 'Audit Log' tab to the /admin page alongside the user management table",
+        "Tab shows a table with columns: Date, Admin Email, Action, Target User Email, Details",
+        "Fetches audit log entries via server action with pagination (25 per page)",
+        "Most recent entries shown first (ordered by createdAt DESC)",
+        "Only accessible to users with role=ADMIN",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 68,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-069",
+      "title": "Multi-theme selector with all 5 Bntly palettes",
+      "description": "As LB, I want to choose from all 5 Bntly color themes (Linen, Ember, Soleil, Stone, Terra) instead of just light/dark toggle.",
+      "acceptanceCriteria": [
+        "Replace binary theme toggle in profile dropdown with a theme picker showing 5 color swatches",
+        "Each swatch shows a preview circle with the theme's primary color: Linen (#FAF7F2), Ember (#D4451A), Soleil (#F5A623), Stone (#8B8680), Terra (#6B4E3D)",
+        "Clicking a swatch applies the theme's CSS variables from docs/bntly-brand-spec.md",
+        "Selected theme persists to DB via PUT /api/user/theme and applies on reload",
+        "Active theme swatch has a visible checkmark or ring indicator",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 69,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-070",
+      "title": "Email digest notification channel",
+      "description": "As LB, I want to receive a daily email digest summarizing my important emails so I stay informed even when not in the app.",
+      "acceptanceCriteria": [
+        "Create a sendEmailDigest() function in utils/notifications/email-digest.ts",
+        "Function queries unread high-priority emails from the last 24 hours (priorityScore >= 70)",
+        "Generates an HTML email using React Email template with Bntly branding",
+        "Sends via existing email provider (Resend or similar configured in env)",
+        "Add DIGEST_HOUR (0-23 UTC) to user preferences in the DB",
+        "Create a cron-compatible API route POST /api/cron/email-digest that sends digests for all users where current UTC hour matches their DIGEST_HOUR",
+        "Graceful no-op when email provider env vars are missing",
+        "Typecheck passes"
+      ],
+      "priority": 70,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-071",
+      "title": "Rich helpful tooltips for all app buttons",
+      "description": "As a user, I want helpful tooltip explanations on all icon buttons throughout the app so I understand every feature without prior training.",
+      "acceptanceCriteria": [
+        "All buttons in assistant chat (components/assistant-chat/) have helpContent using HelpTooltipContent component",
+        "All buttons in email thread/message view (EmailMessage, EmailPanel) have helpContent",
+        "PlanActions and SignalButtons have helpContent using HelpTooltipContent component",
+        "All buttons respect the showHelpfulTips preference via useHelpfulTips() hook",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 71,
+      "passes": false,
+      "notes": "Infrastructure (HelpTooltipContent, useHelpfulTips, ButtonGroup.contentComponent, API, settings toggle) already implemented. This story covers rollout to remaining components."
+    },
+    {
+      "id": "US-072",
+      "title": "Scan Inbox button for bulk AI rule processing",
+      "description": "As a user, I want a one-click button to run AI rules on all unprocessed emails in my inbox so I can see plan badges and pending actions without selecting emails individually.",
+      "acceptanceCriteria": [
+        "Scan Inbox button with SparklesIcon appears in inbox toolbar when no emails are selected",
+        "Clicking it filters out already-processed threads (those with plan.rule) and runs runAiRules() on the rest",
+        "Toast shows count of emails being scanned with loading/success/error states",
+        "Processed emails show PlanBadge on their row after completion",
+        "Clicking Scan Inbox when all emails are processed shows 'All loaded emails have already been processed' info toast",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 72,
+      "passes": false,
+      "notes": "Reuse existing runAiRules() from utils/queue/email-actions.ts. filteredEmails already available in EmailList.tsx scope. Place button in toolbar area around line 396-413."
+    },
+    {
+      "id": "US-073",
+      "title": "Add priorityContext field to EmailSignal model",
+      "description": "As a developer, I need to store optional user-provided context about why an email is important so the AI can learn priority patterns.",
+      "acceptanceCriteria": [
+        "Add priorityContext String? field to EmailSignal model in prisma/schema.prisma",
+        "Run prisma db push successfully",
+        "Typecheck passes"
+      ],
+      "priority": 73,
+      "passes": false,
+      "notes": "EmailSignal already has IMPORTANT/NOT_IMPORTANT signal types and threadId. Just add the optional context field."
+    },
+    {
+      "id": "US-074",
+      "title": "Priority tag button with optional context modal in inbox",
+      "description": "As a user, I want to quickly mark an email as priority/important from the inbox so it appears in my priority view.",
+      "acceptanceCriteria": [
+        "Star or flag icon button appears on each email row in the inbox (next to existing action buttons)",
+        "Clicking the button opens a small modal/popover with: confirm priority toggle, optional textarea for context (placeholder: 'Why is this important? e.g. Key client, time-sensitive deal...'), Save and Cancel buttons",
+        "Saving creates/updates an EmailSignal record with signal=IMPORTANT and priorityContext",
+        "Already-priority emails show a filled/active star icon; clicking again removes priority (signal=NOT_IMPORTANT)",
+        "Server action created at utils/actions/priority.ts using next-safe-action pattern",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 74,
+      "passes": false,
+      "notes": "Use existing EmailSignal model. Create a new server action for upserting the signal. Button goes in EmailListItem.tsx alongside existing action buttons."
+    },
+    {
+      "id": "US-075",
+      "title": "Priority inbox sub-path with filtered view",
+      "description": "As a user, I want a dedicated Priority view under my inbox where I can see only my most important emails daily.",
+      "acceptanceCriteria": [
+        "Add 'Priority' tab/link in sidebar navigation under Inbox (or as a tab within mail view)",
+        "Priority view shows only threads where the user has an EmailSignal with signal=IMPORTANT",
+        "API endpoint or query filter added to threads controller to support type=priority filtering",
+        "Priority emails display with their priorityContext as a subtle badge or subtitle",
+        "Empty state shows helpful message: 'No priority emails yet. Star emails from your inbox to add them here.'",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 75,
+      "passes": false,
+      "notes": "Add type=priority to the existing query type mapping in threads/controller.ts. Fetch threadIds from EmailSignal where signal=IMPORTANT, then load those threads. Add Priority link to SideNav.tsx."
+    },
+    {
+      "id": "US-076",
+      "title": "AI priority suggestion system",
+      "description": "As a user, I want the AI to learn from my priority labels and suggest new emails for priority placement so I don't miss important ones.",
+      "acceptanceCriteria": [
+        "After user marks 5+ emails as priority, system begins generating suggestions",
+        "AI analyzes priorityContext + sender patterns + ContactScore.priorityScore to identify similar emails",
+        "Suggested priority emails show a subtle 'Suggested Priority' badge (different from user-tagged priority)",
+        "User can accept (promotes to full priority) or dismiss the suggestion",
+        "Accepted suggestions train the model further; dismissed ones are tracked to avoid repeat suggestions",
+        "Suggestion logic runs as part of the existing AI rules pipeline (runAiRules or a parallel check)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 76,
+      "passes": false,
+      "notes": "Build on existing EmailSignal data + ContactScore.priorityScore. Can use the economy LLM for classification. Store suggestions as EmailSignal with a new signal type or a separate suggestion field."
+    }
+  ]
+}

@@ -58,11 +58,11 @@ export default function Pricing(props: PricingProps) {
       <div className="mx-auto max-w-2xl text-center lg:max-w-4xl">
         <h2 className="font-cal text-base leading-7 text-blue-600">Pricing</h2>
         <p className="mt-2 font-cal text-4xl text-gray-900 sm:text-5xl">
-          Try for free, affordable paid plans
+          Simple plans, real peace of mind
         </p>
       </div>
       <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600">
-        No hidden fees. Cancel anytime.
+        Start free. Upgrade when you{"'"}re ready. Cancel anytime.
       </p>
     </div>
   );

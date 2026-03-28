@@ -24,6 +24,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { prefixPath } from "@/utils/path";
 import { useAccount } from "@/providers/EmailAccountProvider";
 import { ProfileImage } from "@/components/ProfileImage";
+import { useUser } from "@/hooks/useUser";
+import { UserBadges } from "@/components/UserBadge";
 
 export function TopNav({ trigger }: { trigger: React.ReactNode }) {
   return (
@@ -42,6 +44,7 @@ export function TopNav({ trigger }: { trigger: React.ReactNode }) {
 function ProfileDropdown() {
   const { data: session, status } = useSession();
   const { emailAccountId, emailAccount } = useAccount();
+  const { data: userData } = useUser();
 
   const userNavigation = [
     {
@@ -105,8 +108,15 @@ function ProfileDropdown() {
         >
           <MenuItems className="absolute right-0 z-20 mt-2.5 w-52 origin-top-right rounded-md bg-popover py-2 shadow-lg ring-1 ring-border focus:outline-none">
             <MenuItem>
-              <div className="truncate border-b border-border px-3 pb-2 text-sm text-muted-foreground">
-                {session.user.email}
+              <div className="border-b border-border px-3 pb-2">
+                <div className="truncate text-sm text-muted-foreground">
+                  {session.user.email}
+                </div>
+                <UserBadges
+                  role={userData?.role}
+                  tier={userData?.premium?.tier}
+                  className="mt-1"
+                />
               </div>
             </MenuItem>
             <MenuItem>{({ focus }) => <ThemeToggle focus={focus} />}</MenuItem>

@@ -11,8 +11,10 @@ import {
   ToggleRightIcon,
   ToggleLeftIcon,
   InfoIcon,
+  PowerIcon,
+  PowerOffIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { LoadingContent } from "@/components/LoadingContent";
 import { Button } from "@/components/ui/button";
 import {
@@ -54,6 +56,8 @@ import { inboxZeroLabels } from "@/utils/label";
 import { isDefined } from "@/utils/types";
 import { useAssistantNavigation } from "@/hooks/useAssistantNavigation";
 import { getActionDisplay } from "@/utils/action-display";
+import { Toggle } from "@/components/Toggle";
+import { Checkbox } from "@/components/ui/checkbox";
 import { RuleDialog } from "./RuleDialog";
 import { useDialogState } from "@/hooks/useDialogState";
 
@@ -167,25 +171,124 @@ export function Rules({ size = "md" }: { size?: "sm" | "md" }) {
 
   const hasRules = !!rules?.length;
 
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const selectableRules = useMemo(
+    () => rules.filter((r) => r.id !== COLD_EMAIL_BLOCKER_RULE_ID),
+    [rules],
+  );
+
+  const allSelected =
+    selectableRules.length > 0 &&
+    selectableRules.every((r) => selectedIds.has(r.id));
+
+  const toggleSelect = useCallback((id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const toggleAll = useCallback(() => {
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(selectableRules.map((r) => r.id)));
+    }
+  }, [allSelected, selectableRules]);
+
+  const handleBulkEnable = useCallback(async () => {
+    for (const id of selectedIds) {
+      await setRuleEnabled({ ruleId: id, enabled: true });
+    }
+    toastSuccess({ description: `${selectedIds.size} rule(s) enabled.` });
+    setSelectedIds(new Set());
+    mutate();
+  }, [selectedIds, setRuleEnabled, mutate]);
+
+  const handleBulkDisable = useCallback(async () => {
+    for (const id of selectedIds) {
+      await setRuleEnabled({ ruleId: id, enabled: false });
+    }
+    toastSuccess({ description: `${selectedIds.size} rule(s) disabled.` });
+    setSelectedIds(new Set());
+    mutate();
+  }, [selectedIds, setRuleEnabled, mutate]);
+
+  const handleBulkDelete = useCallback(async () => {
+    const yes = confirm(
+      `Are you sure you want to delete ${selectedIds.size} rule(s)?`,
+    );
+    if (!yes) return;
+    toast.promise(
+      async () => {
+        for (const id of selectedIds) {
+          const res = await deleteRule({ id });
+          if (res?.serverError || res?.validationErrors) {
+            throw new Error(
+              res?.serverError || "There was an error deleting a rule",
+            );
+          }
+        }
+        setSelectedIds(new Set());
+        mutate();
+      },
+      {
+        loading: `Deleting ${selectedIds.size} rule(s)...`,
+        success: `${selectedIds.size} rule(s) deleted`,
+        error: (error) => `Error deleting rules. ${error.message}`,
+      },
+    );
+  }, [selectedIds, deleteRule, mutate]);
+
   return (
     <div className="pb-4">
+      {selectedIds.size > 0 && (
+        <div className="mb-2 flex items-center gap-2 rounded-md border border-border bg-muted px-3 py-2">
+          <span className="text-sm font-medium">
+            {selectedIds.size} selected
+          </span>
+          <div className="ml-auto flex gap-1">
+            <Button size="sm" variant="outline" onClick={handleBulkEnable}>
+              <PowerIcon className="mr-1.5 size-3.5" />
+              Enable
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleBulkDisable}>
+              <PowerOffIcon className="mr-1.5 size-3.5" />
+              Disable
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="text-destructive hover:bg-destructive/10"
+              onClick={handleBulkDelete}
+            >
+              <Trash2Icon className="mr-1.5 size-3.5" />
+              Delete
+            </Button>
+          </div>
+        </div>
+      )}
+
       <Card>
         <LoadingContent loading={isLoading} error={error}>
           {hasRules ? (
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-10">
+                    <Checkbox
+                      checked={allSelected}
+                      onCheckedChange={toggleAll}
+                      aria-label="Select all rules"
+                    />
+                  </TableHead>
                   <TableHead>Name</TableHead>
                   {size === "md" && <TableHead>Condition</TableHead>}
                   <TableHead>Action</TableHead>
-                  {/* {size === "md" && (
-                    <TableHead>
-                      <div className="flex items-center justify-center gap-1">
-                        <span>Threads</span>
-                        <ThreadsExplanation size="sm" />
-                      </div>
-                    </TableHead>
-                  )} */}
+                  <TableHead className="w-20 text-center">Enabled</TableHead>
                   <TableHead>
                     <span className="sr-only">User Actions</span>
                   </TableHead>
@@ -211,6 +314,15 @@ export function Rules({ size = "md" }: { size?: "sm" | "md" }) {
                       key={rule.id}
                       className={!rule.enabled ? "bg-muted opacity-60" : ""}
                     >
+                      <TableCell>
+                        {!isColdEmailBlocker && (
+                          <Checkbox
+                            checked={selectedIds.has(rule.id)}
+                            onCheckedChange={() => toggleSelect(rule.id)}
+                            aria-label={`Select ${rule.name}`}
+                          />
+                        )}
+                      </TableCell>
                       <TableCell className="font-medium">
                         <button
                           type="button"
@@ -226,11 +338,6 @@ export function Rules({ size = "md" }: { size?: "sm" | "md" }) {
                           }}
                           className="flex items-center gap-2 text-left hover:underline"
                         >
-                          {!rule.enabled && (
-                            <Badge color="red" className="mr-2">
-                              Disabled
-                            </Badge>
-                          )}
                           {rule.name}
                           {!rule.automate && (
                             <Tooltip content="Actions for matched emails will require manual approval in the 'Pending' tab. You can change this in the rule settings by clicking this badge.">
@@ -256,31 +363,40 @@ export function Rules({ size = "md" }: { size?: "sm" | "md" }) {
                       <TableCell>
                         <ActionBadges actions={rule.actions} />
                       </TableCell>
-                      {/* {size === "md" && (
-                        <TableCell>
-                          <div className="flex justify-center">
+                      <TableCell>
+                        <div className="flex justify-center">
+                          {!isColdEmailBlocker ? (
                             <Toggle
-                              enabled={rule.runOnThreads}
-                              name="runOnThreads"
+                              name={`rule-enabled-${rule.id}`}
+                              enabled={rule.enabled}
                               onChange={async () => {
-                                if (isColdEmailBlocker) return;
-
-                                const result = await setRuleRunOnThreads({
+                                const result = await setRuleEnabled({
                                   ruleId: rule.id,
-                                  runOnThreads: !rule.runOnThreads,
+                                  enabled: !rule.enabled,
                                 });
-
                                 if (result?.serverError) {
                                   toastError({
-                                    description: `There was an error updating your rule. ${result.serverError || ""}`,
+                                    description: `There was an error ${
+                                      rule.enabled ? "disabling" : "enabling"
+                                    } your rule. ${result.serverError || ""}`,
+                                  });
+                                } else {
+                                  toastSuccess({
+                                    description: `Rule ${
+                                      rule.enabled ? "disabled" : "enabled"
+                                    }!`,
                                   });
                                 }
                                 mutate();
                               }}
                             />
-                          </div>
-                        </TableCell>
-                      )} */}
+                          ) : (
+                            <span className="text-xs text-muted-foreground">
+                              Always on
+                            </span>
+                          )}
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -332,82 +448,47 @@ export function Rules({ size = "md" }: { size?: "sm" | "md" }) {
                               </Link>
                             </DropdownMenuItem>
                             {!isColdEmailBlocker && (
-                              <>
-                                <DropdownMenuItem
-                                  onClick={async () => {
-                                    const result = await setRuleEnabled({
-                                      ruleId: rule.id,
-                                      enabled: !rule.enabled,
-                                    });
+                              <DropdownMenuItem
+                                onClick={async () => {
+                                  const yes = confirm(
+                                    "Are you sure you want to delete this rule?",
+                                  );
+                                  if (yes) {
+                                    toast.promise(
+                                      async () => {
+                                        const res = await deleteRule({
+                                          id: rule.id,
+                                        });
 
-                                    if (result?.serverError) {
-                                      toastError({
-                                        description: `There was an error ${
-                                          rule.enabled
-                                            ? "disabling"
-                                            : "enabling"
-                                        } your rule. ${result.serverError || ""}`,
-                                      });
-                                    } else {
-                                      toastSuccess({
-                                        description: `Rule ${
-                                          rule.enabled ? "disabled" : "enabled"
-                                        }!`,
-                                      });
-                                    }
-
-                                    mutate();
-                                  }}
-                                >
-                                  {rule.enabled ? (
-                                    <ToggleRightIcon className="mr-2 size-4" />
-                                  ) : (
-                                    <ToggleLeftIcon className="mr-2 size-4" />
-                                  )}
-                                  {rule.enabled ? "Disable" : "Enable"}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={async () => {
-                                    const yes = confirm(
-                                      "Are you sure you want to delete this rule?",
-                                    );
-                                    if (yes) {
-                                      toast.promise(
-                                        async () => {
-                                          const res = await deleteRule({
-                                            id: rule.id,
-                                          });
-
-                                          if (
+                                        if (
+                                          res?.serverError ||
+                                          res?.validationErrors ||
+                                          res?.bindArgsValidationErrors
+                                        ) {
+                                          throw new Error(
                                             res?.serverError ||
-                                            res?.validationErrors ||
-                                            res?.bindArgsValidationErrors
-                                          ) {
-                                            throw new Error(
-                                              res?.serverError ||
-                                                "There was an error deleting your rule",
-                                            );
-                                          }
+                                              "There was an error deleting your rule",
+                                          );
+                                        }
 
+                                        mutate();
+                                      },
+                                      {
+                                        loading: "Deleting rule...",
+                                        success: "Rule deleted",
+                                        error: (error) =>
+                                          `Error deleting rule. ${error.message}`,
+                                        finally: () => {
                                           mutate();
                                         },
-                                        {
-                                          loading: "Deleting rule...",
-                                          success: "Rule deleted",
-                                          error: (error) =>
-                                            `Error deleting rule. ${error.message}`,
-                                          finally: () => {
-                                            mutate();
-                                          },
-                                        },
-                                      );
-                                    }
-                                  }}
-                                >
-                                  <Trash2Icon className="mr-2 size-4" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </>
+                                      },
+                                    );
+                                  }
+                                }}
+                              >
+                                <Trash2Icon className="mr-2 size-4" />
+                                Delete
+                              </DropdownMenuItem>
                             )}
                           </DropdownMenuContent>
                         </DropdownMenu>

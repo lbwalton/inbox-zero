@@ -18,6 +18,8 @@ import { LoadingContent } from "@/components/LoadingContent";
 import { DigestMailFrequencySection } from "@/app/(app)/[emailAccountId]/settings/DigestMailFrequencySection";
 import { useDigestEnabled } from "@/hooks/useFeatureFlags";
 import { BillingSection } from "@/app/(app)/[emailAccountId]/settings/BillingSection";
+import { AppearanceSection } from "@/app/(app)/[emailAccountId]/settings/AppearanceSection";
+import { HelpfulTipsSection } from "@/app/(app)/[emailAccountId]/settings/HelpfulTipsSection";
 
 export default function SettingsPage(_props: {
   params: Promise<{ emailAccountId: string }>;
@@ -61,6 +63,8 @@ export default function SettingsPage(_props: {
       </TabsContent>
       <TabsContent value="user">
         <FormWrapper>
+          <AppearanceSection />
+          <HelpfulTipsSection />
           <ModelSection />
           <MultiAccountSection />
           <WebhookSection />

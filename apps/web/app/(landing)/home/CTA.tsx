@@ -18,14 +18,14 @@ export function CTA(props: { CTAComponent?: React.ComponentType }) {
       </div> */}
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="font-cal text-3xl text-gray-900 sm:text-4xl">
-          Boost your productivity.
+          Your inbox, handled.
           <br />
-          Start using Inbox Zero today.
+          Try Bntly today.
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
-          Inbox Zero uses AI to help you empty your inbox daily. What previously
-          took hours, now takes minutes. Inbox Zero is your virtual assistant
-          for emails.
+          Bntly is your personal email assistant — drafting replies, clearing
+          clutter, and keeping your inbox calm. What used to take hours now
+          takes minutes. I{"'"}ve got this.
         </p>
         <CTAComponent />
       </div>

@@ -13,18 +13,21 @@ export const maxDuration = 300; // Applies to the actions
 
 export default async function AssistantPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ emailAccountId: string }>;
+  searchParams: Promise<{ onboarding?: string }>;
 }) {
   const { emailAccountId } = await params;
+  const { onboarding } = await searchParams;
   await checkUserOwnsEmailAccount({ emailAccountId });
 
-  // onboarding redirect
+  // onboarding redirect — skip if already on the onboarding URL to prevent loop
   const cookieStore = await cookies();
   const viewedOnboarding =
     cookieStore.get(ASSISTANT_ONBOARDING_COOKIE)?.value === "true";
 
-  if (!viewedOnboarding) {
+  if (!viewedOnboarding && onboarding !== "true") {
     const hasRule = await prisma.rule.findFirst({
       where: { emailAccountId },
       select: { id: true },

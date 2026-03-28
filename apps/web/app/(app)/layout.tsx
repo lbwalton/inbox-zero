@@ -17,6 +17,7 @@ import { ErrorMessages } from "@/app/(app)/ErrorMessages";
 import { QueueInitializer } from "@/store/QueueInitializer";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { EmailViewer } from "@/components/EmailViewer";
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 
 export const viewport = {
   themeColor: "#FFF",
@@ -62,6 +63,7 @@ export default async function AppLayout({
         <Suspense>
           <CrispWithNoSSR email={session.user.email} />
         </Suspense>
+        <ServiceWorkerRegistration />
       </ErrorBoundary>
     </AppProviders>
   );

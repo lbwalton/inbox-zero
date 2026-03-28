@@ -32,10 +32,10 @@ type DigestItem = {
 
 const colorClasses = {
   blue: {
-    bg: "bg-blue-50",
-    text: "text-blue-800",
-    border: "border-blue-200",
-    bgAccent: "bg-blue-100",
+    bg: "bg-amber-50",
+    text: "text-amber-800",
+    border: "border-amber-200",
+    bgAccent: "bg-amber-100",
   },
   green: {
     bg: "bg-green-50",
@@ -90,7 +90,7 @@ export interface DigestEmailProps {
 
 export default function DigestEmail(props: DigestEmailProps) {
   const {
-    baseUrl = "https://www.getinboxzero.com",
+    baseUrl = "https://www.getbntly.com",
     newsletter = [],
     receipt = [],
     marketing = [],
@@ -474,23 +474,21 @@ export default function DigestEmail(props: DigestEmailProps) {
     <Html>
       <Head />
       <Tailwind>
-        <Body className="bg-white font-sans">
+        <Body className="bg-[#F9F6F1] font-sans">
           <Container className="mx-auto w-full max-w-[600px] p-0">
             <Section className="p-4 text-center">
               <Link href={baseUrl} className="text-[15px]">
                 <Img
-                  src={"https://www.getinboxzero.com/icon.png"}
+                  src={`${baseUrl}/icon.png`}
                   width="40"
                   height="40"
-                  alt="Inbox Zero"
+                  alt="Bntly"
                   className="mx-auto my-0"
                 />
               </Link>
 
               <Text className="mx-0 mb-8 mt-4 p-0 text-center text-2xl font-normal">
-                <span className="font-semibold tracking-tighter">
-                  Inbox Zero
-                </span>
+                <span className="font-semibold tracking-tighter">Bntly</span>
               </Text>
 
               <Heading className="my-4 text-4xl font-medium leading-tight">
@@ -513,7 +511,7 @@ export default function DigestEmail(props: DigestEmailProps) {
             <CategorySection categoryKey="notification" items={notification} />
             <CategorySection categoryKey="toReply" items={toReply} />
 
-            <Hr className="border-solid border-gray-200 my-[24px]" />
+            <Hr className="border-solid border-amber-200 my-[24px]" />
             <Footer baseUrl={baseUrl} unsubscribeToken={unsubscribeToken} />
           </Container>
         </Body>
@@ -523,7 +521,7 @@ export default function DigestEmail(props: DigestEmailProps) {
 }
 
 DigestEmail.PreviewProps = {
-  baseUrl: "https://www.getinboxzero.com",
+  baseUrl: "https://www.getbntly.com",
   unsubscribeToken: "123",
   newsletter: [
     {
@@ -768,7 +766,7 @@ function Footer({
     <Section className="mt-8 text-center text-sm text-gray-500">
       <Text className="m-0">
         You're receiving this email because you enabled digest emails in your
-        Inbox Zero settings.
+        Bntly settings.
       </Text>
       <Text className="m-0">
         <Link

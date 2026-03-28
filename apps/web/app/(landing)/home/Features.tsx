@@ -114,22 +114,20 @@ export function FeaturesWithImage({
 
 export function FeaturesAiAssistant({ imageSide }: { imageSide?: Side }) {
   const title = "Your Personal Assistant";
-  const subtitle = "Your AI Email Assistant That Works Like Magic";
+  const subtitle = "A calm, capable hand on your inbox";
   const description = (
     <>
-      All the benefits of a personal assistant, at a fraction of the cost. It
-      drafts replies, organizes, and labels emails for you.
+      Bntly drafts replies, organizes messages, and labels everything — so your
+      inbox stays tidy without you lifting a finger.
       <br />
       <br />
-      Tell your AI assistant how to manage your email in plain English - just
-      like you would ChatGPT. Want newsletters archived and labeled? Investor
-      emails flagged as important? Automatic reply drafts for common requests?
-      Just ask.
+      Tell Bntly what you need in plain English. Want newsletters quietly
+      archived? Important contacts flagged? Draft replies ready for your morning
+      coffee? Just say the word.
       <br />
       <br />
-      Once configured, your assistant works 24/7 to keep your inbox organized
-      exactly how you want it. No more drowning in email. No expensive human
-      assistant required.
+      Once set up, Bntly works around the clock to keep things exactly how you
+      like them. No overwhelm. No fuss. I{"'"}ve got this.
     </>
   );
 
@@ -149,19 +147,19 @@ const featuresColdEmailBlocker = [
   {
     name: "Block out the noise",
     description:
-      "Automatically archive or label cold emails. Keep your inbox clean and focused on what matters.",
+      "Cold emails get quietly archived or labeled — your inbox stays focused on messages from people you actually know.",
     icon: ShieldHalfIcon,
   },
   {
-    name: "Adjust cold email prompt",
+    name: "You define what's cold",
     description:
-      "Tell Inbox Zero what constitutes a cold email for you. It will block them based on your instructions.",
+      "Tell Bntly what counts as unwanted outreach for you. It learns your preferences and filters accordingly.",
     icon: SparklesIcon,
   },
   {
-    name: "Label cold emails",
+    name: "Review later, if ever",
     description:
-      "Automatically label cold emails so you can review them later. Keep your inbox clean and focused on what matters.",
+      "Cold emails are labeled and tucked away. Glance at them when you feel like it, or don't. Your call.",
     icon: TagIcon,
   },
 ];
@@ -169,7 +167,7 @@ const featuresColdEmailBlocker = [
 export function FeaturesColdEmailBlocker({ imageSide }: { imageSide?: Side }) {
   const subtitle = "Never read a cold email again";
   const description =
-    "Say goodbye to unsolicited outreach. Automatically filter sales pitches and cold emails so you only see messages that matter.";
+    "Sales pitches and unsolicited outreach disappear before they reach you. Bntly keeps your inbox reserved for the people and conversations you care about.";
 
   return (
     <FeaturesWithImage
@@ -187,19 +185,19 @@ const featuresStats = [
   {
     name: "Who emails you most",
     description:
-      "Someone emailing you too much? Figure out a plan to handle this better.",
+      "See which senders fill your inbox and decide what to do about it — unsubscribe, filter, or simply be aware.",
     icon: Sparkles,
   },
   {
     name: "Who you email most",
     description:
-      "If there's one person you're constantly speaking to is there a better way for you to speak?",
+      "Spot your most frequent conversations. Maybe there's a better channel, or maybe it's just nice to know.",
     icon: Orbit,
   },
   {
     name: "What type of emails you get",
     description:
-      "Getting a lot of newsletters or cold emails? Try automatically archiving and labelling them with our AI.",
+      "Newsletters, promotions, cold outreach — see the breakdown and let Bntly help you quiet the noise.",
     icon: LineChart,
   },
 ];
@@ -209,8 +207,8 @@ export function FeaturesStats({ imageSide }: { imageSide?: Side }) {
     <FeaturesWithImage
       imageSide={imageSide}
       title="Email Analytics"
-      subtitle="What gets measured, gets managed"
-      description="Understanding your inbox is the first step to dealing with it. Understand what is filling up your inbox. Then figure out an action plan to deal with it."
+      subtitle="Know your inbox, own your inbox"
+      description="A clear picture of what's landing in your email — who's writing, what's piling up, and where your attention actually goes. Understanding is the first step to calm."
       image="/images/home/email-analytics.png"
       features={featuresStats}
     />
@@ -221,19 +219,19 @@ const featuresUnsubscribe = [
   {
     name: "One-click unsubscribe",
     description:
-      "Don't search for the unsubscribe button. Unsubscribe in a click, or auto archive instead.",
+      "No more hunting for tiny unsubscribe links. One click and it's done — or let Bntly auto-archive instead.",
     icon: MousePointer2Icon,
   },
   {
-    name: "See who emails you most",
+    name: "See who fills your inbox",
     description:
-      "See who's sending you the most emails to prioritise which ones to unsubscribe from.",
+      "Bntly shows you which senders are most active so you can decide who stays and who goes.",
     icon: EyeIcon,
   },
   {
-    name: "How often you read them",
+    name: "Know what you actually read",
     description:
-      "See what percentage of emails you read from each sender. Unsubscribe from the ones you don't read.",
+      "See your open rates by sender. If you never read it, why keep getting it?",
     icon: BarChart2Icon,
   },
 ];
@@ -243,8 +241,8 @@ export function FeaturesUnsubscribe({ imageSide }: { imageSide?: Side }) {
     <FeaturesWithImage
       imageSide={imageSide}
       title="Bulk Unsubscriber"
-      subtitle="Bulk unsubscribe from emails you never read"
-      description="Unsubscribe from newsletters and marketing emails in one click. We show you which emails you never read to make it easy."
+      subtitle="Clear out the clutter in minutes"
+      description="Newsletters you forgot you signed up for, promotions you never open — Bntly surfaces them all and lets you unsubscribe in bulk. One sitting, a cleaner inbox."
       image="/images/home/bulk-unsubscriber.png"
       features={featuresUnsubscribe}
     />
@@ -255,25 +253,25 @@ const featuresReplyZero = [
   {
     name: "Pre-drafted replies",
     description:
-      "AI-drafted replies waiting in Gmail, ready to send or customize.",
+      "Open your inbox to find thoughtful drafts already waiting. Review, tweak, and send — or let them go as-is.",
     icon: ReplyIcon,
   },
   {
     name: "Focus on what needs a reply",
     description:
-      "We label every email that needs a reply, so it's easy to focus on the ones that matter.",
+      "Bntly labels emails that need your attention so you can skip the noise and reply to what matters.",
     icon: EyeIcon,
   },
   {
-    name: "Follow up reminders",
+    name: "Gentle follow-up reminders",
     description:
-      "Never lose track of conversations. We label emails awaiting replies and help you filter for overdue ones.",
+      "Conversations don't slip through the cracks. Bntly flags emails awaiting replies and surfaces overdue ones.",
     icon: BellIcon,
   },
   {
     name: "One-click follow-ups",
     description:
-      "Send polite nudges effortlessly. Our AI drafts follow-up messages, keeping conversations moving.",
+      "Need to nudge someone? Bntly drafts a polite follow-up so you can send it with a single click.",
     icon: SparklesIcon,
   },
 ];
@@ -283,8 +281,8 @@ export function FeaturesReplyZero({ imageSide }: { imageSide?: Side }) {
     <FeaturesWithImage
       imageSide={imageSide}
       title="Reply Zero"
-      subtitle="Pre-written drafts waiting in your inbox"
-      description="Focus only on emails needing your attention. Reply Zero identifies them and prepares draft replies, letting you skip the noise and respond faster."
+      subtitle="Drafts ready when you are"
+      description="Bntly identifies the emails that need your voice and prepares thoughtful draft replies. You just review and send. Less time writing, more time living."
       image="/images/home/reply-zero.png"
       features={featuresReplyZero}
     />

@@ -5,9 +5,18 @@ import { summariseBody } from "@/app/api/ai/summarise/validation";
 import { getSummary } from "@/utils/redis/summary";
 import { emailToContent } from "@/utils/mail";
 import { getEmailAccountWithAi } from "@/utils/user/get";
+import { checkRateLimit } from "@/utils/rate-limit";
 
 export const POST = withEmailAccount(async (request) => {
   const emailAccountId = request.auth.emailAccountId;
+
+  // Rate limit: 30 requests per minute per user (LLM summarization)
+  const rateLimited = checkRateLimit(
+    `summarise:${request.auth.userId}`,
+    30,
+    60_000,
+  );
+  if (rateLimited) return rateLimited;
 
   const json = await request.json();
   const body = summariseBody.parse(json);

@@ -35,7 +35,7 @@ export default function RequestAccessPage() {
           <PageHeading>Email Client (Beta)</PageHeading>
           <div className="mt-2 max-w-prose">
             <SectionDescription>
-              Use the Inbox Zero email client to manage your email.
+              Use the Bntly email client to manage your email.
             </SectionDescription>
           </div>
           <div className="mt-4">
@@ -46,7 +46,7 @@ export default function RequestAccessPage() {
         </Card> */}
 
         {/* <Card className="mx-auto mt-2 w-full max-w-2xl sm:mt-8">
-          <PageHeading>Inbox Zero Daily Challenge</PageHeading>
+          <PageHeading>Bntly Daily Challenge</PageHeading>
           <div className="mt-2 max-w-prose">
             <SectionDescription>
               Getting to inbox zero is overwhelming. But doing it for a single day

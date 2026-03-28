@@ -7,26 +7,37 @@ export type GetEmailAccountsResponse = Awaited<
 >;
 
 async function getEmailAccounts({ userId }: { userId: string }) {
-  const emailAccounts = await prisma.emailAccount.findMany({
-    where: { userId },
-    select: {
-      id: true,
-      email: true,
-      accountId: true,
-      name: true,
-      image: true,
-      user: {
-        select: {
-          name: true,
-          image: true,
-          email: true,
+  const [emailAccounts, focusMode] = await Promise.all([
+    prisma.emailAccount.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        email: true,
+        accountId: true,
+        name: true,
+        image: true,
+        accountLabel: true,
+        isDefault: true,
+        user: {
+          select: {
+            name: true,
+            image: true,
+            email: true,
+          },
         },
       },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+    prisma.focusMode.findUnique({
+      where: { userId },
+      select: {
+        isActive: true,
+        focusedAccountId: true,
+      },
+    }),
+  ]);
 
   const accountsWithNames = emailAccounts.map((account) => {
     // Old accounts don't have a name attached, so use the name from the user
@@ -42,7 +53,15 @@ async function getEmailAccounts({ userId }: { userId: string }) {
     return { ...account, isPrimary: false };
   });
 
-  return { emailAccounts: accountsWithNames };
+  return {
+    emailAccounts: accountsWithNames,
+    focusMode: focusMode
+      ? {
+          isActive: focusMode.isActive,
+          focusedAccountId: focusMode.focusedAccountId,
+        }
+      : null,
+  };
 }
 
 export const GET = withAuth(async (request) => {

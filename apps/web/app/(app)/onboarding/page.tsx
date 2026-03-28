@@ -23,10 +23,8 @@ export default async function OnboardingPage(props: {
       <LoadStats loadBefore showToast={false} />
 
       <div className="px-4 xl:px-0">
-        <PageHeading>First steps to Inbox Zero</PageHeading>
-        <TypographyP>
-          Get to know Inbox Zero and set up your account.
-        </TypographyP>
+        <PageHeading>First steps to Bntly</PageHeading>
+        <TypographyP>Get to know Bntly and set up your account.</TypographyP>
       </div>
 
       <div className="my-8">
@@ -56,7 +54,7 @@ export default async function OnboardingPage(props: {
             },
             {
               title: "Continue",
-              description: "Get started with Inbox Zero",
+              description: "Get started with Bntly",
               content: <OnboardingFinish />,
               active: step === 4,
             },

@@ -3,9 +3,18 @@ import { withEmailAccount } from "@/utils/middleware";
 import { composeAutocompleteBody } from "@/app/api/ai/compose-autocomplete/validation";
 import { chatCompletionStream } from "@/utils/llms";
 import { getEmailAccountWithAi } from "@/utils/user/get";
+import { checkRateLimit } from "@/utils/rate-limit";
 
 export const POST = withEmailAccount(async (request) => {
   const emailAccountId = request.auth.emailAccountId;
+
+  // Rate limit: 60 requests per minute per user (streaming LLM calls)
+  const rateLimited = checkRateLimit(
+    `compose-autocomplete:${request.auth.userId}`,
+    60,
+    60_000,
+  );
+  if (rateLimited) return rateLimited;
 
   const user = await getEmailAccountWithAi({ emailAccountId });
 

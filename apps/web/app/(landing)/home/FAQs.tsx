@@ -1,71 +1,49 @@
 const faqs = [
   {
-    question: "Can I still use Inbox Zero alongside my current email client?",
+    question: "How does Bntly help with my personal email?",
     answer:
-      "Yes! Inbox Zero is intended to be used alongside your existing email client.",
+      "Bntly is your personal email assistant — it drafts replies, organizes your inbox, and quietly handles the clutter so you can focus on the messages that actually matter. Think of it as a calm, capable helper who's always one step ahead.",
   },
   {
-    question: "Is the code open-source?",
-    answer: (
-      <>
-        Yes! You can see the source code in our{" "}
-        <a
-          href="/github"
-          target="_blank"
-          className="font-semibold hover:underline"
-          rel="noreferrer"
-        >
-          GitHub repo
-        </a>
-        .
-      </>
-    ),
-  },
-  {
-    question: "Do you take feature requests?",
-    answer: (
-      <>
-        Yes! Post an issue on{" "}
-        <a
-          href="/github"
-          target="_blank"
-          className="font-semibold hover:underline"
-          rel="noreferrer"
-        >
-          GitHub
-        </a>{" "}
-        or{" "}
-        <a
-          href="mailto:elie@getinboxzero.com"
-          target="_blank"
-          className="font-semibold hover:underline"
-          rel="noreferrer"
-        >
-          email
-        </a>{" "}
-        us. We{"'"}re happy to hear how we can improve your email experience.
-      </>
-    ),
-  },
-  {
-    question: "Which email providers does Inbox Zero support?",
+    question: "Is my email data private and secure?",
     answer:
-      "We only support Gmail and Google Workspace email accounts today. Outlook support is coming soon.",
+      "Absolutely. Bntly has been approved by Google through a thorough security review. Your data is never used to train AI models, and we're CASA Tier 2 certified. Your privacy isn't an afterthought — it's foundational to how we built this.",
+  },
+  {
+    question: "How does the AI drafting work?",
+    answer:
+      "Bntly reads incoming emails and prepares draft replies right inside your inbox. You can send them as-is, tweak them, or skip them entirely. The more you use Bntly, the better it understands your tone and preferences.",
+  },
+  {
+    question: "What is contact intelligence?",
+    answer:
+      "Bntly learns who matters most to you. It tracks who emails you frequently, which messages you actually open, and which senders you tend to reply to — so it can prioritize the right conversations and quiet the rest.",
+  },
+  {
+    question: "Can I still use Bntly alongside my current email client?",
+    answer:
+      "Yes! Bntly works alongside Gmail and Google Workspace. It's a layer of intelligence on top of your existing inbox — nothing changes about how you send or receive email.",
+  },
+  {
+    question: "Which email providers does Bntly support?",
+    answer:
+      "We currently support Gmail and Google Workspace accounts. Outlook support is on the way.",
   },
   {
     question: "Do you offer refunds?",
     answer: (
       <>
-        If you don{"'"}t think we provided you with value send us an{" "}
+        Of course. If Bntly isn{"'"}t right for you, just{" "}
         <a
-          href="mailto:elie@getinboxzero.com"
+          href="mailto:support@getbntly.com"
           target="_blank"
           className="font-semibold hover:underline"
           rel="noreferrer"
         >
-          email
+          send us an email
         </a>{" "}
-        within 14 days of upgrading and we{"'"}ll refund you.
+        within 14 days of upgrading and we{"'"}ll take care of it. No questions,
+        no hassle.
       </>
     ),
   },
