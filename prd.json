@@ -979,8 +979,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 63,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "GET /api/google/messages/unread-count endpoint. useUnreadCount hook with 60s SWR refresh. Badge on Inbox in both sidebar views."
     },
     {
       "id": "US-064",

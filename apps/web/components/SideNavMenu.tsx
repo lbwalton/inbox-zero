@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
@@ -40,6 +41,11 @@ export function SideNavMenu({
               <span>{item.name}</span>
             </Link>
           </SidebarMenuButton>
+          {item.count != null && item.count > 0 && (
+            <SidebarMenuBadge>
+              {item.count > 99 ? "99+" : item.count}
+            </SidebarMenuBadge>
+          )}
         </SidebarMenuItem>
       ))}
     </SidebarMenu>
