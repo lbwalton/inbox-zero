@@ -34,7 +34,11 @@ export const GET = withEmailAccount(async (request) => {
 export const POST = withEmailAccount(async (request) => {
   const { emailAccountId } = request.auth;
   const body = await request.json();
-  const data = createTrustedSenderSchema.parse(body);
+  const parsed = createTrustedSenderSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  }
+  const data = parsed.data;
 
   const sender = await prisma.trustedSender.create({
     data: {

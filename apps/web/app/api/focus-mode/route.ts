@@ -34,7 +34,11 @@ export const GET = withAuth(async (request) => {
 export const PUT = withAuth(async (request) => {
   const userId = request.auth.userId;
   const body = await request.json();
-  const data = updateFocusModeSchema.parse(body);
+  const parsed = updateFocusModeSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  }
+  const data = parsed.data;
 
   // If focusedAccountId is provided, verify it belongs to this user
   if (data.focusedAccountId) {

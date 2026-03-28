@@ -14,7 +14,11 @@ const regenerateSchema = z.object({
 export const POST = withAuth(async (request) => {
   const userId = request.auth.userId;
   const body = await request.json();
-  const { emailAccountId } = regenerateSchema.parse(body);
+  const parsed = regenerateSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  }
+  const { emailAccountId } = parsed.data;
 
   // Verify the email account belongs to this user
   const account = await prisma.emailAccount.findFirst({

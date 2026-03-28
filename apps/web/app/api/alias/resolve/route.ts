@@ -14,7 +14,11 @@ const resolveSchema = z.object({
 export const POST = withAuth(async (request) => {
   const userId = request.auth.userId;
   const body = await request.json();
-  const { phrase } = resolveSchema.parse(body);
+  const parsed = resolveSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  }
+  const { phrase } = parsed.data;
 
   const matches = await resolveAlias(userId, phrase);
 

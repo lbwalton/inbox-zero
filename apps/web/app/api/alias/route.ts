@@ -36,7 +36,11 @@ export const GET = withAuth(async (request) => {
 export const POST = withAuth(async (request) => {
   const userId = request.auth.userId;
   const body = await request.json();
-  const data = confirmAliasSchema.parse(body);
+  const parsed = confirmAliasSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  }
+  const data = parsed.data;
 
   // Verify the email account belongs to this user
   const account = await prisma.emailAccount.findFirst({

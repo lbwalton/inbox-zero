@@ -52,7 +52,11 @@ export const PATCH = withAuth(
     const userId = request.auth.userId;
     const { id } = await params;
     const body = await request.json();
-    const data = patchAliasSchema.parse(body);
+    const parsed = patchAliasSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+    }
+    const data = parsed.data;
 
     const alias = await getAliasForUser(id, userId);
     if (!alias) {
