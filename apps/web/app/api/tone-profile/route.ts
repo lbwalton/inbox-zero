@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 import { withEmailAccount } from "@/utils/middleware";
@@ -16,24 +17,26 @@ export const GET = withEmailAccount(async (request) => {
   return NextResponse.json(toneProfile);
 });
 
+const updateToneProfileSchema = z.object({
+  avgSentenceLength: z.number().min(1).max(100).optional(),
+  commonOpeners: z.array(z.string().max(200)).max(20).optional(),
+  commonSignoffs: z.array(z.string().max(200)).max(20).optional(),
+  formalityScore: z.number().min(1).max(5).optional(),
+  commonPhrases: z.array(z.string().max(200)).max(50).optional(),
+});
+
 export const PUT = withEmailAccount(async (request) => {
   const { emailAccountId } = request.auth;
   const body = await request.json();
 
-  const allowedFields = [
-    "avgSentenceLength",
-    "commonOpeners",
-    "commonSignoffs",
-    "formalityScore",
-    "commonPhrases",
-  ] as const;
-
-  const updateData: Record<string, unknown> = {};
-  for (const field of allowedFields) {
-    if (body[field] !== undefined) {
-      updateData[field] = body[field];
-    }
+  const parsed = updateToneProfileSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
+
+  const updateData = Object.fromEntries(
+    Object.entries(parsed.data).filter(([, v]) => v !== undefined),
+  );
 
   if (Object.keys(updateData).length === 0) {
     return NextResponse.json(

@@ -12,9 +12,7 @@ async function getBntlySettings({ userId }: { userId: string }) {
     where: { id: userId },
     select: {
       slackEnabled: true,
-      slackWebhookUrl: true,
       smsEnabled: true,
-      smsPhoneEncrypted: true,
       emailDigestEnabled: true,
       emailDigestTimeUtc: true,
       pushEnabled: true,
@@ -32,7 +30,14 @@ async function getBntlySettings({ userId }: { userId: string }) {
 
 const updateBntlySettingsSchema = z.object({
   slackEnabled: z.boolean().optional(),
-  slackWebhookUrl: z.string().nullable().optional(),
+  slackWebhookUrl: z
+    .string()
+    .url()
+    .refine((url) => url.startsWith("https://hooks.slack.com/"), {
+      message: "Must be a Slack webhook URL",
+    })
+    .nullable()
+    .optional(),
   smsEnabled: z.boolean().optional(),
   smsPhoneEncrypted: z.string().nullable().optional(),
   emailDigestEnabled: z.boolean().optional(),
@@ -57,7 +62,11 @@ export const GET = withAuth(async (request) => {
 export const PATCH = withAuth(async (request) => {
   const userId = request.auth.userId;
   const body = await request.json();
-  const data = updateBntlySettingsSchema.parse(body);
+  const parsed = updateBntlySettingsSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  }
+  const data = parsed.data;
 
   const updated = await prisma.user.update({
     where: { id: userId },

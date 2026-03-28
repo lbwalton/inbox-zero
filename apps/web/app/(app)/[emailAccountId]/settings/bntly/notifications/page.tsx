@@ -32,9 +32,7 @@ export default function NotificationsSettingsPage() {
   useEffect(() => {
     if (data) {
       setSlackEnabled(data.slackEnabled);
-      setSlackWebhookUrl(data.slackWebhookUrl || "");
       setSmsEnabled(data.smsEnabled);
-      setSmsPhone(data.smsPhoneEncrypted || "");
       setPushEnabled(data.pushEnabled);
       setEmailDigestEnabled(data.emailDigestEnabled);
       setEmailDigestTimeUtc(data.emailDigestTimeUtc);

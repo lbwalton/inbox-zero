@@ -8,6 +8,16 @@ import { env } from "@/env";
 
 const logger = createScopedLogger("nudge/digest");
 
+/** Escape HTML special characters to prevent XSS in email templates */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
@@ -121,12 +131,12 @@ export const POST = withError(async (request) => {
               (item) =>
                 `<tr>
                   <td style="padding:8px;border-bottom:1px solid #eee;">${item.nudgeType === "OUTBOUND" ? "Outbound" : "Inbound"}</td>
-                  <td style="padding:8px;border-bottom:1px solid #eee;">${item.threadId}</td>
-                  <td style="padding:8px;border-bottom:1px solid #eee;">${item.sentAt.toLocaleDateString()}</td>
+                  <td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(item.threadId)}</td>
+                  <td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(item.sentAt.toLocaleDateString())}</td>
                 </tr>`,
             )
             .join("");
-          return `<h3 style="color:#C96B16;margin-top:24px;">${label}</h3>
+          return `<h3 style="color:#C96B16;margin-top:24px;">${escapeHtml(label)}</h3>
             <table style="width:100%;border-collapse:collapse;">
               <thead><tr>
                 <th style="text-align:left;padding:8px;border-bottom:2px solid #C96B16;">Type</th>
@@ -145,10 +155,10 @@ export const POST = withError(async (request) => {
         .map(
           (item) =>
             `<tr>
-              <td style="padding:8px;border-bottom:1px solid #eee;">${item.accountLabel}</td>
+              <td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(item.accountLabel)}</td>
               <td style="padding:8px;border-bottom:1px solid #eee;">${item.nudgeType === "OUTBOUND" ? "Outbound" : "Inbound"}</td>
-              <td style="padding:8px;border-bottom:1px solid #eee;">${item.threadId}</td>
-              <td style="padding:8px;border-bottom:1px solid #eee;">${item.sentAt.toLocaleDateString()}</td>
+              <td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(item.threadId)}</td>
+              <td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(item.sentAt.toLocaleDateString())}</td>
             </tr>`,
         )
         .join("");
