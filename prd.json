@@ -945,8 +945,8 @@
         "Typecheck passes"
       ],
       "priority": 61,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "RLS migration at supabase/migrations/20260328000001_enable_rls.sql. Apply via supabase db push."
     },
     {
       "id": "US-062",
