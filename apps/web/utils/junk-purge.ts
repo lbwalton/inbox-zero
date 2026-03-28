@@ -6,6 +6,7 @@ import { createScopedLogger } from "@/utils/logger";
 const logger = createScopedLogger("junk-purge");
 
 const JUNK_LABEL_NAME = "Junk";
+const MAX_PURGE_PER_RUN = 500;
 
 /**
  * Purges emails in the Junk label that are older than the user's
@@ -83,25 +84,27 @@ export async function purgeJunkEmails(emailAccountId: string): Promise<void> {
 
       if (messages.length === 0) break;
 
-      // Delete each message (permanent delete via gmail.messages.delete)
+      // Trash each message (recoverable for 30 days) instead of permanent delete
       for (const message of messages) {
         if (!message.id) continue;
+        if (totalDeleted >= MAX_PURGE_PER_RUN) break;
 
         try {
-          await gmail.users.messages.delete({
+          await gmail.users.messages.trash({
             userId: "me",
             id: message.id,
           });
           totalDeleted++;
         } catch (error) {
-          logger.error("Failed to delete message", {
+          logger.error("Failed to trash message", {
             messageId: message.id,
             emailAccountId,
-            error,
+            error: error instanceof Error ? error.message : String(error),
           });
         }
       }
 
+      if (totalDeleted >= MAX_PURGE_PER_RUN) break;
       pageToken = response.data.nextPageToken ?? undefined;
     } while (pageToken);
 

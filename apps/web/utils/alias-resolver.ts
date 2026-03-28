@@ -83,30 +83,31 @@ export async function resolveAlias(
   });
 
   const queryVector = embeddingResponse.data[0].embedding;
+  // Validate that all embedding values are finite numbers to prevent injection
+  if (!queryVector.every((v) => Number.isFinite(v))) {
+    logger.error("Invalid embedding values received from OpenAI");
+    return [];
+  }
   const vectorStr = `[${queryVector.join(",")}]`;
 
-  // 4. Run pgvector cosine similarity search
+  // 4. Run pgvector cosine similarity search using parameterized $queryRaw
   //    The <=> operator computes cosine distance; similarity = 1 - distance
   const results: Array<{
     contactEmail: string;
     contactName: string | null;
     emailAccountId: string;
     similarity: number;
-  }> = await prisma.$queryRawUnsafe(
-    `
+  }> = await prisma.$queryRaw`
     SELECT
       "contactEmail",
       "contactName",
       "emailAccountId",
-      1 - ("embedding" <=> $1::vector(1536)) AS similarity
+      1 - ("embedding" <=> ${vectorStr}::vector(1536)) AS similarity
     FROM "ContactEmbedding"
-    WHERE "emailAccountId" = ANY($2::text[])
-    ORDER BY "embedding" <=> $1::vector(1536)
+    WHERE "emailAccountId" = ANY(${accountIds}::text[])
+    ORDER BY "embedding" <=> ${vectorStr}::vector(1536)
     LIMIT 3
-    `,
-    vectorStr,
-    accountIds,
-  );
+  `;
 
   logger.info("Alias resolution results", {
     phrase,

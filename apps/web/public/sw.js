@@ -35,7 +35,16 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
-  const url = event.notification.data?.url || "/";
+  let url = event.notification.data?.url || "/";
+  // Prevent open redirect: only allow same-origin or relative URLs
+  try {
+    const parsed = new URL(url, self.location.origin);
+    if (parsed.origin !== self.location.origin) {
+      url = "/";
+    }
+  } catch {
+    url = "/";
+  }
 
   event.waitUntil(
     clients

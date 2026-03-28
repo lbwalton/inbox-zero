@@ -41,6 +41,14 @@ export async function notifySlack(params: SlackNotifyParams): Promise<void> {
     return;
   }
 
+  // SSRF protection: only allow Slack webhook URLs
+  if (!webhookUrl.startsWith("https://hooks.slack.com/")) {
+    logger.error("Invalid Slack webhook URL rejected (SSRF protection)", {
+      userId,
+    });
+    return;
+  }
+
   const typeEmoji = nudgeType === "OUTBOUND" ? "\u{1F4E4}" : "\u{1F4E5}";
   const typeLabel = nudgeType === "OUTBOUND" ? "Outbound" : "Inbound";
 
@@ -85,10 +93,8 @@ export async function notifySlack(params: SlackNotifyParams): Promise<void> {
     });
 
     if (!response.ok) {
-      const body = await response.text();
       logger.error("Slack webhook returned error", {
         status: response.status,
-        body,
         userId,
       });
     } else {

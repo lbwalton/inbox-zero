@@ -45,6 +45,7 @@ export async function detectOutboundNudges(
       sentAt: { lte: cutoffDate },
       resolved: false,
     },
+    take: 200,
     select: {
       threadId: true,
       messageId: true,
