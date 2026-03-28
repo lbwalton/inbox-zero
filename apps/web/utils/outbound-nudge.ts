@@ -75,13 +75,21 @@ export async function detectOutboundNudges(
 
     if (existingNudge) continue;
 
-    // Create NudgeLog entry
-    await prisma.nudgeLog.create({
-      data: {
+    // Upsert NudgeLog — unique constraint prevents duplicates from race conditions
+    await prisma.nudgeLog.upsert({
+      where: {
+        emailAccountId_threadId_nudgeType: {
+          emailAccountId,
+          threadId: thread.threadId,
+          nudgeType: "OUTBOUND",
+        },
+      },
+      create: {
         emailAccountId,
         threadId: thread.threadId,
         nudgeType: "OUTBOUND",
       },
+      update: {},
     });
 
     nudgesCreated++;

@@ -976,6 +976,7 @@ model NudgeLog {
   status         NudgeStatus @default(PENDING)
   snoozeUntil    DateTime?
 
+  @@unique([emailAccountId, threadId, nudgeType])
   @@index([emailAccountId])
 }
 

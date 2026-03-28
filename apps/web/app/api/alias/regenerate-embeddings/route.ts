@@ -3,6 +3,7 @@ import { z } from "zod";
 import prisma from "@/utils/prisma";
 import { withAuth } from "@/utils/middleware";
 import { generateContactEmbeddings } from "@/utils/contact-embedder";
+import { checkRateLimit } from "@/utils/rate-limit";
 
 const regenerateSchema = z.object({
   emailAccountId: z.string().min(1),
@@ -13,6 +14,15 @@ const regenerateSchema = z.object({
  */
 export const POST = withAuth(async (request) => {
   const userId = request.auth.userId;
+
+  // Rate limit: 5 requests per hour per user (expensive embedding generation)
+  const rateLimited = checkRateLimit(
+    `regen-embeddings:${userId}`,
+    5,
+    60 * 60 * 1000,
+  );
+  if (rateLimited) return rateLimited;
+
   const body = await request.json();
   const parsed = regenerateSchema.safeParse(body);
   if (!parsed.success) {
