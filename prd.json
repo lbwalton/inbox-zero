@@ -620,8 +620,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 42,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created bntly settings layout with sidebar nav linking to 10 sub-sections. Uses lucide icons, cn() for active state."
     },
     {
       "id": "US-043",
@@ -637,8 +637,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 43,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Connected Accounts settings page. Shows EmailAccount list with inline label editing."
     },
     {
       "id": "US-044",
@@ -656,8 +656,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 44,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Focus Mode settings page. Toggle on/off, schedule hours, breakthrough threshold via /api/focus-mode."
     },
     {
       "id": "US-045",
@@ -674,8 +674,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 45,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Tone Profile settings page. Read-only display of openers, signoffs, formality. Re-scan button."
     },
     {
       "id": "US-046",
@@ -692,8 +692,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 46,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Contact Intelligence settings page. Top contacts by priority score with replyRate and avgReplyTime."
     },
     {
       "id": "US-047",
@@ -709,8 +709,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 47,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Trusted Senders settings page with CRUD. New API routes: GET/POST/DELETE /api/trusted-senders."
     },
     {
       "id": "US-048",
@@ -728,8 +728,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 48,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Notification settings page. Toggles for slack/sms/push/emailDigest with conditional inputs."
     },
     {
       "id": "US-049",
@@ -746,8 +746,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 49,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Auto-Draft & Nudge settings page. Toggle autoDraft, threshold slider, nudge day inputs."
     },
     {
       "id": "US-050",
@@ -763,8 +763,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 50,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Junk Settings page. Retention days, auto-delete toggle, manual purge button."
     },
     {
       "id": "US-051",
@@ -781,8 +781,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 51,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Suggested Labels settings page. Lists with PENDING/APPROVED/DISMISSED badges. Approve/Dismiss actions."
     },
     {
       "id": "US-052",
@@ -858,8 +858,8 @@
         "Typecheck passes"
       ],
       "priority": 56,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created contact-embedder.ts. Generates vector embeddings for contacts using OpenAI text-embedding-3-small. Uses prisma.$executeRaw for vector upserts."
     },
     {
       "id": "US-057",
@@ -875,8 +875,8 @@
         "Typecheck passes"
       ],
       "priority": 57,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created alias-resolver.ts. Cosine similarity search via prisma.$queryRaw on ContactEmbedding vectors. Returns top match above 0.7 threshold."
     },
     {
       "id": "US-058",
@@ -891,8 +891,8 @@
         "Typecheck passes"
       ],
       "priority": 58,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created alias API routes: GET/POST/DELETE /api/alias, PUT /api/alias/[id], GET /api/alias/resolve, POST /api/alias/regenerate-embeddings."
     },
     {
       "id": "US-059",
@@ -909,8 +909,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 59,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created AliasAutocomplete component. Debounced search with dropdown, integrated into ComposeEmailForm To: field."
     },
     {
       "id": "US-060",
@@ -928,8 +928,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 60,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created Alias Manager settings page under bntly/aliases. Lists aliases with confirmed/unconfirmed badges. Add/delete/regenerate embeddings."
     }
   ]
 }
