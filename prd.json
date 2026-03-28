@@ -930,6 +930,196 @@
       "priority": 60,
       "passes": true,
       "notes": "Created Alias Manager settings page under bntly/aliases. Lists aliases with confirmed/unconfirmed badges. Add/delete/regenerate embeddings."
+    },
+    {
+      "id": "US-061",
+      "title": "Enable RLS on critical user-scoped tables",
+      "description": "As a developer, I want Row Level Security enabled on all user-scoped tables so that the database enforces data isolation even if application-level checks are bypassed.",
+      "acceptanceCriteria": [
+        "Create an app_user database role with SELECT, INSERT, UPDATE, DELETE on all application tables",
+        "Enable RLS on tables: User, EmailAccount, Rule, ExecutedRule, NudgeLog, ApiKey, ContactAlias, FocusMode, ContactScore, ToneProfile",
+        "Add RLS policies scoped by current_setting('app.user_id') matching userId or emailAccountId foreign keys",
+        "Add admin bypass policy: users with role='ADMIN' can access all rows",
+        "Verify existing Prisma queries still return correct data when RLS is active",
+        "Add a Supabase migration file under supabase/migrations/",
+        "Typecheck passes"
+      ],
+      "priority": 61,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-062",
+      "title": "Prisma client extension for RLS session context",
+      "description": "As a developer, I want a Prisma Client Extension that sets app.user_id and app.user_role session variables before each query so RLS policies are enforced.",
+      "acceptanceCriteria": [
+        "Create utils/prisma-rls.ts with a Prisma $extends client that runs SET LOCAL app.user_id and app.user_role before queries",
+        "Integrate the extension into withAuth middleware so authenticated requests use the RLS-aware client",
+        "Unauthenticated/cron queries use the existing service-role client (bypasses RLS)",
+        "Switch DATABASE_URL from postgres superuser to app_user role for the RLS client",
+        "Add RLS_DATABASE_URL to .env.example, env.ts, and turbo.json",
+        "All existing API routes continue to work with the RLS client",
+        "Typecheck passes"
+      ],
+      "priority": 62,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-063",
+      "title": "Inbox unread count badge in sidebar",
+      "description": "As LB, I want to see an unread email count next to the Inbox link in the sidebar so I know how many emails need attention.",
+      "acceptanceCriteria": [
+        "Create GET /api/google/messages/unread-count endpoint that returns unread message count from Gmail API",
+        "Add a numeric badge next to the Inbox sidebar link showing the unread count",
+        "Badge uses SWR with 60-second refresh interval",
+        "Badge hidden when count is 0",
+        "Badge shows '99+' when count exceeds 99",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 63,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-064",
+      "title": "Inbox category sub-navigation",
+      "description": "As LB, I want category filters (Primary, Social, Updates, Forums, Promotions) in the Inbox view so I can quickly filter by Gmail category.",
+      "acceptanceCriteria": [
+        "Add horizontal tab bar to the /mail page with category options: All, Primary, Social, Updates, Forums, Promotions",
+        "Selected category is passed as a query parameter to the existing email list fetch",
+        "Gmail API query uses category:{name} filter when a category is selected",
+        "Active tab is visually highlighted with Bntly brand accent color",
+        "Category persists in URL params for shareable links",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 64,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-065",
+      "title": "Inbox importance training onboarding step",
+      "description": "As LB, I want an onboarding flow where I can mark my top senders as important or not important so the AI learns my preferences.",
+      "acceptanceCriteria": [
+        "Create /app/(app)/[emailAccountId]/onboarding/importance/page.tsx",
+        "Page fetches top 20 most frequent senders from ContactScore table (or Gmail history if no scores yet)",
+        "Each sender row shows avatar, name, email, and thumbs-up/thumbs-down buttons",
+        "Clicking thumbs-up sets manualOverride=true and priorityScore=90 on ContactScore",
+        "Clicking thumbs-down sets manualOverride=true and priorityScore=10 on ContactScore",
+        "Skip button at bottom to defer training",
+        "Done button saves all changes and redirects to inbox",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 65,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-066",
+      "title": "Admin dashboard — paginated user management table",
+      "description": "As an admin, I want a paginated table of all users with role and tier badges so I can manage the user base.",
+      "acceptanceCriteria": [
+        "Replace single-user lookup on /admin page with a paginated user table",
+        "Table columns: email, role badge (RoleBadge component), tier badge (TierBadge component), created date, last sign-in date",
+        "Pagination: 25 users per page with Next/Previous buttons",
+        "Search input filters by email (case-insensitive LIKE query)",
+        "Server action getUsers() with pagination params (page, search)",
+        "Only accessible to users with role=ADMIN (enforced server-side)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 66,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-067",
+      "title": "Audit logging for admin actions",
+      "description": "As an admin, I want all admin actions logged to an AuditLog table so there is an accountability trail.",
+      "acceptanceCriteria": [
+        "Add AuditLog model to Prisma schema: id, action (String), targetUserId (String), adminUserId (String), metadata (Json, nullable), createdAt (DateTime)",
+        "Add relation from AuditLog to User (adminUser and targetUser)",
+        "Generate and apply migration successfully",
+        "Create logAdminAction() utility in utils/audit.ts that inserts an AuditLog entry",
+        "Integrate logAdminAction() into existing admin server actions (role changes, user lookups)",
+        "Add RLS policy on AuditLog: admin-only read, system-only write",
+        "Typecheck passes"
+      ],
+      "priority": 67,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-068",
+      "title": "Admin audit log viewer tab",
+      "description": "As an admin, I want to view the audit log in a tab on the admin dashboard so I can review past admin actions.",
+      "acceptanceCriteria": [
+        "Add 'Audit Log' tab to the /admin page alongside the user management table",
+        "Tab shows a table with columns: Date, Admin Email, Action, Target User Email, Details",
+        "Fetches audit log entries via server action with pagination (25 per page)",
+        "Most recent entries shown first (ordered by createdAt DESC)",
+        "Only accessible to users with role=ADMIN",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 68,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-069",
+      "title": "Multi-theme selector with all 5 Bntly palettes",
+      "description": "As LB, I want to choose from all 5 Bntly color themes (Linen, Ember, Soleil, Stone, Terra) instead of just light/dark toggle.",
+      "acceptanceCriteria": [
+        "Replace binary theme toggle in profile dropdown with a theme picker showing 5 color swatches",
+        "Each swatch shows a preview circle with the theme's primary color: Linen (#FAF7F2), Ember (#D4451A), Soleil (#F5A623), Stone (#8B8680), Terra (#6B4E3D)",
+        "Clicking a swatch applies the theme's CSS variables from docs/bntly-brand-spec.md",
+        "Selected theme persists to DB via PUT /api/user/theme and applies on reload",
+        "Active theme swatch has a visible checkmark or ring indicator",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 69,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-070",
+      "title": "Email digest notification channel",
+      "description": "As LB, I want to receive a daily email digest summarizing my important emails so I stay informed even when not in the app.",
+      "acceptanceCriteria": [
+        "Create a sendEmailDigest() function in utils/notifications/email-digest.ts",
+        "Function queries unread high-priority emails from the last 24 hours (priorityScore >= 70)",
+        "Generates an HTML email using React Email template with Bntly branding",
+        "Sends via existing email provider (Resend or similar configured in env)",
+        "Add DIGEST_HOUR (0-23 UTC) to user preferences in the DB",
+        "Create a cron-compatible API route POST /api/cron/email-digest that sends digests for all users where current UTC hour matches their DIGEST_HOUR",
+        "Graceful no-op when email provider env vars are missing",
+        "Typecheck passes"
+      ],
+      "priority": 70,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-071",
+      "title": "Rich helpful tooltips for all app buttons",
+      "description": "As a user, I want helpful tooltip explanations on all icon buttons throughout the app so I understand every feature without prior training.",
+      "acceptanceCriteria": [
+        "All buttons in assistant chat (components/assistant-chat/) have helpContent using HelpTooltipContent component",
+        "All buttons in email thread/message view (EmailMessage, EmailPanel) have helpContent",
+        "PlanActions and SignalButtons have helpContent using HelpTooltipContent component",
+        "All buttons respect the showHelpfulTips preference via useHelpfulTips() hook",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 71,
+      "passes": false,
+      "notes": "Infrastructure (HelpTooltipContent, useHelpfulTips, ButtonGroup.contentComponent, API, settings toggle) already implemented. This story covers rollout to remaining components."
     }
   ]
 }

@@ -2,7 +2,10 @@
 
 ## Build & Test Commands
 
-- Development: `pnpm dev`
+- Development: `pnpm dev` (see note below if env vars appear empty)
+- Development (safe): `env -i HOME="$HOME" PATH="$PATH" USER="$USER" SHELL="$SHELL" bash -c 'set -a && source .env && set +a && npx next dev --turbopack'`
+  > Use this if the shell has stale empty env vars exported (e.g. NEXTAUTH_SECRET, GOOGLE_CLIENT_ID, ECONOMY_LLM_PROVIDER).
+  > Root cause: some tool previously sourced `.env.example` into the shell session.
 - Build: `pnpm build`
 - Lint: `pnpm lint`
 - Run all tests: `pnpm test`
@@ -33,6 +36,15 @@
     {data && <YourComponent data={data} />}
   </LoadingContent>
   ```
+
+## Database & RLS
+
+- When adding new tables/models to Prisma schema, evaluate whether RLS policies are needed
+- User-scoped tables MUST include a `userId` or `emailAccountId` foreign key for authorization
+- All Prisma queries for user-scoped data MUST include `where: { userId }` or equivalent
+- RLS policies are managed via Supabase CLI (`supabase db push` or migrations)
+- Connect via `supabase` CLI for direct DB operations: `supabase db execute`
+- Admin role is stored in User.role field (enum: USER, ADMIN)
 
 ## Environment Variables
 

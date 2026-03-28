@@ -8,7 +8,15 @@ import { cn } from "@/utils";
 export function ThemeToggle({ focus }: { focus?: boolean }) {
   const { setTheme, theme } = useTheme();
 
-  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
+  const toggleTheme = () => {
+    const next = theme === "light" ? "dark" : "light";
+    setTheme(next);
+    fetch("/api/user/theme", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ theme: next }),
+    }).catch(() => {});
+  };
 
   return (
     <button
