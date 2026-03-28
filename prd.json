@@ -1084,8 +1084,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 69,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Replaced binary theme toggle with 5-theme picker dropdown. Shows color swatches for Linen, Ember, Soleil, Stone, Terra. Persists via /api/user/theme."
     },
     {
       "id": "US-070",
