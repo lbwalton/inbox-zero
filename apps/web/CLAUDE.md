@@ -50,3 +50,11 @@
 
 - Add to `.env.example`, `env.ts`, and `turbo.json`
 - Client-side vars: Prefix with `NEXT_PUBLIC_`
+
+## Git & Branching Strategy
+
+- `main` is the source of truth — represents the latest stable Bntly code
+- Create short-lived feature branches off `main` for new work (e.g., `ralph/priority-inbox`, `ralph/scan-inbox`)
+- Always create a PR against `main` for review before merging
+- Delete feature branches after merge
+- Ralph autonomous agent branches use the `ralph/` prefix
