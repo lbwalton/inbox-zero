@@ -1015,8 +1015,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 65,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Onboarding page at /onboarding/importance. Top senders API + bulk update API. Thumbs up/down UI with save/skip."
     },
     {
       "id": "US-066",
