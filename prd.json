@@ -1033,8 +1033,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 66,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "AdminUserTable component with paginated user list, search, role/tier badges. GET /api/admin/users endpoint."
     },
     {
       "id": "US-067",
