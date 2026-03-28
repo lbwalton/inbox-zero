@@ -477,8 +477,8 @@
         "Typecheck passes"
       ],
       "priority": 32,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created notify-slack.ts with sendSlackNudge. Posts to SLACK_WEBHOOK_URL with formatted message. Checks user slackEnabled."
     },
     {
       "id": "US-033",
@@ -489,8 +489,8 @@
         "Typecheck passes"
       ],
       "priority": 33,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created notify-sms.ts using Twilio REST API via fetch. Checks user smsEnabled."
     },
     {
       "id": "US-034",
@@ -502,8 +502,8 @@
         "Typecheck passes"
       ],
       "priority": 34,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created notify-push.ts with web-push pattern. Created POST /api/push/subscribe to save PushSubscription."
     },
     {
       "id": "US-035",
@@ -515,8 +515,8 @@
         "Typecheck passes"
       ],
       "priority": 35,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created public/sw.js for push notification handling. Created ServiceWorkerRegistration component."
     },
     {
       "id": "US-036",
@@ -528,8 +528,8 @@
         "Typecheck passes"
       ],
       "priority": 36,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created POST /api/nudge/digest route for daily email digest compilation via Resend."
     },
     {
       "id": "US-037",
@@ -545,8 +545,8 @@
         "Typecheck passes"
       ],
       "priority": 37,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created nudge-dispatcher.ts. Checks shouldSuppressNudge, then dispatches via Slack/SMS/Push/Email based on user prefs."
     },
     {
       "id": "US-038",
@@ -562,8 +562,8 @@
         "Typecheck passes"
       ],
       "priority": 38,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created inbox-filter.ts (trusted sender filter) and modified webhook to call it for inbound emails."
     },
     {
       "id": "US-039",
@@ -576,8 +576,8 @@
         "Typecheck passes"
       ],
       "priority": 39,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created junk-purge.ts and POST /api/junk/purge cron route. Trashes junk older than junkRetentionDays."
     },
     {
       "id": "US-040",
@@ -589,8 +589,8 @@
         "Typecheck passes"
       ],
       "priority": 40,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created label-suggester.ts. Uses LLM to analyze email patterns and create SuggestedLabel entries."
     },
     {
       "id": "US-041",
@@ -604,8 +604,8 @@
         "Typecheck passes"
       ],
       "priority": 41,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created GET /api/labels and PUT /api/labels/[id] routes. Approve creates Gmail label, dismiss updates status."
     },
     {
       "id": "US-042",
@@ -795,8 +795,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 52,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created PriorityBadge component showing colored dot based on ContactScore priority level."
     },
     {
       "id": "US-053",
@@ -809,8 +809,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 53,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created SignalButtons component with thumbs-up/down calling POST /api/emails/signal."
     },
     {
       "id": "US-054",
@@ -823,8 +823,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 54,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created FocusModeBanner component below top nav. Shows active focus mode with disable button."
     },
     {
       "id": "US-055",
@@ -839,8 +839,8 @@
         "Typecheck passes"
       ],
       "priority": 55,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added pgvector extension, ContactEmbedding model with vector(1536) embedding, ContactAlias model with unique userId+phrase."
     },
     {
       "id": "US-056",

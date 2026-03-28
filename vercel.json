@@ -14,6 +14,18 @@
     {
       "path": "/api/nudge/detect",
       "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/nudge/digest",
+      "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/junk/purge",
+      "schedule": "0 4 * * 1"
+    },
+    {
+      "path": "/api/labels/suggest",
+      "schedule": "0 5 1 * *"
     }
   ]
 }

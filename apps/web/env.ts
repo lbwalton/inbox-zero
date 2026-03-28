@@ -105,6 +105,19 @@ export const env = createEnv({
     LICENSE_25_SEAT_VARIANT_ID: z.coerce.number().optional(),
 
     DUB_API_KEY: z.string().optional(),
+
+    // Slack notifications
+    SLACK_WEBHOOK_URL: z.string().optional(),
+
+    // Twilio SMS notifications
+    TWILIO_ACCOUNT_SID: z.string().optional(),
+    TWILIO_AUTH_TOKEN: z.string().optional(),
+    TWILIO_FROM_NUMBER: z.string().optional(),
+
+    // Web Push (VAPID keys)
+    VAPID_PUBLIC_KEY: z.string().optional(),
+    VAPID_PRIVATE_KEY: z.string().optional(),
+    VAPID_SUBJECT: z.string().optional().default("mailto:support@getbntly.com"),
   },
   client: {
     // stripe
