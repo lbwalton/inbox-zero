@@ -1,7 +1,7 @@
 {
   "project": "Bntly Email Assistant",
   "branchName": "ralph/lb-email-assistant",
-  "description": "Bntly — a warm, personalized intelligence layer on top of lbwalton/inbox-zero. Multi-Gmail-account support with instant onboarding scan, contact priority scoring with manual tagging, tone profile learning, silent auto-draft, Focus Mode with scheduled activation and breakthrough threshold, proactive nudge notifications (Slack, SMS, email digest, browser push), trusted sender whitelist with AI-suggested client domains, Junk label with optional auto-purge, smart label suggestions, semantic contact alias resolution, five selectable color theme palettes, and a full personalization settings hub — all under the Bntly brand.",
+  "description": "Bntly \u2014 a warm, personalized intelligence layer on top of lbwalton/inbox-zero. Multi-Gmail-account support with instant onboarding scan, contact priority scoring with manual tagging, tone profile learning, silent auto-draft, Focus Mode with scheduled activation and breakthrough threshold, proactive nudge notifications (Slack, SMS, email digest, browser push), trusted sender whitelist with AI-suggested client domains, Junk label with optional auto-purge, smart label suggestions, semantic contact alias resolution, five selectable color theme palettes, and a full personalization settings hub \u2014 all under the Bntly brand.",
   "userStories": [
     {
       "id": "US-001",
@@ -178,11 +178,11 @@
       "title": "Define 5 theme palettes in CSS",
       "description": "As a developer, I need five selectable color theme palettes with full CSS variable sets for the Bntly brand.",
       "acceptanceCriteria": [
-        "In globals.css, define .light theme class — warm light palette (soft cream/amber) as the default",
-        "Define .dark theme class — warm dark palette (deep charcoal with warm accents)",
-        "Define .bright theme class — vibrant saturated warm palette",
-        "Define .monochromatic theme class — neutral grays with single warm accent",
-        "Define .earth theme class — terracotta/sage/earth tones",
+        "In globals.css, define .light theme class \u2014 warm light palette (soft cream/amber) as the default",
+        "Define .dark theme class \u2014 warm dark palette (deep charcoal with warm accents)",
+        "Define .bright theme class \u2014 vibrant saturated warm palette",
+        "Define .monochromatic theme class \u2014 neutral grays with single warm accent",
+        "Define .earth theme class \u2014 terracotta/sage/earth tones",
         "Each class defines all CSS vars: background, foreground, card, popover, primary, secondary, muted, accent, destructive, border, input, ring, sidebar-*, chart-*, radius",
         "Typecheck passes"
       ],
@@ -228,7 +228,7 @@
       "title": "Update email templates with Bntly branding",
       "description": "As a developer, I need all outgoing email templates to reflect the Bntly brand.",
       "acceptanceCriteria": [
-        "Update /packages/resend/ email templates — sender name to Bntly",
+        "Update /packages/resend/ email templates \u2014 sender name to Bntly",
         "Update email template headers and footers with Bntly branding",
         "Update email template logos to Bntly logo",
         "Apply warm Bntly colors to inline styles in email templates",
@@ -240,7 +240,7 @@
     },
     {
       "id": "US-017",
-      "title": "Landing page rebrand — hero, nav, and footer",
+      "title": "Landing page rebrand \u2014 hero, nav, and footer",
       "description": "As a developer, I need the landing page header, hero, and footer to reflect the Bntly brand.",
       "acceptanceCriteria": [
         "Update Header.tsx navigation items, logo, and CTA copy for Bntly",
@@ -256,7 +256,7 @@
     },
     {
       "id": "US-018",
-      "title": "Landing page rebrand — content sections",
+      "title": "Landing page rebrand \u2014 content sections",
       "description": "As a developer, I need all landing page content sections to reflect the Bntly brand.",
       "acceptanceCriteria": [
         "Update FAQs.tsx with Bntly-relevant questions and answers",
@@ -402,7 +402,7 @@
         "Returns early if ContactScore for sender is below autoDraftThreshold or autoDraftEnabled = false for that contact",
         "Fetches ToneProfile for emailAccountId to use as LLM system context",
         "Calls LLM via existing abstraction with full thread history as user message",
-        "Creates draft via gmail.drafts.create using account credentials — never sends",
+        "Creates draft via gmail.drafts.create using account credentials \u2014 never sends",
         "Exports: generateAutoDraft(emailAccountId: string, threadId: string, emailBody: string): Promise<void>",
         "Typecheck passes"
       ],
@@ -418,7 +418,7 @@
         "In existing /api/google/webhook, identify EmailAccount by matching Gmail address from PubSub message",
         "Dispatch generateAutoDraft via QStash if user autoDraftEnabled = true",
         "Dispatch filterInboundEmail via QStash for every inbound email",
-        "Both dispatches are non-blocking — webhook returns 200 immediately",
+        "Both dispatches are non-blocking \u2014 webhook returns 200 immediately",
         "Typecheck passes"
       ],
       "priority": 28,
@@ -485,7 +485,7 @@
       "title": "SMS notification utility",
       "description": "As a developer, I need an SMS notification delivery utility for nudge alerts via Twilio.",
       "acceptanceCriteria": [
-        "Create /apps/web/utils/notify-sms.ts: Twilio SDK with TWILIO_ACCOUNT_SID/AUTH_TOKEN/FROM_NUMBER. Decrypts phone. Message: '[Work/Personal] [sender] is waiting — [subject max 60 chars]. Open: [url]'. Critical breakthrough prefix: 'CRITICAL'. Only if smsEnabled = true.",
+        "Create /apps/web/utils/notify-sms.ts: Twilio SDK with TWILIO_ACCOUNT_SID/AUTH_TOKEN/FROM_NUMBER. Decrypts phone. Message: '[Work/Personal] [sender] is waiting \u2014 [subject max 60 chars]. Open: [url]'. Critical breakthrough prefix: 'CRITICAL'. Only if smsEnabled = true.",
         "Typecheck passes"
       ],
       "priority": 33,
@@ -538,7 +538,7 @@
       "acceptanceCriteria": [
         "Create /apps/web/utils/nudge-dispatcher.ts",
         "Reads all PENDING NudgeLog records for user across all accounts",
-        "For each nudge, calls shouldSuppressNudge — if true, skip dispatch for this nudge",
+        "For each nudge, calls shouldSuppressNudge \u2014 if true, skip dispatch for this nudge",
         "If not suppressed, dispatches to Slack/SMS/push based on user settings",
         "Updates each NudgeLog status to ACTIONED after dispatch",
         "Create POST /api/nudge/dispatch that triggers the dispatcher via QStash",
@@ -555,7 +555,7 @@
       "acceptanceCriteria": [
         "Create /apps/web/utils/inbox-filter.ts accepting emailAccountId and sender email",
         "Trusted if: in TrustedSender (case-insensitive contact or domain match, addedManually = true or false) OR in ContactScore OR EmailSignal has IMPORTANT for sender",
-        "NOT_IMPORTANT signal overrides trust — treated as unknown regardless",
+        "NOT_IMPORTANT signal overrides trust \u2014 treated as unknown regardless",
         "Trusted: leave in inbox; Unknown: apply label 'Review', remove INBOX label; Spam/cold (reuse base app logic): apply label 'Junk'",
         "Create 'Review' and 'Junk' Gmail labels if they don't exist (check first, create if missing)",
         "Exports: filterInboundEmail(emailAccountId: string, senderEmail: string, threadId: string): Promise<void>",
@@ -584,7 +584,7 @@
       "title": "Smart label suggestion service and monthly cron",
       "description": "As a developer, I need a label and client domain suggestion service that runs monthly.",
       "acceptanceCriteria": [
-        "Create /apps/web/utils/label-suggester.ts: accepts emailAccountId. LLM prompt 1: suggest 3-5 Gmail labels from email patterns — creates SuggestedLabel records. LLM prompt 2: detect frequent company domains not owned by user — creates TrustedSender records type CLIENT_DOMAIN addedManually = false. Skips existing labels.",
+        "Create /apps/web/utils/label-suggester.ts: accepts emailAccountId. LLM prompt 1: suggest 3-5 Gmail labels from email patterns \u2014 creates SuggestedLabel records. LLM prompt 2: detect frequent company domains not owned by user \u2014 creates TrustedSender records type CLIENT_DOMAIN addedManually = false. Skips existing labels.",
         "Monthly cron calls this alongside tone scan",
         "Typecheck passes"
       ],
@@ -643,7 +643,7 @@
     {
       "id": "US-044",
       "title": "Focus Mode settings panel",
-      "description": "As LB, I want to configure Focus Mode — which account to focus, schedule, and the breakthrough threshold.",
+      "description": "As LB, I want to configure Focus Mode \u2014 which account to focus, schedule, and the breakthrough threshold.",
       "acceptanceCriteria": [
         "Create /app/settings/personalization/focus/page.tsx",
         "Global Focus Mode toggle (maps to FocusMode.isActive)",
@@ -685,7 +685,7 @@
         "Create /app/settings/personalization/contacts/page.tsx",
         "Fetches top 50 ContactScore records for active account sorted by priorityScore desc",
         "Table columns: Email, Score badge (gray 0-39 / amber 40-79 / green 80-100), Reply Rate (%), Avg Reply Time, Auto-Draft toggle, Manual Override lock icon",
-        "Score is editable inline — clicking shows number input; saving calls PATCH /api/contact-scoring/:id and sets manualOverride = true",
+        "Score is editable inline \u2014 clicking shows number input; saving calls PATCH /api/contact-scoring/:id and sets manualOverride = true",
         "Auto-Draft toggle saves immediately",
         "Lock icon: locked when manualOverride = true; clicking unlocked state re-enables auto-recalculation",
         "Typecheck passes",
@@ -718,7 +718,7 @@
       "description": "As LB, I want to configure all notification channels and choose combined vs per-account notification view.",
       "acceptanceCriteria": [
         "Create /app/settings/personalization/notifications/page.tsx",
-        "Notification view toggle at top: 'Combined — all accounts' or 'Per account' — maps to notificationView",
+        "Notification view toggle at top: 'Combined \u2014 all accounts' or 'Per account' \u2014 maps to notificationView",
         "Slack: toggle + webhook URL text input",
         "SMS: toggle + phone number input (last 4 digits shown after save) + 'Send Test SMS' button calling POST /api/nudge/test-sms",
         "Email Digest: toggle + time select (6am / 7am / 8am PT, stored as UTC)",
@@ -757,7 +757,7 @@
         "Create /app/settings/personalization/junk/page.tsx",
         "Toggle 'Auto-purge Junk after X days' (default off)",
         "Number input for days (default 30, only enabled when toggle is on)",
-        "'Purge Now' button shows inline confirmation state 'Are you sure? This is permanent' with Confirm and Cancel — on confirm calls POST /api/junk/purge and shows 'Purge started' inline",
+        "'Purge Now' button shows inline confirmation state 'Are you sure? This is permanent' with Confirm and Cancel \u2014 on confirm calls POST /api/junk/purge and shows 'Purge started' inline",
         "Save via PUT /api/user/junk-settings",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
@@ -817,7 +817,7 @@
       "title": "Focus Mode banner below top nav",
       "description": "As LB, I want a Focus Mode indicator banner visible when Focus Mode is active.",
       "acceptanceCriteria": [
-        "When FocusMode.isActive = true: render a 32px slim banner below top nav with violet left-border accent, text: 'Focus · [Account Label] · Other accounts paused below [X]', and a 'Pause' link on the right that calls PUT /api/focus-mode with { isActive: false }",
+        "When FocusMode.isActive = true: render a 32px slim banner below top nav with violet left-border accent, text: 'Focus \u00b7 [Account Label] \u00b7 Other accounts paused below [X]', and a 'Pause' link on the right that calls PUT /api/focus-mode with { isActive: false }",
         "Banner is not rendered when FocusMode.isActive = false",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
@@ -867,7 +867,7 @@
       "description": "As a developer, I need a service that takes a natural language phrase and returns the best-matching contact using pgvector similarity search.",
       "acceptanceCriteria": [
         "Create /apps/web/utils/alias-resolver.ts",
-        "First checks ContactAlias table for exact phrase match (case-insensitive) — if found, return immediately with confirmed: true, skip vector search",
+        "First checks ContactAlias table for exact phrase match (case-insensitive) \u2014 if found, return immediately with confirmed: true, skip vector search",
         "If no confirmed alias: embed the input phrase using the same embedding model as US-056",
         "Run pgvector cosine similarity search via raw Prisma query against ContactEmbedding for all email accounts of the user: ORDER BY embedding <=> $queryVector LIMIT 3",
         "Return top 3 matches as array of { contactEmail, contactName, similarityScore, emailAccountId }",
@@ -900,7 +900,7 @@
       "description": "As LB, I want the compose To: field to suggest a real contact when I type a natural language phrase, and remember my choice going forward.",
       "acceptanceCriteria": [
         "In the compose/reply To: field, after user pauses typing (300ms debounce), call POST /api/alias/resolve if the input does not look like an email address (no @ symbol)",
-        "If a confirmed alias is returned: silently replace the typed phrase with the resolved contact chip (name + email) — no confirmation prompt",
+        "If a confirmed alias is returned: silently replace the typed phrase with the resolved contact chip (name + email) \u2014 no confirmation prompt",
         "If unconfirmed matches returned: render an inline confirmation chip below the To: field showing contact avatar initial, resolved name, email, 'Use this' button, and 'Not right' link",
         "'Use this': calls POST /api/alias/confirm then replaces typed phrase with contact chip",
         "'Not right': dismisses chip and shows next best match if available",
@@ -1020,7 +1020,7 @@
     },
     {
       "id": "US-066",
-      "title": "Admin dashboard — paginated user management table",
+      "title": "Admin dashboard \u2014 paginated user management table",
       "description": "As an admin, I want a paginated table of all users with role and tier badges so I can manage the user base.",
       "acceptanceCriteria": [
         "Replace single-user lookup on /admin page with a paginated user table",
@@ -1120,6 +1120,88 @@
       "priority": 71,
       "passes": false,
       "notes": "Infrastructure (HelpTooltipContent, useHelpfulTips, ButtonGroup.contentComponent, API, settings toggle) already implemented. This story covers rollout to remaining components."
+    },
+    {
+      "id": "US-072",
+      "title": "Scan Inbox button for bulk AI rule processing",
+      "description": "As a user, I want a one-click button to run AI rules on all unprocessed emails in my inbox so I can see plan badges and pending actions without selecting emails individually.",
+      "acceptanceCriteria": [
+        "Scan Inbox button with SparklesIcon appears in inbox toolbar when no emails are selected",
+        "Clicking it filters out already-processed threads (those with plan.rule) and runs runAiRules() on the rest",
+        "Toast shows count of emails being scanned with loading/success/error states",
+        "Processed emails show PlanBadge on their row after completion",
+        "Clicking Scan Inbox when all emails are processed shows 'All loaded emails have already been processed' info toast",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 72,
+      "passes": false,
+      "notes": "Reuse existing runAiRules() from utils/queue/email-actions.ts. filteredEmails already available in EmailList.tsx scope. Place button in toolbar area around line 396-413."
+    },
+    {
+      "id": "US-073",
+      "title": "Add priorityContext field to EmailSignal model",
+      "description": "As a developer, I need to store optional user-provided context about why an email is important so the AI can learn priority patterns.",
+      "acceptanceCriteria": [
+        "Add priorityContext String? field to EmailSignal model in prisma/schema.prisma",
+        "Run prisma db push successfully",
+        "Typecheck passes"
+      ],
+      "priority": 73,
+      "passes": false,
+      "notes": "EmailSignal already has IMPORTANT/NOT_IMPORTANT signal types and threadId. Just add the optional context field."
+    },
+    {
+      "id": "US-074",
+      "title": "Priority tag button with optional context modal in inbox",
+      "description": "As a user, I want to quickly mark an email as priority/important from the inbox so it appears in my priority view.",
+      "acceptanceCriteria": [
+        "Star or flag icon button appears on each email row in the inbox (next to existing action buttons)",
+        "Clicking the button opens a small modal/popover with: confirm priority toggle, optional textarea for context (placeholder: 'Why is this important? e.g. Key client, time-sensitive deal...'), Save and Cancel buttons",
+        "Saving creates/updates an EmailSignal record with signal=IMPORTANT and priorityContext",
+        "Already-priority emails show a filled/active star icon; clicking again removes priority (signal=NOT_IMPORTANT)",
+        "Server action created at utils/actions/priority.ts using next-safe-action pattern",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 74,
+      "passes": false,
+      "notes": "Use existing EmailSignal model. Create a new server action for upserting the signal. Button goes in EmailListItem.tsx alongside existing action buttons."
+    },
+    {
+      "id": "US-075",
+      "title": "Priority inbox sub-path with filtered view",
+      "description": "As a user, I want a dedicated Priority view under my inbox where I can see only my most important emails daily.",
+      "acceptanceCriteria": [
+        "Add 'Priority' tab/link in sidebar navigation under Inbox (or as a tab within mail view)",
+        "Priority view shows only threads where the user has an EmailSignal with signal=IMPORTANT",
+        "API endpoint or query filter added to threads controller to support type=priority filtering",
+        "Priority emails display with their priorityContext as a subtle badge or subtitle",
+        "Empty state shows helpful message: 'No priority emails yet. Star emails from your inbox to add them here.'",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 75,
+      "passes": false,
+      "notes": "Add type=priority to the existing query type mapping in threads/controller.ts. Fetch threadIds from EmailSignal where signal=IMPORTANT, then load those threads. Add Priority link to SideNav.tsx."
+    },
+    {
+      "id": "US-076",
+      "title": "AI priority suggestion system",
+      "description": "As a user, I want the AI to learn from my priority labels and suggest new emails for priority placement so I don't miss important ones.",
+      "acceptanceCriteria": [
+        "After user marks 5+ emails as priority, system begins generating suggestions",
+        "AI analyzes priorityContext + sender patterns + ContactScore.priorityScore to identify similar emails",
+        "Suggested priority emails show a subtle 'Suggested Priority' badge (different from user-tagged priority)",
+        "User can accept (promotes to full priority) or dismiss the suggestion",
+        "Accepted suggestions train the model further; dismissed ones are tracked to avoid repeat suggestions",
+        "Suggestion logic runs as part of the existing AI rules pipeline (runAiRules or a parallel check)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 76,
+      "passes": false,
+      "notes": "Build on existing EmailSignal data + ContactScore.priorityScore. Can use the economy LLM for classification. Store suggestions as EmailSignal with a new signal type or a separate suggestion field."
     }
   ]
 }
