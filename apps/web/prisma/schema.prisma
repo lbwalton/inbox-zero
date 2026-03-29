@@ -917,6 +917,8 @@ enum DigestStatus {
 enum EmailSignalType {
   IMPORTANT
   NOT_IMPORTANT
+  SUGGESTED_PRIORITY
+  DISMISSED_SUGGESTION
 }
 
 enum NudgeType {

@@ -1200,8 +1200,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 76,
-      "passes": false,
-      "notes": "Build on existing EmailSignal data + ContactScore.priorityScore. Can use the economy LLM for classification. Store suggestions as EmailSignal with a new signal type or a separate suggestion field."
+      "passes": true,
+      "notes": "Suggestion engine uses sender patterns + ContactScore to suggest priority emails. Accept/dismiss API. SuggestedPriorityBadge with inline accept/dismiss buttons. SUGGESTED_PRIORITY and DISMISSED_SUGGESTION signal types added."
     }
   ]
 }
