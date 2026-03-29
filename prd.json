@@ -1165,8 +1165,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 74,
-      "passes": false,
-      "notes": "Use existing EmailSignal model. Create a new server action for upserting the signal. Button goes in EmailListItem.tsx alongside existing action buttons."
+      "passes": true,
+      "notes": "Priority context popover on thumbs-up. API accepts priorityContext field. Save/Skip buttons in popover. Textarea with 500 char limit."
     },
     {
       "id": "US-075",

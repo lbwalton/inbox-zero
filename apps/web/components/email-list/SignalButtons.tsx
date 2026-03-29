@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ThumbsUpIcon, ThumbsDownIcon } from "lucide-react";
 import { Tooltip } from "@/components/Tooltip";
 import { HelpTooltipContent } from "@/components/HelpTooltipContent";
 import { useHelpfulTips } from "@/hooks/useHelpfulTips";
 import { useAccount } from "@/providers/EmailAccountProvider";
+import { Button } from "@/components/ui/button";
 
 type SignalType = "IMPORTANT" | "NOT_IMPORTANT" | null;
 
@@ -18,9 +19,9 @@ interface SignalButtonsProps {
 }
 
 /**
- * US-053: Thumbs-up / thumbs-down signal buttons.
+ * US-053 + US-074: Thumbs-up / thumbs-down signal buttons with priority context.
  * Calls POST /api/emails/signal with type IMPORTANT or NOT_IMPORTANT.
- * Mutual exclusion between the two signals.
+ * When marking as IMPORTANT, shows a popover for optional context.
  */
 export function SignalButtons({
   threadId,
@@ -32,14 +33,15 @@ export function SignalButtons({
   const showTips = useHelpfulTips();
   const [signal, setSignal] = useState<SignalType>(initialSignal);
   const [loading, setLoading] = useState(false);
+  const [showContextPopover, setShowContextPopover] = useState(false);
+  const [contextText, setContextText] = useState("");
+  const popoverRef = useRef<HTMLDivElement>(null);
 
-  const handleSignal = useCallback(
-    async (newSignal: "IMPORTANT" | "NOT_IMPORTANT") => {
-      if (loading) return;
-
-      // Toggle off if same signal clicked
-      const targetSignal = signal === newSignal ? null : newSignal;
-
+  const sendSignal = useCallback(
+    async (
+      targetSignal: "IMPORTANT" | "NOT_IMPORTANT" | null,
+      priorityContext?: string,
+    ) => {
       setLoading(true);
       try {
         if (targetSignal) {
@@ -51,6 +53,7 @@ export function SignalButtons({
               senderEmail,
               signal: targetSignal,
               emailAccountId,
+              ...(priorityContext ? { priorityContext } : {}),
             }),
           });
         }
@@ -61,8 +64,40 @@ export function SignalButtons({
         setLoading(false);
       }
     },
-    [threadId, senderEmail, emailAccountId, signal, loading],
+    [threadId, senderEmail, emailAccountId],
   );
+
+  const handleImportantClick = useCallback(() => {
+    if (loading) return;
+
+    // If already important, toggle off
+    if (signal === "IMPORTANT") {
+      sendSignal(null);
+      return;
+    }
+
+    // Show context popover
+    setShowContextPopover(true);
+    setContextText("");
+  }, [signal, loading, sendSignal]);
+
+  const handleSaveContext = useCallback(() => {
+    sendSignal("IMPORTANT", contextText.trim() || undefined);
+    setShowContextPopover(false);
+    setContextText("");
+  }, [sendSignal, contextText]);
+
+  const handleSkipContext = useCallback(() => {
+    sendSignal("IMPORTANT");
+    setShowContextPopover(false);
+    setContextText("");
+  }, [sendSignal]);
+
+  const handleNotImportant = useCallback(() => {
+    if (loading) return;
+    const targetSignal = signal === "NOT_IMPORTANT" ? null : "NOT_IMPORTANT";
+    sendSignal(targetSignal);
+  }, [signal, loading, sendSignal]);
 
   const visibilityClass = alwaysVisible
     ? ""
@@ -70,7 +105,7 @@ export function SignalButtons({
 
   return (
     <div
-      className={`flex items-center gap-0.5 ${visibilityClass}`}
+      className={`relative flex items-center gap-0.5 ${visibilityClass}`}
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => e.stopPropagation()}
     >
@@ -94,7 +129,7 @@ export function SignalButtons({
               : "text-muted-foreground"
           }`}
           aria-label="Mark important"
-          onClick={() => handleSignal("IMPORTANT")}
+          onClick={handleImportantClick}
           disabled={loading}
         >
           <ThumbsUpIcon
@@ -103,6 +138,44 @@ export function SignalButtons({
           />
         </button>
       </Tooltip>
+
+      {showContextPopover && (
+        <div
+          ref={popoverRef}
+          className="absolute bottom-full left-0 z-[9999] mb-2 w-64 rounded-lg border bg-popover p-3 shadow-lg"
+        >
+          <p className="mb-2 text-xs font-medium">
+            Why is this important? (optional)
+          </p>
+          <textarea
+            value={contextText}
+            onChange={(e) => setContextText(e.target.value)}
+            placeholder="e.g. Key client, time-sensitive deal..."
+            className="mb-2 w-full rounded-md border bg-background px-2 py-1.5 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+            rows={2}
+            maxLength={500}
+            autoFocus
+          />
+          <div className="flex justify-end gap-1.5">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs"
+              onClick={handleSkipContext}
+            >
+              Skip
+            </Button>
+            <Button
+              size="sm"
+              className="h-7 text-xs"
+              onClick={handleSaveContext}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
+      )}
+
       <Tooltip
         content="Mark not important"
         contentComponent={
@@ -123,7 +196,7 @@ export function SignalButtons({
               : "text-muted-foreground"
           }`}
           aria-label="Mark not important"
-          onClick={() => handleSignal("NOT_IMPORTANT")}
+          onClick={handleNotImportant}
           disabled={loading}
         >
           <ThumbsDownIcon
