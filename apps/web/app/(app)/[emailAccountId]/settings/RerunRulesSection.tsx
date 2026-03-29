@@ -3,8 +3,9 @@
 import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { FormSection, FormSectionLeft } from "@/components/Form";
-import { SectionDescription } from "@/components/Typography";
+import { FormSection } from "@/components/Form";
+import { SectionDescription, SectionHeader } from "@/components/Typography";
+import { TooltipExplanation } from "@/components/TooltipExplanation";
 import { useAccount } from "@/providers/EmailAccountProvider";
 import { useAiQueueState } from "@/store/ai-queue";
 import { runAiRules, cancelAiRules } from "@/utils/queue/email-actions";
@@ -95,16 +96,25 @@ export function RerunRulesSection() {
 
   return (
     <FormSection>
-      <FormSectionLeft
-        title="Re-run rules on past emails"
-        description="Force re-process emails that were already handled by your AI rules. Use this after updating rules to retroactively apply changes. This will consume API credits."
-      />
+      <div>
+        <div className="flex items-center gap-1.5">
+          <SectionHeader>Re-run rules on past emails</SectionHeader>
+          <TooltipExplanation
+            size="md"
+            text="Your emails are checked by your AI rules when they first arrive. If you change your rules later, old emails keep their old results. Use this to check old emails again with your new rules. This uses API credits."
+          />
+        </div>
+        <SectionDescription>
+          Changed your rules? Use this to go back and check old emails with your
+          updated rules. Only use this when you have made changes to your rules
+          and want those changes to apply to emails you already received.
+        </SectionDescription>
+      </div>
 
       <div className="space-y-3">
         <SectionDescription>
-          Select a date range and optionally limit the number of emails to
-          re-process. All matching emails will be re-evaluated against your
-          current rules, even if they were previously processed.
+          Pick a date range to choose which emails to re-check. You can also set
+          a limit so it only checks a certain number of emails at a time.
         </SectionDescription>
 
         <div className="grid grid-cols-2 gap-2">
