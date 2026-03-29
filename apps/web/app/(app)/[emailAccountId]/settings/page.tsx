@@ -20,6 +20,7 @@ import { useDigestEnabled } from "@/hooks/useFeatureFlags";
 import { BillingSection } from "@/app/(app)/[emailAccountId]/settings/BillingSection";
 import { AppearanceSection } from "@/app/(app)/[emailAccountId]/settings/AppearanceSection";
 import { HelpfulTipsSection } from "@/app/(app)/[emailAccountId]/settings/HelpfulTipsSection";
+import { RerunRulesSection } from "@/app/(app)/[emailAccountId]/settings/RerunRulesSection";
 
 export default function SettingsPage(_props: {
   params: Promise<{ emailAccountId: string }>;
@@ -34,6 +35,7 @@ export default function SettingsPage(_props: {
           <TabsList>
             <TabsTrigger value="email">Email</TabsTrigger>
             <TabsTrigger value="user">User</TabsTrigger>
+            <TabsTrigger value="advanced">Advanced</TabsTrigger>
           </TabsList>
         </div>
       </TabsToolbar>
@@ -71,6 +73,11 @@ export default function SettingsPage(_props: {
           <ApiKeysSection />
           <BillingSection />
           <DeleteSection />
+        </FormWrapper>
+      </TabsContent>
+      <TabsContent value="advanced">
+        <FormWrapper>
+          <RerunRulesSection />
         </FormWrapper>
       </TabsContent>
     </Tabs>
