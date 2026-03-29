@@ -28,11 +28,9 @@ export function createRlsClient(
   const extended = client.$extends({
     query: {
       async $allOperations({ args, query }) {
-        // Set RLS session context before each query using a transaction
+        // Set RLS session context before each query using bound parameters
         const [, result] = await client.$transaction([
-          client.$executeRawUnsafe(
-            `SELECT set_config('app.user_id', '${userId}', true), set_config('app.user_role', '${userRole}', true)`,
-          ),
+          client.$executeRaw`SELECT set_config('app.user_id', ${userId}, true), set_config('app.user_role', ${userRole}, true)`,
           query(args),
         ]);
         return result;

@@ -120,6 +120,10 @@ model User {
   // Referral relationships
   referralsMade    Referral[] @relation("ReferrerUser")
   referralReceived Referral?  @relation("ReferredUser")
+
+  // Audit log relationships
+  auditLogsAsAdmin  AuditLog[] @relation("AuditLogAdmin")
+  auditLogsAsTarget AuditLog[] @relation("AuditLogTarget")
 }
 
 // Migrating over to the new settings model. Currently most settings are in the User model, but will be moved to this model in the future.
@@ -1077,6 +1081,9 @@ model AuditLog {
   adminUserId  String
   metadata     Json?
   createdAt    DateTime @default(now())
+
+  adminUser  User  @relation("AuditLogAdmin", fields: [adminUserId], references: [id])
+  targetUser User? @relation("AuditLogTarget", fields: [targetUserId], references: [id])
 
   @@index([adminUserId])
   @@index([createdAt])
