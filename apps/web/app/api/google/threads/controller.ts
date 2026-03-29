@@ -28,6 +28,11 @@ export async function getThreads({
 }) {
   if (!accessToken) throw new SafeError("Missing access token");
 
+  // Priority view: fetch threadIds from EmailSignal, then load from Gmail
+  if (query.type === "priority") {
+    return getPriorityThreads({ query, accessToken, emailAccountId });
+  }
+
   function getQuery() {
     if (query.q) {
       return query.q;
@@ -126,4 +131,83 @@ function getLabelIds(type?: string | null) {
         return [GmailLabel.INBOX];
       return [type];
   }
+}
+
+async function getPriorityThreads({
+  query,
+  accessToken,
+  emailAccountId,
+}: {
+  query: ThreadsQuery;
+  accessToken: string;
+  emailAccountId: string;
+}) {
+  // Fetch priority thread IDs from EmailSignal
+  const signals = await prisma.emailSignal.findMany({
+    where: {
+      emailAccountId,
+      signal: "IMPORTANT",
+    },
+    orderBy: { taggedAt: "desc" },
+    take: query.limit || 50,
+    select: {
+      threadId: true,
+      priorityContext: true,
+    },
+  });
+
+  const threadIds = signals.map((s) => s.threadId);
+
+  if (threadIds.length === 0) {
+    return { threads: [], nextPageToken: undefined };
+  }
+
+  const [threads, plans] = await Promise.all([
+    getThreadsBatch(threadIds, accessToken),
+    prisma.executedRule.findMany({
+      where: {
+        emailAccountId,
+        threadId: { in: threadIds },
+        status: {
+          in: [ExecutedRuleStatus.PENDING, ExecutedRuleStatus.SKIPPED],
+        },
+      },
+      select: {
+        id: true,
+        messageId: true,
+        threadId: true,
+        rule: true,
+        actionItems: true,
+        status: true,
+        reason: true,
+      },
+    }),
+  ]);
+
+  const contextMap = new Map(
+    signals.map((s) => [s.threadId, s.priorityContext]),
+  );
+
+  const threadsWithMessages = await Promise.all(
+    threads.map(async (thread) => {
+      const id = thread.id;
+      if (!id) return;
+      const messages = parseMessages(thread, { withoutIgnoredSenders: true });
+      const plan = plans.find((p) => p.threadId === id);
+
+      return {
+        id,
+        messages,
+        snippet: decodeSnippet(thread.snippet),
+        plan,
+        category: await getCategory({ emailAccountId, threadId: id }),
+        priorityContext: contextMap.get(id) ?? null,
+      };
+    }) || [],
+  );
+
+  return {
+    threads: threadsWithMessages.filter(isDefined),
+    nextPageToken: undefined,
+  };
 }

@@ -18,6 +18,7 @@ import {
   GiftIcon,
   InboxIcon,
   type LucideIcon,
+  StarIcon,
   MailsIcon,
   MessageCircleReplyIcon,
   MessagesSquareIcon,
@@ -198,6 +199,11 @@ const topMailLinks: NavItem[] = [
     name: "Inbox",
     icon: InboxIcon,
     href: "?type=inbox",
+  },
+  {
+    name: "Priority",
+    icon: StarIcon,
+    href: "?type=priority",
   },
   {
     name: "Drafts",

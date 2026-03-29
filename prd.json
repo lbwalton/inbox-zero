@@ -1182,8 +1182,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 75,
-      "passes": false,
-      "notes": "Add type=priority to the existing query type mapping in threads/controller.ts. Fetch threadIds from EmailSignal where signal=IMPORTANT, then load those threads. Add Priority link to SideNav.tsx."
+      "passes": true,
+      "notes": "Priority view at ?type=priority. getPriorityThreads() fetches from EmailSignal IMPORTANT records. Priority link in sidebar with StarIcon."
     },
     {
       "id": "US-076",
