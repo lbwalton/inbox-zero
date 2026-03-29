@@ -1148,8 +1148,8 @@
         "Typecheck passes"
       ],
       "priority": 73,
-      "passes": false,
-      "notes": "EmailSignal already has IMPORTANT/NOT_IMPORTANT signal types and threadId. Just add the optional context field."
+      "passes": true,
+      "notes": "Added priorityContext String? field to EmailSignal model. Apply via prisma db push."
     },
     {
       "id": "US-074",

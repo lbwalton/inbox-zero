@@ -954,8 +954,9 @@ model EmailSignal {
   emailAccount   EmailAccount    @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
   threadId       String
   senderEmail    String
-  signal         EmailSignalType
-  taggedAt       DateTime        @default(now())
+  signal          EmailSignalType
+  priorityContext String?
+  taggedAt        DateTime        @default(now())
 
   @@unique([emailAccountId, threadId])
   @@index([emailAccountId])
