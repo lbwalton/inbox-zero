@@ -8,13 +8,19 @@ import { SectionDescription } from "@/components/Typography";
 import type { ThreadsResponse } from "@/app/api/google/threads/controller";
 import type { ThreadsQuery } from "@/app/api/google/threads/validation";
 import { LoadingContent } from "@/components/LoadingContent";
-import { runAiRules } from "@/utils/queue/email-actions";
+import { runAiRules, cancelAiRules } from "@/utils/queue/email-actions";
 import { sleep } from "@/utils/sleep";
 import { PremiumAlertWithData, usePremium } from "@/components/PremiumAlert";
 import { SetDateDropdown } from "@/app/(app)/[emailAccountId]/assistant/SetDateDropdown";
 import { dateToSeconds } from "@/utils/date";
 import { useThreads } from "@/hooks/useThreads";
-import { useAiQueueState } from "@/store/ai-queue";
+import {
+  useBulkProcessState,
+  startBulkProcess,
+  incrementBulkTotal,
+  finishBulkProcess,
+  resetBulkProcess,
+} from "@/store/bulk-process";
 import {
   Dialog,
   DialogContent,
@@ -30,26 +36,21 @@ export function BulkRunRules() {
   const { emailAccountId } = useAccount();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [totalThreads, setTotalThreads] = useState(0);
 
   const { data, isLoading, error } = useThreads({ type: "inbox" });
 
-  const queue = useAiQueueState();
-
   const { hasAiAccess, isLoading: isLoadingPremium } = usePremium();
 
-  const [running, setRunning] = useState(false);
+  const bulkState = useBulkProcessState();
 
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
-
-  const abortRef = useRef<() => void>(undefined);
 
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button type="button" variant="outline" Icon={HistoryIcon}>
+          <Button type="button" variant="outline" size="sm" Icon={HistoryIcon}>
             Bulk Process Emails
           </Button>
         </DialogTrigger>
@@ -62,17 +63,11 @@ export function BulkRunRules() {
               <>
                 <SectionDescription>
                   This runs your rules on unread emails currently in your inbox
-                  (that have not been previously processed).
+                  (that have not been previously processed). You can close this
+                  dialog and navigate freely — processing continues in the
+                  background.
                 </SectionDescription>
 
-                {!!queue.size && (
-                  <div className="rounded-md border border-green-200 bg-green-50 px-2 py-1.5 dark:border-green-800 dark:bg-green-950">
-                    <SectionDescription className="mt-0">
-                      Progress: {totalThreads - queue.size}/{totalThreads}{" "}
-                      emails completed
-                    </SectionDescription>
-                  </div>
-                )}
                 <div className="space-y-4">
                   <LoadingContent loading={isLoadingPremium}>
                     {hasAiAccess ? (
@@ -82,38 +77,36 @@ export function BulkRunRules() {
                             onChange={setStartDate}
                             value={startDate}
                             placeholder="Set start date"
-                            disabled={running}
+                            disabled={bulkState.running}
                           />
                           <SetDateDropdown
                             onChange={setEndDate}
                             value={endDate}
                             placeholder="Set end date (optional)"
-                            disabled={running}
+                            disabled={bulkState.running}
                           />
                         </div>
 
                         <Button
                           type="button"
-                          disabled={running || !startDate}
-                          loading={running}
-                          onClick={async () => {
+                          disabled={bulkState.running || !startDate}
+                          loading={bulkState.running}
+                          onClick={() => {
                             if (!startDate) return;
-                            setRunning(true);
-                            abortRef.current = await onRun(
-                              emailAccountId,
-                              { startDate, endDate },
-                              (count) =>
-                                setTotalThreads((total) => total + count),
-                              () => setRunning(false),
-                            );
+                            startBulkProcess();
+                            setIsOpen(false);
+                            onRun(emailAccountId, { startDate, endDate });
                           }}
                         >
                           Process Emails
                         </Button>
-                        {running && (
+                        {bulkState.running && (
                           <Button
                             variant="outline"
-                            onClick={() => abortRef.current?.()}
+                            onClick={() => {
+                              cancelAiRules();
+                              resetBulkProcess();
+                            }}
                           >
                             Cancel
                           </Button>
@@ -149,8 +142,6 @@ export function BulkRunRules() {
 async function onRun(
   emailAccountId: string,
   { startDate, endDate }: { startDate: Date; endDate?: Date },
-  incrementThreadsQueued: (count: number) => void,
-  onComplete: () => void,
 ) {
   let nextPageToken = "";
   const LIMIT = 25;
@@ -161,13 +152,7 @@ async function onRun(
     endDate ? `before:${endDateInSeconds}` : ""
   } is:unread`;
 
-  let aborted = false;
-
-  function abort() {
-    aborted = true;
-  }
-
-  async function run() {
+  try {
     for (let i = 0; i < 100; i++) {
       const query: ThreadsQuery = {
         type: "inbox",
@@ -185,21 +170,16 @@ async function onRun(
 
       const threadsWithoutPlan = data.threads.filter((t) => !t.plan);
 
-      incrementThreadsQueued(threadsWithoutPlan.length);
+      incrementBulkTotal(threadsWithoutPlan.length);
 
-      runAiRules(emailAccountId, threadsWithoutPlan, false);
+      await runAiRules(emailAccountId, threadsWithoutPlan, false);
 
-      if (!nextPageToken || aborted) break;
+      if (!nextPageToken) break;
 
       // avoid gmail api rate limits
-      // ai takes longer anyway
       await sleep(threadsWithoutPlan.length ? 5_000 : 2_000);
     }
-
-    onComplete();
+  } finally {
+    finishBulkProcess();
   }
-
-  run();
-
-  return abort;
 }

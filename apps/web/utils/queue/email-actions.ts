@@ -2,6 +2,7 @@
 
 import { runRulesAction } from "@/utils/actions/ai-rule";
 import { pushToAiQueueAtom, removeFromAiQueueAtom } from "@/store/ai-queue";
+import { incrementBulkCompleted } from "@/store/bulk-process";
 import type { Thread } from "@/components/email-list/types";
 import { isDefined } from "@/utils/types";
 import { aiQueue } from "@/utils/queue/ai-queue";
@@ -26,6 +27,7 @@ export const runAiRules = async (
         isTest: false,
       });
       removeFromAiQueueAtom(thread.id);
+      incrementBulkCompleted();
     }),
   );
 };

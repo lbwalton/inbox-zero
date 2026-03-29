@@ -18,6 +18,7 @@ import { QueueInitializer } from "@/store/QueueInitializer";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { EmailViewer } from "@/components/EmailViewer";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
+import { BulkProcessOverlay } from "@/components/BulkProcessOverlay";
 
 export const viewport = {
   themeColor: "#FFF",
@@ -50,6 +51,7 @@ export default async function AppLayout({
         {children}
       </SideNavWithTopNav>
       <EmailViewer />
+      <BulkProcessOverlay />
       <ErrorBoundary extra={{ component: "AppLayout" }}>
         <PostHogIdentify />
         <TokenCheck />
