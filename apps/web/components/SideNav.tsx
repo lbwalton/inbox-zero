@@ -141,7 +141,7 @@ export const useNavigation = () => {
   };
 };
 
-const bottomLinks: NavItem[] = [
+const getBottomLinks = (emailAccountId: string): NavItem[] => [
   {
     name: "Help Center",
     href: "https://docs.getbntly.com",
@@ -190,8 +190,16 @@ const bottomLinks: NavItem[] = [
     ),
     hideInMail: true,
   },
-  { name: "Premium", href: "/premium", icon: CrownIcon },
-  { name: "Settings", href: "/settings", icon: CogIcon },
+  {
+    name: "Premium",
+    href: prefixPath(emailAccountId, "/premium"),
+    icon: CrownIcon,
+  },
+  {
+    name: "Settings",
+    href: prefixPath(emailAccountId, "/settings"),
+    icon: CogIcon,
+  },
 ];
 
 const topMailLinks: NavItem[] = [
@@ -258,19 +266,25 @@ export function SideNav({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const userRole = userData?.role;
   const userTier = userData?.premium?.tier;
 
+  const { emailAccountId } = useAccount();
+  const bottomLinks = useMemo(
+    () => getBottomLinks(emailAccountId),
+    [emailAccountId],
+  );
+
   const visibleBottomLinks = useMemo(
     () =>
       showMailNav
         ? [
             {
               name: "Back",
-              href: "/automation",
+              href: prefixPath(emailAccountId, "/automation"),
               icon: ArrowLeftIcon,
             },
             ...bottomLinks.filter((l) => !l.hideInMail),
           ]
         : bottomLinks,
-    [showMailNav],
+    [showMailNav, emailAccountId, bottomLinks],
   );
 
   const adminLink: NavItem[] = useMemo(
