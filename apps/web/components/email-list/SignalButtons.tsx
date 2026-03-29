@@ -3,6 +3,8 @@
 import { useCallback, useState } from "react";
 import { ThumbsUpIcon, ThumbsDownIcon } from "lucide-react";
 import { Tooltip } from "@/components/Tooltip";
+import { HelpTooltipContent } from "@/components/HelpTooltipContent";
+import { useHelpfulTips } from "@/hooks/useHelpfulTips";
 import { useAccount } from "@/providers/EmailAccountProvider";
 
 type SignalType = "IMPORTANT" | "NOT_IMPORTANT" | null;
@@ -27,6 +29,7 @@ export function SignalButtons({
   alwaysVisible = false,
 }: SignalButtonsProps) {
   const { emailAccountId } = useAccount();
+  const showTips = useHelpfulTips();
   const [signal, setSignal] = useState<SignalType>(initialSignal);
   const [loading, setLoading] = useState(false);
 
@@ -71,7 +74,18 @@ export function SignalButtons({
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => e.stopPropagation()}
     >
-      <Tooltip content="Mark important">
+      <Tooltip
+        content="Mark important"
+        contentComponent={
+          showTips ? (
+            <HelpTooltipContent
+              title="Mark Important"
+              description="Flag this email as important. Trains the AI to prioritize similar emails and senders in the future."
+              example="Emails from this sender will rank higher in Priority Inbox"
+            />
+          ) : undefined
+        }
+      >
         <button
           type="button"
           className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-green-100 dark:hover:bg-green-900/40 ${
@@ -89,7 +103,18 @@ export function SignalButtons({
           />
         </button>
       </Tooltip>
-      <Tooltip content="Mark not important">
+      <Tooltip
+        content="Mark not important"
+        contentComponent={
+          showTips ? (
+            <HelpTooltipContent
+              title="Mark Not Important"
+              description="Flag this email as low priority. Trains the AI to deprioritize similar emails and senders."
+              example="Future newsletters from this sender won't appear in Priority Inbox"
+            />
+          ) : undefined
+        }
+      >
         <button
           type="button"
           className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-red-100 dark:hover:bg-red-900/40 ${

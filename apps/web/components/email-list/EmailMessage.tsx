@@ -6,6 +6,8 @@ import {
   ChevronsDownUpIcon,
 } from "lucide-react";
 import { Tooltip } from "@/components/Tooltip";
+import { HelpTooltipContent } from "@/components/HelpTooltipContent";
+import { useHelpfulTips } from "@/hooks/useHelpfulTips";
 import { extractNameFromEmail } from "@/utils/email";
 import { formatShortDate } from "@/utils/date";
 import { ComposeEmailFormLazy } from "@/app/(app)/[emailAccountId]/compose/ComposeEmailFormLazy";
@@ -49,6 +51,7 @@ export function EmailMessage({
 }) {
   const [showReply, setShowReply] = useState(defaultShowReply || false);
   const [showDetails, setShowDetails] = useState(false);
+  const showTips = useHelpfulTips();
 
   const onReply = useCallback(() => setShowReply(true), []);
   const [showForward, setShowForward] = useState(false);
@@ -81,6 +84,7 @@ export function EmailMessage({
         showReplyButton={showReplyButton}
         onReply={onReply}
         onForward={onForward}
+        showTips={showTips}
       />
 
       {expanded && (
@@ -121,9 +125,11 @@ function TopBar({
   showReplyButton,
   onReply,
   onForward,
+  showTips,
 }: {
   message: ParsedMessage;
   expanded: boolean;
+  showTips: boolean;
   showDetails: boolean;
   toggleDetails: (e: React.MouseEvent) => void;
   showReplyButton: boolean;
@@ -166,13 +172,33 @@ function TopBar({
         </p>
         {showReplyButton && (
           <div className="relative flex items-center">
-            <Tooltip content="Reply">
+            <Tooltip
+              content="Reply"
+              contentComponent={
+                showTips ? (
+                  <HelpTooltipContent
+                    title="Reply"
+                    description="Open the reply editor to respond to this message. Your reply will be sent to the original sender."
+                  />
+                ) : undefined
+              }
+            >
               <Button variant="ghost" size="icon" onClick={onReply}>
                 <ReplyIcon className="h-4 w-4" />
                 <span className="sr-only">Reply</span>
               </Button>
             </Tooltip>
-            <Tooltip content="Forward">
+            <Tooltip
+              content="Forward"
+              contentComponent={
+                showTips ? (
+                  <HelpTooltipContent
+                    title="Forward"
+                    description="Forward this email to someone else with an optional message."
+                  />
+                ) : undefined
+              }
+            >
               <Button variant="ghost" size="icon">
                 <ForwardIcon className="h-4 w-4" onClick={onForward} />
                 <span className="sr-only">Forward</span>

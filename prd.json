@@ -1118,8 +1118,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 71,
-      "passes": false,
-      "notes": "Infrastructure (HelpTooltipContent, useHelpfulTips, ButtonGroup.contentComponent, API, settings toggle) already implemented. This story covers rollout to remaining components."
+      "passes": true,
+      "notes": "Rich tooltips added to PlanActions (Execute/Reject), SignalButtons (Important/Not Important), EmailMessage (Reply/Forward). All respect showHelpfulTips preference."
     },
     {
       "id": "US-072",
