@@ -2,7 +2,12 @@ import { Suspense } from "react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { MessageCircleIcon, SettingsIcon, SlidersIcon } from "lucide-react";
+import {
+  MessageCircleIcon,
+  PlayIcon,
+  SettingsIcon,
+  SlidersIcon,
+} from "lucide-react";
 import prisma from "@/utils/prisma";
 import { History } from "@/app/(app)/[emailAccountId]/assistant/History";
 import { Pending } from "@/app/(app)/[emailAccountId]/assistant/Pending";
@@ -11,6 +16,7 @@ import { Rules } from "@/app/(app)/[emailAccountId]/assistant/Rules";
 import { Process } from "@/app/(app)/[emailAccountId]/assistant/Process";
 import { KnowledgeBase } from "@/app/(app)/[emailAccountId]/assistant/knowledge/KnowledgeBase";
 import { RulesPrompt } from "@/app/(app)/[emailAccountId]/assistant/RulesPrompt";
+import { BulkRunRules } from "@/app/(app)/[emailAccountId]/assistant/BulkRunRules";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { PermissionsCheck } from "@/app/(app)/[emailAccountId]/PermissionsCheck";
 import { TabsToolbar } from "@/components/TabsToolbar";
@@ -93,6 +99,8 @@ export default async function AutomationPage({
             </div>
 
             <div className="flex items-center gap-2">
+              <BulkRunRules />
+
               <Button asChild variant="outline" size="sm">
                 <Link
                   href={prefixPath(
