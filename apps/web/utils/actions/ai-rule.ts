@@ -31,9 +31,13 @@ import type { CreateOrUpdateRuleSchemaWithCategories } from "@/utils/ai/rule/cre
 import { deleteRule, safeCreateRule, safeUpdateRule } from "@/utils/rule/rule";
 import { getUserCategoriesForNames } from "@/utils/category.server";
 import { actionClient } from "@/utils/actions/safe-action";
-import { getGmailClientForEmail } from "@/utils/account";
+import {
+  getGmailClientForEmail,
+  getGmailClientForEmailId,
+} from "@/utils/account";
 import { getEmailAccountWithAi } from "@/utils/user/get";
 import { SafeError } from "@/utils/error";
+import { watchEmails } from "@/app/api/google/watch/controller";
 
 const logger = createScopedLogger("ai-rule");
 
@@ -479,6 +483,27 @@ export const saveRulesPromptAction = actionClient
       where: { id: emailAccountId },
       data: { rulesPrompt },
     });
+
+    // Auto-register Gmail watch if not already active
+    const account = await prisma.emailAccount.findUnique({
+      where: { id: emailAccountId },
+      select: { watchEmailsExpirationDate: true },
+    });
+    if (
+      !account?.watchEmailsExpirationDate ||
+      account.watchEmailsExpirationDate < new Date()
+    ) {
+      try {
+        const gmail = await getGmailClientForEmailId({ emailAccountId });
+        await watchEmails({ emailAccountId, gmail });
+        logger.info("Auto-registered Gmail watch", { emailAccountId });
+      } catch (error) {
+        logger.error("Failed to auto-register Gmail watch", {
+          emailAccountId,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
 
     logger.info("Completed", {
       emailAccountId,
