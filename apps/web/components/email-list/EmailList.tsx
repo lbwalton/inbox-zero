@@ -6,8 +6,9 @@ import countBy from "lodash/countBy";
 import { capitalCase } from "capital-case";
 import Link from "next/link";
 import { toast } from "sonner";
-import { ChevronsDownIcon } from "lucide-react";
+import { ChevronsDownIcon, SparklesIcon } from "lucide-react";
 import { ActionButtonsBulk } from "@/components/ActionButtonsBulk";
+import { toastInfo } from "@/components/Toast";
 import { Celebration } from "@/components/Celebration";
 import { EmailPanel } from "@/components/email-list/EmailPanel";
 import type { Thread } from "@/components/email-list/types";
@@ -389,6 +390,27 @@ export function EmailList({
     );
   }, [emailAccountId, selectedRows, threads]);
 
+  const onScanInbox = useCallback(async () => {
+    const unprocessed = threads.filter((t) => !t.plan?.rule);
+    if (unprocessed.length === 0) {
+      toastInfo({
+        title: "Already scanned",
+        description: "All loaded emails have already been processed.",
+      });
+      return;
+    }
+    toast.promise(
+      async () => {
+        runAiRules(emailAccountId, unprocessed, false);
+      },
+      {
+        loading: `Scanning ${unprocessed.length} email(s)...`,
+        success: `Scanned ${unprocessed.length} email(s). Check the Pending tab for results.`,
+        error: "There was an error scanning your inbox.",
+      },
+    );
+  }, [emailAccountId, threads]);
+
   const isEmpty = threads.length === 0;
 
   return (
@@ -411,6 +433,17 @@ export function EmailList({
               onApprove={onAiApproveBulk}
               onReject={onAiRejectBulk}
             />
+          </div>
+          <div className="ml-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onScanInbox}
+              className="gap-1.5"
+            >
+              <SparklesIcon className="h-4 w-4" />
+              Scan Inbox
+            </Button>
           </div>
           {/* <div className="ml-auto gap-1 flex items-center">
             <Button variant="ghost" size='icon'>

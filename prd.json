@@ -1135,8 +1135,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 72,
-      "passes": false,
-      "notes": "Reuse existing runAiRules() from utils/queue/email-actions.ts. filteredEmails already available in EmailList.tsx scope. Place button in toolbar area around line 396-413."
+      "passes": true,
+      "notes": "Scan Inbox button with SparklesIcon in toolbar. Filters unprocessed threads, runs runAiRules(). Toast feedback for progress/completion/empty states."
     },
     {
       "id": "US-073",
