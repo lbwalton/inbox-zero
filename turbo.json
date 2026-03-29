@@ -6,6 +6,7 @@
       "env": [
         "NODE_ENV",
         "DATABASE_URL",
+        "RLS_DATABASE_URL",
         "DIRECT_URL",
         "NEXTAUTH_SECRET",
         "NEXTAUTH_URL",

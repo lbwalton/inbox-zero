@@ -3,6 +3,7 @@
 import { useCallback, useEffect, use } from "react";
 import useSWRInfinite from "swr/infinite";
 import { useSetAtom } from "jotai";
+import Link from "next/link";
 import { List } from "@/components/email-list/EmailList";
 import { LoadingContent } from "@/components/LoadingContent";
 import type { ThreadsQuery } from "@/app/api/google/threads/validation";
@@ -11,6 +12,7 @@ import { refetchEmailListAtom } from "@/store/email";
 import { BetaBanner } from "@/app/(app)/[emailAccountId]/mail/BetaBanner";
 import { ClientOnly } from "@/components/ClientOnly";
 import { PermissionsCheck } from "@/app/(app)/[emailAccountId]/PermissionsCheck";
+import { cn } from "@/utils";
 
 export default function Mail(props: {
   searchParams: Promise<{ type?: string; labelId?: string }>;
@@ -86,12 +88,39 @@ export default function Mail(props: {
     setSize((size) => size + 1);
   }, [setSize]);
 
+  const categoryTabs = [
+    { label: "All", type: "inbox" },
+    { label: "Primary", type: "CATEGORY_PERSONAL" },
+    { label: "Social", type: "CATEGORY_SOCIAL" },
+    { label: "Updates", type: "CATEGORY_UPDATES" },
+    { label: "Forums", type: "CATEGORY_FORUMS" },
+    { label: "Promotions", type: "CATEGORY_PROMOTIONS" },
+  ];
+
+  const activeType = searchParams.type || "inbox";
+
   return (
     <>
       <PermissionsCheck />
       <ClientOnly>
         <BetaBanner />
       </ClientOnly>
+      <div className="flex gap-1 overflow-x-auto border-b px-3 py-1.5">
+        {categoryTabs.map((tab) => (
+          <Link
+            key={tab.type}
+            href={`?type=${tab.type}`}
+            className={cn(
+              "whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+              activeType === tab.type
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+            )}
+          >
+            {tab.label}
+          </Link>
+        ))}
+      </div>
       <LoadingContent loading={isLoading && !data} error={error}>
         {allThreads && (
           <List

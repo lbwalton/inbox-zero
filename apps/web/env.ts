@@ -6,6 +6,7 @@ export const env = createEnv({
   server: {
     NODE_ENV: z.enum(["development", "production", "test"]),
     DATABASE_URL: z.string().url(),
+    RLS_DATABASE_URL: z.string().url().optional(),
     NEXTAUTH_SECRET: z.string().min(1),
     NEXTAUTH_URL: z.string().optional(),
     GOOGLE_CLIENT_ID: z.string().min(1),

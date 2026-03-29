@@ -945,8 +945,8 @@
         "Typecheck passes"
       ],
       "priority": 61,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "RLS migration at supabase/migrations/20260328000001_enable_rls.sql. Apply via supabase db push."
     },
     {
       "id": "US-062",
@@ -962,8 +962,8 @@
         "Typecheck passes"
       ],
       "priority": 62,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created utils/prisma-rls.ts with createRlsClient(). RLS enforced when RLS_DATABASE_URL is set. Graceful fallback to default client otherwise."
     },
     {
       "id": "US-063",
@@ -979,8 +979,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 63,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "GET /api/google/messages/unread-count endpoint. useUnreadCount hook with 60s SWR refresh. Badge on Inbox in both sidebar views."
     },
     {
       "id": "US-064",
@@ -996,8 +996,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 64,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Horizontal category tab bar on mail page. Uses existing Gmail category labels via ?type= param. Active tab highlighted with primary color."
     },
     {
       "id": "US-065",
@@ -1015,8 +1015,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 65,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Onboarding page at /onboarding/importance. Top senders API + bulk update API. Thumbs up/down UI with save/skip."
     },
     {
       "id": "US-066",
@@ -1033,8 +1033,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 66,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "AdminUserTable component with paginated user list, search, role/tier badges. GET /api/admin/users endpoint."
     },
     {
       "id": "US-067",
@@ -1050,8 +1050,8 @@
         "Typecheck passes"
       ],
       "priority": 67,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "AuditLog model added to schema. logAdminAction() utility in utils/audit.ts. RLS migration for admin-only read."
     },
     {
       "id": "US-068",
@@ -1067,8 +1067,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 68,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "AdminAuditLog component with paginated table. GET /api/admin/audit-logs endpoint. Tabbed admin page (Users, Audit Log, Admin Tools)."
     },
     {
       "id": "US-069",
@@ -1084,8 +1084,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 69,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Replaced binary theme toggle with 5-theme picker dropdown. Shows color swatches for Linen, Ember, Soleil, Stone, Terra. Persists via /api/user/theme."
     },
     {
       "id": "US-070",
@@ -1102,8 +1102,8 @@
         "Typecheck passes"
       ],
       "priority": 70,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Cron endpoint at /api/cron/email-digest. Digest utility generates Bntly-branded HTML with high-priority contacts. Scheduled by emailDigestTimeUtc."
     },
     {
       "id": "US-071",
@@ -1118,8 +1118,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 71,
-      "passes": false,
-      "notes": "Infrastructure (HelpTooltipContent, useHelpfulTips, ButtonGroup.contentComponent, API, settings toggle) already implemented. This story covers rollout to remaining components."
+      "passes": true,
+      "notes": "Rich tooltips added to PlanActions (Execute/Reject), SignalButtons (Important/Not Important), EmailMessage (Reply/Forward). All respect showHelpfulTips preference."
     },
     {
       "id": "US-072",
@@ -1135,8 +1135,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 72,
-      "passes": false,
-      "notes": "Reuse existing runAiRules() from utils/queue/email-actions.ts. filteredEmails already available in EmailList.tsx scope. Place button in toolbar area around line 396-413."
+      "passes": true,
+      "notes": "Scan Inbox button with SparklesIcon in toolbar. Filters unprocessed threads, runs runAiRules(). Toast feedback for progress/completion/empty states."
     },
     {
       "id": "US-073",
@@ -1148,8 +1148,8 @@
         "Typecheck passes"
       ],
       "priority": 73,
-      "passes": false,
-      "notes": "EmailSignal already has IMPORTANT/NOT_IMPORTANT signal types and threadId. Just add the optional context field."
+      "passes": true,
+      "notes": "Added priorityContext String? field to EmailSignal model. Apply via prisma db push."
     },
     {
       "id": "US-074",
@@ -1165,8 +1165,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 74,
-      "passes": false,
-      "notes": "Use existing EmailSignal model. Create a new server action for upserting the signal. Button goes in EmailListItem.tsx alongside existing action buttons."
+      "passes": true,
+      "notes": "Priority context popover on thumbs-up. API accepts priorityContext field. Save/Skip buttons in popover. Textarea with 500 char limit."
     },
     {
       "id": "US-075",
@@ -1182,8 +1182,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 75,
-      "passes": false,
-      "notes": "Add type=priority to the existing query type mapping in threads/controller.ts. Fetch threadIds from EmailSignal where signal=IMPORTANT, then load those threads. Add Priority link to SideNav.tsx."
+      "passes": true,
+      "notes": "Priority view at ?type=priority. getPriorityThreads() fetches from EmailSignal IMPORTANT records. Priority link in sidebar with StarIcon."
     },
     {
       "id": "US-076",
@@ -1200,8 +1200,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 76,
-      "passes": false,
-      "notes": "Build on existing EmailSignal data + ContactScore.priorityScore. Can use the economy LLM for classification. Store suggestions as EmailSignal with a new signal type or a separate suggestion field."
+      "passes": true,
+      "notes": "Suggestion engine uses sender patterns + ContactScore to suggest priority emails. Accept/dismiss API. SuggestedPriorityBadge with inline accept/dismiss buttons. SUGGESTED_PRIORITY and DISMISSED_SUGGESTION signal types added."
     }
   ]
 }

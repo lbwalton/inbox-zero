@@ -120,6 +120,10 @@ model User {
   // Referral relationships
   referralsMade    Referral[] @relation("ReferrerUser")
   referralReceived Referral?  @relation("ReferredUser")
+
+  // Audit log relationships
+  auditLogsAsAdmin  AuditLog[] @relation("AuditLogAdmin")
+  auditLogsAsTarget AuditLog[] @relation("AuditLogTarget")
 }
 
 // Migrating over to the new settings model. Currently most settings are in the User model, but will be moved to this model in the future.
@@ -917,6 +921,8 @@ enum DigestStatus {
 enum EmailSignalType {
   IMPORTANT
   NOT_IMPORTANT
+  SUGGESTED_PRIORITY
+  DISMISSED_SUGGESTION
 }
 
 enum NudgeType {
@@ -954,8 +960,9 @@ model EmailSignal {
   emailAccount   EmailAccount    @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
   threadId       String
   senderEmail    String
-  signal         EmailSignalType
-  taggedAt       DateTime        @default(now())
+  signal          EmailSignalType
+  priorityContext String?
+  taggedAt        DateTime        @default(now())
 
   @@unique([emailAccountId, threadId])
   @@index([emailAccountId])
@@ -1065,4 +1072,19 @@ model ContactAlias {
 
   @@unique([userId, phrase])
   @@index([userId])
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  action       String
+  targetUserId String?
+  adminUserId  String
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  adminUser  User  @relation("AuditLogAdmin", fields: [adminUserId], references: [id])
+  targetUser User? @relation("AuditLogTarget", fields: [targetUserId], references: [id])
+
+  @@index([adminUserId])
+  @@index([createdAt])
 }

@@ -12,6 +12,7 @@ const emailSignalSchema = z.object({
   senderEmail: z.string().email(),
   signal: z.enum(["IMPORTANT", "NOT_IMPORTANT"]),
   emailAccountId: z.string(),
+  priorityContext: z.string().max(500).optional(),
 });
 
 export type EmailSignalBody = z.infer<typeof emailSignalSchema>;
@@ -47,11 +48,13 @@ export const POST = withAuth(async (request) => {
       threadId: body.threadId,
       senderEmail: body.senderEmail,
       signal: body.signal,
+      priorityContext: body.priorityContext ?? null,
       taggedAt: new Date(),
     },
     update: {
       senderEmail: body.senderEmail,
       signal: body.signal,
+      priorityContext: body.priorityContext ?? null,
       taggedAt: new Date(),
     },
   });

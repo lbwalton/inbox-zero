@@ -18,6 +18,7 @@ import {
   GiftIcon,
   InboxIcon,
   type LucideIcon,
+  StarIcon,
   MailsIcon,
   MessageCircleReplyIcon,
   MessagesSquareIcon,
@@ -57,6 +58,7 @@ import { prefixPath } from "@/utils/path";
 import { ReferralDialog } from "@/components/ReferralDialog";
 import { useUser } from "@/hooks/useUser";
 import { UserBadges } from "@/components/UserBadge";
+import { useUnreadCount } from "@/hooks/useUnreadCount";
 
 type NavItem = {
   name: string;
@@ -71,6 +73,7 @@ export const useNavigation = () => {
   // When we have features in early access, we can filter the navigation items
   const showCleaner = useCleanerEnabled();
   const { emailAccountId } = useAccount();
+  const { unreadCount } = useUnreadCount();
 
   // Assistant category items
   const assistantItems: NavItem[] = useMemo(
@@ -89,6 +92,7 @@ export const useNavigation = () => {
         name: "Inbox",
         href: prefixPath(emailAccountId, "/mail"),
         icon: InboxIcon,
+        count: unreadCount,
       },
       {
         name: "Cold Emails",
@@ -195,6 +199,11 @@ const topMailLinks: NavItem[] = [
     name: "Inbox",
     icon: InboxIcon,
     href: "?type=inbox",
+  },
+  {
+    name: "Priority",
+    icon: StarIcon,
+    href: "?type=priority",
   },
   {
     name: "Drafts",
@@ -343,6 +352,15 @@ function MailNav({ path }: { path: string }) {
   const { onOpen } = useComposeModal();
   const [showHiddenLabels, setShowHiddenLabels] = useState(false);
   const { visibleLabels, hiddenLabels, isLoading } = useSplitLabels();
+  const { unreadCount } = useUnreadCount();
+
+  const topMailLinksWithCount = useMemo(
+    () =>
+      topMailLinks.map((link) =>
+        link.name === "Inbox" ? { ...link, count: unreadCount } : link,
+      ),
+    [unreadCount],
+  );
 
   // Transform user labels into NavItems
   const labelNavItems = useMemo(() => {
@@ -390,7 +408,7 @@ function MailNav({ path }: { path: string }) {
       </SidebarGroup>
 
       <SidebarGroup>
-        <SideNavMenu items={topMailLinks} activeHref={path} />
+        <SideNavMenu items={topMailLinksWithCount} activeHref={path} />
       </SidebarGroup>
       <SidebarGroup>
         <SidebarGroupLabel>Categories</SidebarGroupLabel>

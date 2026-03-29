@@ -3,6 +3,8 @@ import { CheckIcon, XIcon } from "lucide-react";
 import { LoadingMiniSpinner } from "@/components/Loading";
 import { toastError, toastSuccess } from "@/components/Toast";
 import { Tooltip } from "@/components/Tooltip";
+import { HelpTooltipContent } from "@/components/HelpTooltipContent";
+import { useHelpfulTips } from "@/hooks/useHelpfulTips";
 import type { Executing, Thread } from "@/components/email-list/types";
 import { cn } from "@/utils";
 import { approvePlanAction, rejectPlanAction } from "@/utils/actions/ai-rule";
@@ -101,6 +103,8 @@ export function PlanActions(props: {
     [rejectPlan, thread],
   );
 
+  const showTips = useHelpfulTips();
+
   if (!thread.plan?.rule) return null;
   if (thread.plan?.status === "APPLIED" || thread.plan?.status === "REJECTED")
     return null;
@@ -110,7 +114,18 @@ export function PlanActions(props: {
       {props.executingPlan ? (
         <LoadingMiniSpinner />
       ) : (
-        <Tooltip content="Execute AI Plan">
+        <Tooltip
+          content="Execute AI Plan"
+          contentComponent={
+            showTips ? (
+              <HelpTooltipContent
+                title="Approve AI Plan"
+                description="Run the AI's suggested actions for this email — like labeling, archiving, or drafting a reply based on your rules."
+                example="AI suggests: Label as 'Client' → Archive"
+              />
+            ) : undefined
+          }
+        >
           <button
             type="button"
             onClick={execute}
@@ -124,7 +139,17 @@ export function PlanActions(props: {
       {props.rejectingPlan ? (
         <LoadingMiniSpinner />
       ) : (
-        <Tooltip content="Reject AI Plan">
+        <Tooltip
+          content="Reject AI Plan"
+          contentComponent={
+            showTips ? (
+              <HelpTooltipContent
+                title="Reject AI Plan"
+                description="Dismiss the AI's suggested actions. The email stays in your inbox unchanged. Helps the system learn what you don't want."
+              />
+            ) : undefined
+          }
+        >
           <button
             type="button"
             onClick={reject}
