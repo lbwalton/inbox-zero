@@ -1102,8 +1102,8 @@
         "Typecheck passes"
       ],
       "priority": 70,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Cron endpoint at /api/cron/email-digest. Digest utility generates Bntly-branded HTML with high-priority contacts. Scheduled by emailDigestTimeUtc."
     },
     {
       "id": "US-071",
