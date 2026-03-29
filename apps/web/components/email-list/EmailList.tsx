@@ -6,7 +6,7 @@ import countBy from "lodash/countBy";
 import { capitalCase } from "capital-case";
 import Link from "next/link";
 import { toast } from "sonner";
-import { ChevronsDownIcon, SparklesIcon } from "lucide-react";
+import { ChevronsDownIcon, SparklesIcon, XIcon } from "lucide-react";
 import { ActionButtonsBulk } from "@/components/ActionButtonsBulk";
 import { toastInfo } from "@/components/Toast";
 import { Celebration } from "@/components/Celebration";
@@ -24,7 +24,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { runAiRules } from "@/utils/queue/email-actions";
+import { runAiRules, cancelAiRules } from "@/utils/queue/email-actions";
 import { Button } from "@/components/ui/button";
 import { ButtonLoader } from "@/components/Loading";
 import {
@@ -390,6 +390,9 @@ export function EmailList({
     );
   }, [emailAccountId, selectedRows, threads]);
 
+  const [scanCount, setScanCount] = useState<string>("");
+  const [isScanning, setIsScanning] = useState(false);
+
   const onScanInbox = useCallback(async () => {
     const unprocessed = threads.filter((t) => !t.plan?.rule);
     if (unprocessed.length === 0) {
@@ -399,17 +402,36 @@ export function EmailList({
       });
       return;
     }
+
+    const limit = scanCount ? parseInt(scanCount, 10) : undefined;
+    const toScan =
+      limit && limit > 0 ? unprocessed.slice(0, limit) : unprocessed;
+
+    setIsScanning(true);
     toast.promise(
       async () => {
-        runAiRules(emailAccountId, unprocessed, false);
+        await runAiRules(emailAccountId, toScan, false);
+        setIsScanning(false);
       },
       {
-        loading: `Scanning ${unprocessed.length} email(s)...`,
-        success: `Scanned ${unprocessed.length} email(s). Check the Pending tab for results.`,
-        error: "There was an error scanning your inbox.",
+        loading: `Scanning ${toScan.length} email(s)...`,
+        success: `Scanned ${toScan.length} email(s). Check the Pending tab for results.`,
+        error: () => {
+          setIsScanning(false);
+          return "There was an error scanning your inbox.";
+        },
       },
     );
-  }, [emailAccountId, threads]);
+  }, [emailAccountId, threads, scanCount]);
+
+  const onCancelScan = useCallback(() => {
+    cancelAiRules();
+    setIsScanning(false);
+    toastInfo({
+      title: "Scan cancelled",
+      description: "Remaining emails will not be scanned.",
+    });
+  }, []);
 
   const isEmpty = threads.length === 0;
 
@@ -434,16 +456,37 @@ export function EmailList({
               onReject={onAiRejectBulk}
             />
           </div>
-          <div className="ml-auto">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onScanInbox}
-              className="gap-1.5"
-            >
-              <SparklesIcon className="h-4 w-4" />
-              Scan Inbox
-            </Button>
+          <div className="ml-auto flex items-center gap-1.5">
+            <input
+              type="number"
+              min="1"
+              placeholder="#"
+              value={scanCount}
+              onChange={(e) => setScanCount(e.target.value)}
+              className="h-8 w-14 rounded-md border border-input bg-background px-2 text-sm tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              title="Number of emails to scan (leave empty for all)"
+            />
+            {isScanning ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onCancelScan}
+                className="gap-1.5 text-destructive hover:text-destructive"
+              >
+                <XIcon className="h-4 w-4" />
+                Cancel
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onScanInbox}
+                className="gap-1.5"
+              >
+                <SparklesIcon className="h-4 w-4" />
+                Scan Inbox
+              </Button>
+            )}
           </div>
           {/* <div className="ml-auto gap-1 flex items-center">
             <Button variant="ghost" size='icon'>

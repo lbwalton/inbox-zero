@@ -15,7 +15,7 @@ export const runAiRules = async (
   const threadIds = threads.map((t) => t.id);
   pushToAiQueueAtom(threadIds);
 
-  aiQueue.addAll(
+  await aiQueue.addAll(
     threads.map((thread) => async () => {
       const message = thread.messages?.[thread.messages.length - 1];
       if (!message) return;
@@ -28,4 +28,8 @@ export const runAiRules = async (
       removeFromAiQueueAtom(thread.id);
     }),
   );
+};
+
+export const cancelAiRules = () => {
+  aiQueue.clear();
 };
