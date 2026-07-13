@@ -155,7 +155,7 @@
       ],
       "priority": 11,
       "passes": true,
-      "notes": "Rebranded 42 files: metadata, landing pages, app pages, components, config. All Inbox Zero/getinboxzero.com references replaced with Bntly/getbntly.com."
+      "notes": "Rebranded 42 files: metadata, landing pages, app pages, components, config. All Inbox Zero/getinboxzero.com references replaced with Bntly/getbntly.com. | PHASE-A VERIFIED 2026-07-13: app + landing show Bntly everywhere; 0 user-facing 'Inbox Zero' strings (internal @inboxzero package names remain, not user-visible)."
     },
     {
       "id": "US-012",
@@ -171,7 +171,7 @@
       ],
       "priority": 12,
       "passes": true,
-      "notes": "Replaced SVG wordmark in Logo.tsx, updated email template logos in digest.tsx and summary.tsx."
+      "notes": "Replaced SVG wordmark in Logo.tsx, updated email template logos in digest.tsx and summary.tsx. | PHASE-A VERIFIED 2026-07-13: Bntly wordmark in sidebar + favicon icon.png served. needsHumanEye: logo aesthetics."
     },
     {
       "id": "US-013",
@@ -188,7 +188,7 @@
       ],
       "priority": 13,
       "passes": true,
-      "notes": "Defined 5 theme palettes (Linen, Ember, Soleil, Stone, Terra) with full CSS variable sets in globals.css."
+      "notes": "Defined 5 theme palettes (Linen, Ember, Soleil, Stone, Terra) with full CSS variable sets in globals.css. | PHASE-A VERIFIED 2026-07-13: all 5 palettes (light/dark/bright/monochromatic/earth) present in globals.css; each applies distinct --background/--primary tokens, verified via computed styles in browser."
     },
     {
       "id": "US-014",
@@ -204,7 +204,7 @@
       ],
       "priority": 14,
       "passes": true,
-      "notes": "Added themePreference to User model. Created GET/PUT /api/user/theme routes. Updated ThemeProvider with 5 themes and ThemeSync component."
+      "notes": "Added themePreference to User model. Created GET/PUT /api/user/theme routes. Updated ThemeProvider with 5 themes and ThemeSync component. | PHASE-A VERIFIED 2026-07-13: theme persists to DB (GET /api/user/theme returned selected theme) and localStorage."
     },
     {
       "id": "US-015",
@@ -221,7 +221,7 @@
       ],
       "priority": 15,
       "passes": true,
-      "notes": "Created ThemePicker component with 5 swatches, keyboard a11y, and PUT /api/user/theme integration. Added AppearanceSection to settings page."
+      "notes": "Created ThemePicker component with 5 swatches, keyboard a11y, and PUT /api/user/theme integration. Added AppearanceSection to settings page. | PHASE-A VERIFIED 2026-07-13: picker renders 5 options (Linen/Ember/Soleil/Stone/Terra), clicking each switches the html class live. BUG: React hydration mismatch on SSR (see FIX-003)."
     },
     {
       "id": "US-016",
@@ -236,7 +236,7 @@
       ],
       "priority": 16,
       "passes": true,
-      "notes": "Updated email templates with warm amber/cream colors. Replaced blue tones with #C96B16 amber. Updated URLs to getbntly.com."
+      "notes": "Updated email templates with warm amber/cream colors. Replaced blue tones with #C96B16 amber. Updated URLs to getbntly.com. | PHASE-A VERIFIED 2026-07-13: digest.tsx + summary.tsx carry Bntly branding, no stale strings."
     },
     {
       "id": "US-017",
@@ -252,7 +252,7 @@
       ],
       "priority": 17,
       "passes": true,
-      "notes": "Rebranded Header (simplified nav, removed Solutions dropdown), Hero (warm personal copy), HeroAB variants, Footer (personal use cases, removed enterprise/OSS links), CTAButtons."
+      "notes": "Rebranded Header (simplified nav, removed Solutions dropdown), Hero (warm personal copy), HeroAB variants, Footer (personal use cases, removed enterprise/OSS links), CTAButtons. | PHASE-A PARTIAL 2026-07-13: hero text/nav/footer rebranded (Bntly, getbntly.com, bntlyapp). FAIL: hero product screenshot asset still shows INBOX ZERO app UI (see FIX-004)."
     },
     {
       "id": "US-018",
@@ -268,7 +268,7 @@
       ],
       "priority": 18,
       "passes": true,
-      "notes": "Rewrote FAQs (7 Bntly-relevant), testimonials (warm placeholders with initial avatars), features, CTA, privacy, and pricing copy with personal assistant brand voice."
+      "notes": "Rewrote FAQs (7 Bntly-relevant), testimonials (warm placeholders with initial avatars), features, CTA, privacy, and pricing copy with personal assistant brand voice. | PHASE-A PARTIAL 2026-07-13: content sections text rebranded. FAIL: inherited false social proof - 'Trusted by 10,000+ productive users' + Resend/ByteDance/Zendesk/Netflix/DOAC logos, and CASA Tier 2 / Google-approval claims not true for Bntly (see FIX-004)."
     },
     {
       "id": "US-019",
@@ -1085,7 +1085,7 @@
       ],
       "priority": 69,
       "passes": true,
-      "notes": "Replaced binary theme toggle with 5-theme picker dropdown. Shows color swatches for Linen, Ember, Soleil, Stone, Terra. Persists via /api/user/theme."
+      "notes": "Replaced binary theme toggle with 5-theme picker dropdown. Shows color swatches for Linen, Ember, Soleil, Stone, Terra. Persists via /api/user/theme. | PHASE-A VERIFIED 2026-07-13: all 5 themes switch live from the picker with correct palette classes; persistence confirmed."
     },
     {
       "id": "US-070",
@@ -1228,6 +1228,34 @@
       "priority": 95,
       "passes": false,
       "notes": "Found during Phase A Group 1 verification 2026-07-13."
+    },
+    {
+      "id": "FIX-003",
+      "title": "Fix ThemePicker SSR hydration mismatch",
+      "description": "React hydration error on /settings?tab=user: server renders ThemePicker radios unchecked (aria-checked=false, tabIndex=-1) while client renders the persisted theme as checked. next-themes state is unavailable during SSR; picker must render theme-dependent attributes only after mount (mounted-state gate) or suppress hydration warning correctly.",
+      "acceptanceCriteria": [
+        "Loading /settings?tab=user with a non-default theme produces zero hydration errors in the browser console",
+        "Theme picker still shows the persisted theme as selected after reload",
+        "All 5 themes still switch live"
+      ],
+      "priority": 91,
+      "passes": false,
+      "notes": "Found during Phase A Group 2 browser verification 2026-07-13."
+    },
+    {
+      "id": "FIX-004",
+      "title": "Landing page content integrity: hero screenshot + false claims",
+      "description": "Landing page ships inherited Inbox Zero marketing assets and claims that are false for Bntly: (1) hero product screenshot shows INBOX ZERO app UI; (2) 'Trusted by 10,000+ productive users' with Resend/ByteDance/Zendesk/Netflix/DOAC logos; (3) home Privacy section claims Google security review approval and CASA Tier 2 (also blocks OAuth verification honesty); privacy policy lacks Google Limited Use disclosure.",
+      "acceptanceCriteria": [
+        "Hero screenshot replaced with a real Bntly app screenshot (or removed)",
+        "Trusted-by logo wall and 10,000+ users claim removed or replaced with truthful content",
+        "CASA Tier 2 / Google-approval claims removed or softened until actually obtained",
+        "Privacy policy contains the Google API Services User Data Policy Limited Use disclosure",
+        "No testimonial or stat on the landing page refers to Inbox Zero users"
+      ],
+      "priority": 92,
+      "passes": false,
+      "notes": "Found during Phase A Group 2 browser verification 2026-07-13. Ties into OAuth verification prep."
     }
   ],
   "projectConfig": {
