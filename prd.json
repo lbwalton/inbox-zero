@@ -376,7 +376,7 @@
       ],
       "priority": 25,
       "passes": true,
-      "notes": "Created tone-scanner.ts using Gmail API + LLM abstraction. Extracts openers, signoffs, formality, phrases. Upserts ToneProfile."
+      "notes": "Created tone-scanner.ts using Gmail API + LLM abstraction. Extracts openers, signoffs, formality, phrases. Upserts ToneProfile. | PHASE-A PARTIAL 2026-07-13: scanner service exists, worker route cron-protected, fails safe (500 -> QStash retry) on dead Gmail tokens. Real scan needs real tokens."
     },
     {
       "id": "US-026",
@@ -391,7 +391,7 @@
       ],
       "priority": 26,
       "passes": true,
-      "notes": "Created GET/PUT /api/tone-profile routes. Created /api/tone-profile/scan cron dispatcher + worker via QStash. Added monthly cron to vercel.json."
+      "notes": "Created GET/PUT /api/tone-profile routes. Created /api/tone-profile/scan cron dispatcher + worker via QStash. Added monthly cron to vercel.json. | PHASE-A VERIFIED 2026-07-13: GET /api/tone-profile returns seeded profile (openers/signoffs/formality); scan + worker routes require cron secret; monthly cron registered (0 3 1 * *)."
     },
     {
       "id": "US-027",
@@ -408,7 +408,7 @@
       ],
       "priority": 27,
       "passes": true,
-      "notes": "Created auto-draft.ts with generateAutoDraft. Checks user.autoDraftEnabled, ContactScore threshold, ToneProfile for LLM context, creates Gmail draft."
+      "notes": "Created auto-draft.ts with generateAutoDraft. Checks user.autoDraftEnabled, ContactScore threshold, ToneProfile for LLM context, creates Gmail draft. | PHASE-A VERIFIED-IN-CODE 2026-07-13: threshold + per-contact + per-user gates present; creates via gmail.drafts.create; no send call anywhere in the path. Live draft creation needs real tokens + LLM (needs-lb-review)."
     },
     {
       "id": "US-028",
@@ -423,7 +423,7 @@
       ],
       "priority": 28,
       "passes": true,
-      "notes": "Modified /api/google/webhook/route.ts to look up EmailAccount by email, dispatch auto-draft (if autoDraftEnabled) and filter-inbound via QStash using Promise.allSettled fire-and-forget pattern. Webhook returns 200 immediately."
+      "notes": "Modified /api/google/webhook/route.ts to look up EmailAccount by email, dispatch auto-draft (if autoDraftEnabled) and filter-inbound via QStash using Promise.allSettled fire-and-forget pattern. Webhook returns 200 immediately. | PHASE-A VERIFIED-IN-CODE 2026-07-13: webhook dispatches BOTH generateAutoDraft (gated on autoDraftEnabled) and filterInboundEmail, non-blocking with logged failures."
     },
     {
       "id": "US-029",
@@ -657,7 +657,7 @@
       ],
       "priority": 44,
       "passes": true,
-      "notes": "Created Focus Mode settings page. Toggle on/off, schedule hours, breakthrough threshold via /api/focus-mode."
+      "notes": "Created Focus Mode settings page. Toggle on/off, schedule hours, breakthrough threshold via /api/focus-mode. | PHASE-A VERIFIED 2026-07-13: Focus Mode panel renders and reflects API-set state (toggle on, threshold 80); PUT persists to DB."
     },
     {
       "id": "US-045",
@@ -675,7 +675,7 @@
       ],
       "priority": 45,
       "passes": true,
-      "notes": "Created Tone Profile settings page. Read-only display of openers, signoffs, formality. Re-scan button."
+      "notes": "Created Tone Profile settings page. Read-only display of openers, signoffs, formality. Re-scan button. | PHASE-A BLOCKED 2026-07-13: panel UI behind Gmail permissions guard with fixture tokens; API read path verified in US-026."
     },
     {
       "id": "US-046",
@@ -747,7 +747,7 @@
       ],
       "priority": 49,
       "passes": true,
-      "notes": "Created Auto-Draft & Nudge settings page. Toggle autoDraft, threshold slider, nudge day inputs."
+      "notes": "Created Auto-Draft & Nudge settings page. Toggle autoDraft, threshold slider, nudge day inputs. | PHASE-A BLOCKED 2026-07-13: panel UI behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-050",
