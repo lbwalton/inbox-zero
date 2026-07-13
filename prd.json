@@ -563,7 +563,7 @@
       ],
       "priority": 38,
       "passes": true,
-      "notes": "Created inbox-filter.ts (trusted sender filter) and modified webhook to call it for inbound emails."
+      "notes": "Created inbox-filter.ts (trusted sender filter) and modified webhook to call it for inbound emails. | PHASE-A VERIFIED-IN-CODE 2026-07-13: inbox-filter.ts exists with trust hierarchy; wired into webhook (US-028). Gmail label ops need real-token pass."
     },
     {
       "id": "US-039",
@@ -577,7 +577,7 @@
       ],
       "priority": 39,
       "passes": true,
-      "notes": "Created junk-purge.ts and POST /api/junk/purge cron route. Trashes junk older than junkRetentionDays."
+      "notes": "Created junk-purge.ts and POST /api/junk/purge cron route. Trashes junk older than junkRetentionDays. | PHASE-A PARTIAL 2026-07-13: purge route runs with cron secret and fans out; POST-only (FIX-010); Gmail deletion needs real pass."
     },
     {
       "id": "US-040",
@@ -590,7 +590,7 @@
       ],
       "priority": 40,
       "passes": true,
-      "notes": "Created label-suggester.ts. Uses LLM to analyze email patterns and create SuggestedLabel entries."
+      "notes": "Created label-suggester.ts. Uses LLM to analyze email patterns and create SuggestedLabel entries. | PHASE-A PARTIAL 2026-07-13: suggester exists, cron registered, POST-only (FIX-010); LLM+Gmail path needs real pass."
     },
     {
       "id": "US-041",
@@ -605,7 +605,7 @@
       ],
       "priority": 41,
       "passes": true,
-      "notes": "Created GET /api/labels and PUT /api/labels/[id] routes. Approve creates Gmail label, dismiss updates status."
+      "notes": "Created GET /api/labels and PUT /api/labels/[id] routes. Approve creates Gmail label, dismiss updates status. | PHASE-A VERIFIED 2026-07-13: PUT /api/labels/:id DISMISSED persists to DB; APPROVED correctly fails without valid Gmail tokens and stays PENDING (no false state)."
     },
     {
       "id": "US-042",
@@ -621,7 +621,7 @@
       ],
       "priority": 42,
       "passes": true,
-      "notes": "Created bntly settings layout with sidebar nav linking to 10 sub-sections. Uses lucide icons, cn() for active state."
+      "notes": "Created bntly settings layout with sidebar nav linking to 10 sub-sections. Uses lucide icons, cn() for active state. | PHASE-A VERIFIED 2026-07-13: hub layout renders with all 10 sidebar items and active-state highlighting at /settings/bntly/*."
     },
     {
       "id": "US-043",
@@ -710,7 +710,7 @@
       ],
       "priority": 47,
       "passes": true,
-      "notes": "Created Trusted Senders settings page with CRUD. New API routes: GET/POST/DELETE /api/trusted-senders."
+      "notes": "Created Trusted Senders settings page with CRUD. New API routes: GET/POST/DELETE /api/trusted-senders. | PHASE-A BLOCKED 2026-07-13: panel behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-048",
@@ -764,7 +764,7 @@
       ],
       "priority": 50,
       "passes": true,
-      "notes": "Created Junk Settings page. Retention days, auto-delete toggle, manual purge button."
+      "notes": "Created Junk Settings page. Retention days, auto-delete toggle, manual purge button. | PHASE-A BLOCKED 2026-07-13: panel behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-051",
@@ -782,7 +782,7 @@
       ],
       "priority": 51,
       "passes": true,
-      "notes": "Created Suggested Labels settings page. Lists with PENDING/APPROVED/DISMISSED badges. Approve/Dismiss actions."
+      "notes": "Created Suggested Labels settings page. Lists with PENDING/APPROVED/DISMISSED badges. Approve/Dismiss actions. | PHASE-A BLOCKED 2026-07-13: panel behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-052",
@@ -859,7 +859,7 @@
       ],
       "priority": 56,
       "passes": true,
-      "notes": "Created contact-embedder.ts. Generates vector embeddings for contacts using OpenAI text-embedding-3-small. Uses prisma.$executeRaw for vector upserts."
+      "notes": "Created contact-embedder.ts. Generates vector embeddings for contacts using OpenAI text-embedding-3-small. Uses prisma.$executeRaw for vector upserts. | PHASE-A PARTIAL 2026-07-13: embedder service exists; embedding generation needs LLM + real contacts pass."
     },
     {
       "id": "US-057",
@@ -876,7 +876,7 @@
       ],
       "priority": 57,
       "passes": true,
-      "notes": "Created alias-resolver.ts. Cosine similarity search via prisma.$queryRaw on ContactEmbedding vectors. Returns top match above 0.7 threshold."
+      "notes": "Created alias-resolver.ts. Cosine similarity search via prisma.$queryRaw on ContactEmbedding vectors. Returns top match above 0.7 threshold. | PHASE-A VERIFIED 2026-07-13: /api/alias/resolve returns exact-phrase match with similarity 1. Semantic (embedding) matching needs LLM pass."
     },
     {
       "id": "US-058",
@@ -892,7 +892,7 @@
       ],
       "priority": 58,
       "passes": true,
-      "notes": "Created alias API routes: GET/POST/DELETE /api/alias, PUT /api/alias/[id], GET /api/alias/resolve, POST /api/alias/regenerate-embeddings."
+      "notes": "Created alias API routes: GET/POST/DELETE /api/alias, PUT /api/alias/[id], GET /api/alias/resolve, POST /api/alias/regenerate-embeddings. | PHASE-A VERIFIED 2026-07-13: POST upserts with confirmedAt (DB-verified), GET lists, PATCH updates contact, DELETE removes. All round-tripped."
     },
     {
       "id": "US-059",
@@ -910,7 +910,7 @@
       ],
       "priority": 59,
       "passes": true,
-      "notes": "Created AliasAutocomplete component. Debounced search with dropdown, integrated into ComposeEmailForm To: field."
+      "notes": "Created AliasAutocomplete component. Debounced search with dropdown, integrated into ComposeEmailForm To: field. | PHASE-A BLOCKED 2026-07-13: compose UI needs real-token pass."
     },
     {
       "id": "US-060",
@@ -929,7 +929,7 @@
       ],
       "priority": 60,
       "passes": true,
-      "notes": "Created Alias Manager settings page under bntly/aliases. Lists aliases with confirmed/unconfirmed badges. Add/delete/regenerate embeddings."
+      "notes": "Created Alias Manager settings page under bntly/aliases. Lists aliases with confirmed/unconfirmed badges. Add/delete/regenerate embeddings. | PHASE-A BLOCKED 2026-07-13: panel behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-061",
@@ -946,7 +946,7 @@
       ],
       "priority": 61,
       "passes": true,
-      "notes": "RLS migration at supabase/migrations/20260328000001_enable_rls.sql. Apply via supabase db push."
+      "notes": "RLS migration at supabase/migrations/20260328000001_enable_rls.sql. Apply via supabase db push. | PHASE-A VERIFIED-AS-WRITTEN 2026-07-13: migration applies cleanly, RLS enabled+policies on all 10 declared tables + AuditLog. GAPS: 4 user-scoped tables not covered (FIX-012); policies never enforced for the role the app connects with (FIX-014)."
     },
     {
       "id": "US-062",
@@ -963,7 +963,7 @@
       ],
       "priority": 62,
       "passes": true,
-      "notes": "Created utils/prisma-rls.ts with createRlsClient(). RLS enforced when RLS_DATABASE_URL is set. Graceful fallback to default client otherwise."
+      "notes": "Created utils/prisma-rls.ts with createRlsClient(). RLS enforced when RLS_DATABASE_URL is set. Graceful fallback to default client otherwise. | PHASE-A PARTIAL 2026-07-13: extension sets app.user_id/app.user_role via parameterized set_config. But app connects as table owner so policies do not apply (FIX-014)."
     },
     {
       "id": "US-063",
@@ -980,7 +980,7 @@
       ],
       "priority": 63,
       "passes": true,
-      "notes": "GET /api/google/messages/unread-count endpoint. useUnreadCount hook with 60s SWR refresh. Badge on Inbox in both sidebar views."
+      "notes": "GET /api/google/messages/unread-count endpoint. useUnreadCount hook with 60s SWR refresh. Badge on Inbox in both sidebar views. | PHASE-A BLOCKED 2026-07-13: unread badge needs real Gmail data pass."
     },
     {
       "id": "US-064",
@@ -997,7 +997,7 @@
       ],
       "priority": 64,
       "passes": true,
-      "notes": "Horizontal category tab bar on mail page. Uses existing Gmail category labels via ?type= param. Active tab highlighted with primary color."
+      "notes": "Horizontal category tab bar on mail page. Uses existing Gmail category labels via ?type= param. Active tab highlighted with primary color. | PHASE-A BLOCKED 2026-07-13: category sub-nav needs real Gmail data pass."
     },
     {
       "id": "US-065",
@@ -1034,7 +1034,7 @@
       ],
       "priority": 66,
       "passes": true,
-      "notes": "AdminUserTable component with paginated user list, search, role/tier badges. GET /api/admin/users endpoint."
+      "notes": "AdminUserTable component with paginated user list, search, role/tier badges. GET /api/admin/users endpoint. | PHASE-A VERIFIED 2026-07-13: /api/admin/users returns paginated users for ADMIN; dashboard renders Users table with fixture row in browser."
     },
     {
       "id": "US-067",
@@ -1050,8 +1050,8 @@
         "Typecheck passes"
       ],
       "priority": 67,
-      "passes": true,
-      "notes": "AuditLog model added to schema. logAdminAction() utility in utils/audit.ts. RLS migration for admin-only read."
+      "passes": false,
+      "notes": "AuditLog model added to schema. logAdminAction() utility in utils/audit.ts. RLS migration for admin-only read. | PHASE-A FAIL 2026-07-13: utils/audit.ts exists but has ZERO callers - no admin action writes an AuditLog row (FIX-013)."
     },
     {
       "id": "US-068",
@@ -1068,7 +1068,7 @@
       ],
       "priority": 68,
       "passes": true,
-      "notes": "AdminAuditLog component with paginated table. GET /api/admin/audit-logs endpoint. Tabbed admin page (Users, Audit Log, Admin Tools)."
+      "notes": "AdminAuditLog component with paginated table. GET /api/admin/audit-logs endpoint. Tabbed admin page (Users, Audit Log, Admin Tools). | PHASE-A PARTIAL 2026-07-13: Audit Log tab + API render/return empty list correctly; nothing to display because US-067 never writes (FIX-013)."
     },
     {
       "id": "US-069",
@@ -1119,7 +1119,7 @@
       ],
       "priority": 71,
       "passes": true,
-      "notes": "Rich tooltips added to PlanActions (Execute/Reject), SignalButtons (Important/Not Important), EmailMessage (Reply/Forward). All respect showHelpfulTips preference."
+      "notes": "Rich tooltips added to PlanActions (Execute/Reject), SignalButtons (Important/Not Important), EmailMessage (Reply/Forward). All respect showHelpfulTips preference. | PHASE-A BLOCKED 2026-07-13: tooltip sweep needs real-token UI pass."
     },
     {
       "id": "US-072",
@@ -1136,7 +1136,7 @@
       ],
       "priority": 72,
       "passes": true,
-      "notes": "Scan Inbox button with SparklesIcon in toolbar. Filters unprocessed threads, runs runAiRules(). Toast feedback for progress/completion/empty states."
+      "notes": "Scan Inbox button with SparklesIcon in toolbar. Filters unprocessed threads, runs runAiRules(). Toast feedback for progress/completion/empty states. | PHASE-A BLOCKED 2026-07-13: Scan Inbox button needs real Gmail data pass."
     },
     {
       "id": "US-073",
@@ -1352,6 +1352,43 @@
       "priority": 86,
       "passes": false,
       "notes": "Found Phase A Group 6 2026-07-13. Highest-impact finding so far."
+    },
+    {
+      "id": "FIX-012",
+      "title": "Extend RLS to remaining user-scoped Bntly tables",
+      "description": "EmailSignal, TrustedSender, SuggestedLabel, PushSubscription are user/account-scoped but have no RLS enabled (relrowsecurity=f). US-061's list omitted them.",
+      "acceptanceCriteria": [
+        "RLS enabled + policies for the 4 tables in a new supabase migration",
+        "Migration applies cleanly on a DB with existing data"
+      ],
+      "priority": 80,
+      "passes": false,
+      "notes": "Found Phase A Group 9 2026-07-13."
+    },
+    {
+      "id": "FIX-013",
+      "title": "Admin actions never write audit logs (utils/audit.ts has no callers)",
+      "description": "US-067's audit helper exists but no admin mutation (role change, premium upgrade, user deletion) invokes it, so AuditLog stays empty and the US-068 viewer is decorative.",
+      "acceptanceCriteria": [
+        "Every admin mutation route/action writes an AuditLog row with actor, action, target, metadata",
+        "Audit Log tab shows entries after performing an admin action (browser-verified)"
+      ],
+      "priority": 79,
+      "passes": false,
+      "notes": "Found Phase A Group 9 2026-07-13."
+    },
+    {
+      "id": "FIX-014",
+      "title": "RLS policies are never enforced: app connects as table owner, app_user is NOLOGIN",
+      "description": "The Prisma connection uses the postgres (owner) role which bypasses RLS; app_user (the role policies target) is NOLOGIN and unused; no FORCE ROW LEVEL SECURITY. The entire RLS layer currently provides zero runtime protection.",
+      "acceptanceCriteria": [
+        "Decide enforcement model: connect via a non-owner role that honors RLS, or ALTER TABLE ... FORCE ROW LEVEL SECURITY with owner-safe policies, or explicitly document RLS as future defense-in-depth",
+        "If enforced: verify cross-user query with app.user_id set to another user returns zero rows through the app's actual connection",
+        "Prisma queries still function for the legitimate user"
+      ],
+      "priority": 78,
+      "passes": false,
+      "notes": "Found Phase A Group 9 2026-07-13. Security-relevant."
     }
   ],
   "projectConfig": {
