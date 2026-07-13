@@ -44,21 +44,23 @@ export function useExecutePlan(refetch: () => void) {
 
   const rejectPlan = useCallback(
     async (thread: Thread) => {
+      if (!thread.plan?.id) {
+        // Plan may have already been processed or removed — just refresh
+        refetch();
+        return;
+      }
+
       setRejectingPlan((s) => ({ ...s, [thread.id!]: true }));
 
-      if (thread.plan?.id) {
-        const result = await rejectPlanAction(emailAccountId, {
-          executedRuleId: thread.plan.id,
+      const result = await rejectPlanAction(emailAccountId, {
+        executedRuleId: thread.plan.id,
+      });
+      if (result?.serverError) {
+        toastError({
+          description: `Error rejecting plan. ${result.serverError || ""}`,
         });
-        if (result?.serverError) {
-          toastError({
-            description: `Error rejecting plan. ${result.serverError || ""}`,
-          });
-        } else {
-          toastSuccess({ description: "Plan rejected" });
-        }
       } else {
-        toastError({ description: "Plan not found" });
+        toastSuccess({ description: "Plan rejected" });
       }
 
       refetch();

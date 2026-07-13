@@ -64,8 +64,12 @@ export async function getThreads({
         emailAccountId,
         threadId: { in: threadIds },
         status: {
-          // TODO probably want to show applied rules here in the future too
-          in: [ExecutedRuleStatus.PENDING, ExecutedRuleStatus.SKIPPED],
+          in: [
+            ExecutedRuleStatus.PENDING,
+            ExecutedRuleStatus.SKIPPED,
+            ExecutedRuleStatus.APPLIED,
+            ExecutedRuleStatus.REJECTED,
+          ],
         },
       },
       select: {
@@ -169,7 +173,11 @@ async function getPriorityThreads({
         emailAccountId,
         threadId: { in: threadIds },
         status: {
-          in: [ExecutedRuleStatus.PENDING, ExecutedRuleStatus.SKIPPED],
+          in: [
+            ExecutedRuleStatus.PENDING,
+            ExecutedRuleStatus.SKIPPED,
+            ExecutedRuleStatus.APPLIED,
+          ],
         },
       },
       select: {

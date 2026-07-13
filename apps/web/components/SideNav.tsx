@@ -75,6 +75,19 @@ export const useNavigation = () => {
   const { emailAccountId } = useAccount();
   const { unreadCount } = useUnreadCount();
 
+  // Inbox section (standalone above Assistant)
+  const inboxItems: NavItem[] = useMemo(
+    () => [
+      {
+        name: "Inbox",
+        href: prefixPath(emailAccountId, "/mail"),
+        icon: InboxIcon,
+        count: unreadCount,
+      },
+    ],
+    [emailAccountId, unreadCount],
+  );
+
   // Assistant category items
   const assistantItems: NavItem[] = useMemo(
     () => [
@@ -87,12 +100,6 @@ export const useNavigation = () => {
         name: "Reply Zero",
         href: prefixPath(emailAccountId, "/reply-zero"),
         icon: MessageCircleReplyIcon,
-      },
-      {
-        name: "Inbox",
-        href: prefixPath(emailAccountId, "/mail"),
-        icon: InboxIcon,
-        count: unreadCount,
       },
       {
         name: "Cold Emails",
@@ -136,6 +143,7 @@ export const useNavigation = () => {
   );
 
   return {
+    inboxItems,
     assistantItems,
     cleanItems: cleanItemsFiltered,
   };
@@ -327,6 +335,9 @@ export function SideNav({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <MailNav path={path} />
           ) : (
             <>
+              <SidebarGroup>
+                <SideNavMenu items={navigation.inboxItems} activeHref={path} />
+              </SidebarGroup>
               <SidebarGroup>
                 <SidebarGroupLabel>Assistant</SidebarGroupLabel>
                 <SideNavMenu
