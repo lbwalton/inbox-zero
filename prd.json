@@ -330,8 +330,8 @@
         "Typecheck passes"
       ],
       "priority": 22,
-      "passes": true,
-      "notes": "Created contact-scoring.ts with weighted scoring (reply rate 35%, reply time 25%, frequency 25%, signals +/-). Skips manual overrides. Upserts ContactScore."
+      "passes": false,
+      "notes": "Created contact-scoring.ts with weighted scoring (reply rate 35%, reply time 25%, frequency 25%, signals +/-). Skips manual overrides. Upserts ContactScore. | PHASE-A FAIL 2026-07-13: engine runs, preserves manualOverride rows, applies signal bonus/penalty - BUT thread-frequency uses signal count as proxy, so one NOT_IMPORTANT tag nets +15 vs identical untagged contact (56.8 vs 41.8, verified in DB). Weighting inverts user intent (FIX-008)."
     },
     {
       "id": "US-023",
@@ -345,7 +345,7 @@
       ],
       "priority": 23,
       "passes": true,
-      "notes": ""
+      "notes": "PHASE-A VERIFIED 2026-07-13: /api/contact-scoring/score runs with cron secret ({success:true}, scores recomputed in DB); /run queues accounts ({queued:true}); weekly cron registered in vercel.json (0 2 * * 0). CAVEAT: CRON_SECRET missing from .env - if also missing in Vercel, no cron ever runs (FIX-009)."
     },
     {
       "id": "US-024",
@@ -360,7 +360,7 @@
       ],
       "priority": 24,
       "passes": true,
-      "notes": "Created POST /api/emails/signal with upsert and QStash scoring dispatch."
+      "notes": "Created POST /api/emails/signal with upsert and QStash scoring dispatch. | PHASE-A VERIFIED 2026-07-13: signal POST creates EmailSignal with priorityContext, upsert flips signal on re-tag (verified in DB). BUG: await publishToQstash throws after successful save -> route 500s despite saved data (FIX-007)."
     },
     {
       "id": "US-025",
@@ -693,7 +693,7 @@
       ],
       "priority": 46,
       "passes": true,
-      "notes": "Created Contact Intelligence settings page. Top contacts by priority score with replyRate and avgReplyTime."
+      "notes": "Created Contact Intelligence settings page. Top contacts by priority score with replyRate and avgReplyTime. | PHASE-A BLOCKED 2026-07-13: panel route serves 200 but in-browser render blocked by Gmail permissions guard with fixture tokens. Needs one real Google sign-in to verify UI."
     },
     {
       "id": "US-047",
@@ -796,7 +796,7 @@
       ],
       "priority": 52,
       "passes": true,
-      "notes": "Created PriorityBadge component showing colored dot based on ContactScore priority level."
+      "notes": "Created PriorityBadge component showing colored dot based on ContactScore priority level. | PHASE-A BLOCKED 2026-07-13: mail-list UI requires real Gmail data; needs real-token pass."
     },
     {
       "id": "US-053",
@@ -810,7 +810,7 @@
       ],
       "priority": 53,
       "passes": true,
-      "notes": "Created SignalButtons component with thumbs-up/down calling POST /api/emails/signal."
+      "notes": "Created SignalButtons component with thumbs-up/down calling POST /api/emails/signal. | PHASE-A BLOCKED 2026-07-13: mail-list UI requires real Gmail data; needs real-token pass. Backend tagging API verified in US-024."
     },
     {
       "id": "US-054",
@@ -1166,7 +1166,7 @@
       ],
       "priority": 74,
       "passes": true,
-      "notes": "Priority context popover on thumbs-up. API accepts priorityContext field. Save/Skip buttons in popover. Textarea with 500 char limit."
+      "notes": "Priority context popover on thumbs-up. API accepts priorityContext field. Save/Skip buttons in popover. Textarea with 500 char limit. | PHASE-A PARTIAL 2026-07-13: backend verified (EmailSignal accepts priorityContext, max 500 chars). Modal UI needs real-token pass."
     },
     {
       "id": "US-075",
@@ -1183,7 +1183,7 @@
       ],
       "priority": 75,
       "passes": true,
-      "notes": "Priority view at ?type=priority. getPriorityThreads() fetches from EmailSignal IMPORTANT records. Priority link in sidebar with StarIcon."
+      "notes": "Priority view at ?type=priority. getPriorityThreads() fetches from EmailSignal IMPORTANT records. Priority link in sidebar with StarIcon. | PHASE-A PARTIAL 2026-07-13: getPriorityThreads exists in threads controller. UI needs real-token pass."
     },
     {
       "id": "US-076",
@@ -1201,7 +1201,7 @@
       ],
       "priority": 76,
       "passes": true,
-      "notes": "Suggestion engine uses sender patterns + ContactScore to suggest priority emails. Accept/dismiss API. SuggestedPriorityBadge with inline accept/dismiss buttons. SUGGESTED_PRIORITY and DISMISSED_SUGGESTION signal types added."
+      "notes": "Suggestion engine uses sender patterns + ContactScore to suggest priority emails. Accept/dismiss API. SuggestedPriorityBadge with inline accept/dismiss buttons. SUGGESTED_PRIORITY and DISMISSED_SUGGESTION signal types added. | PHASE-A PARTIAL 2026-07-13: SUGGESTED_PRIORITY/DISMISSED_SUGGESTION enum values present in DB. Suggestion flow needs real-token + LLM pass."
     },
     {
       "id": "FIX-001",
@@ -1283,6 +1283,47 @@
       "priority": 96,
       "passes": false,
       "notes": "Found during Phase A Group 3 2026-07-13 when the real Upstash instance (growing-eft-70064.upstash.io) stopped resolving."
+    },
+    {
+      "id": "FIX-007",
+      "title": "Signal API 500s after successful save when QStash dispatch fails",
+      "description": "app/api/emails/signal/route.ts awaits publishToQstash after upserting the EmailSignal; a QStash failure throws, returning 500 even though the tag saved. Dispatch is best-effort: catch, log, and still return success.",
+      "acceptanceCriteria": [
+        "QStash publish failure does not change the API response for a successful save",
+        "Failure is logged with context",
+        "Verified with unreachable QStash: POST returns success and row exists"
+      ],
+      "priority": 94,
+      "passes": false,
+      "notes": "Found Phase A Group 4 2026-07-13."
+    },
+    {
+      "id": "FIX-008",
+      "title": "Contact scoring: NOT_IMPORTANT tag raises score via signal-count frequency proxy",
+      "description": "utils/contact-scoring.ts uses per-contact signal count as the thread-frequency component (normalized to max). Any signal maxes frequency (+25) which outweighs NOT_IMPORTANT_PENALTY (-10), so a single not-important tag nets +15 vs untagged contacts. Verified in DB: identical contacts scored 56.8 (1 NOT_IMPORTANT signal) vs 41.8 (no signals).",
+      "acceptanceCriteria": [
+        "Thread frequency derives from actual email volume (e.g. EmailMessage counts), not manual signal count",
+        "A NOT_IMPORTANT tag strictly lowers a contact's score relative to their untagged baseline",
+        "An IMPORTANT tag strictly raises it",
+        "Unit test covering both directions",
+        "Re-run scorer on fixtures shows correct ordering"
+      ],
+      "priority": 89,
+      "passes": false,
+      "notes": "Found Phase A Group 4 2026-07-13 with DB evidence."
+    },
+    {
+      "id": "FIX-009",
+      "title": "CRON_SECRET missing: all 6 Bntly crons silently unauthorized",
+      "description": "CRON_SECRET is absent from apps/web/.env and unverified in Vercel. hasCronSecret() then never matches, so every cron route (contact-scoring/run, tone-profile/scan, nudge/detect, nudge/digest, junk/purge, labels/suggest) returns 401 on every scheduled run - the learning loops never execute.",
+      "acceptanceCriteria": [
+        "CRON_SECRET set in .env.example docs, local .env, and Vercel project env",
+        "A failed cron auth alerts (Sentry captureException already wired) - confirm it is visible",
+        "One production cron observed executing successfully end to end"
+      ],
+      "priority": 88,
+      "passes": false,
+      "notes": "Found Phase A Group 4 2026-07-13. Local verification used CRON_SECRET override."
     }
   ],
   "projectConfig": {
