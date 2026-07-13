@@ -436,7 +436,7 @@
       ],
       "priority": 29,
       "passes": true,
-      "notes": "Created outbound-nudge.ts using ThreadTracker (unresolved threads past outboundNudgeDays) and inbound-nudge.ts using EmailMessage (unread inbox messages past inboundNudgeDays with LLM classification via chatCompletionObject). Both enforce 24hr NudgeLog deduplication."
+      "notes": "Created outbound-nudge.ts using ThreadTracker (unresolved threads past outboundNudgeDays) and inbound-nudge.ts using EmailMessage (unread inbox messages past inboundNudgeDays with LLM classification via chatCompletionObject). Both enforce 24hr NudgeLog deduplication. | PHASE-A VERIFIED 2026-07-13: outbound detection works end to end on DB fixtures (5-day-old AWAITING ThreadTracker -> NudgeLog OUTBOUND PENDING). Inbound route exists; needs real data pass."
     },
     {
       "id": "US-030",
@@ -449,7 +449,7 @@
       ],
       "priority": 30,
       "passes": true,
-      "notes": "Created POST /api/nudge/detect cron dispatcher + /api/nudge/outbound and /api/nudge/inbound worker routes. Added daily cron to vercel.json."
+      "notes": "Created POST /api/nudge/detect cron dispatcher + /api/nudge/outbound and /api/nudge/inbound worker routes. Added daily cron to vercel.json. | PHASE-A PARTIAL 2026-07-13: /api/nudge/detect runs with cron secret and fans out per account; daily cron registered. BUG: response reports dispatched count even when every QStash publish failed (attempts counted as successes). Also POST-only (FIX-010)."
     },
     {
       "id": "US-031",
@@ -465,8 +465,8 @@
         "Typecheck passes"
       ],
       "priority": 31,
-      "passes": true,
-      "notes": "Created focus-mode-check.ts with shouldSuppressNudge. Checks FocusMode.isActive, schedule window, focused account, and breakthrough threshold."
+      "passes": false,
+      "notes": "Created focus-mode-check.ts with shouldSuppressNudge. Checks FocusMode.isActive, schedule window, focused account, and breakthrough threshold. | PHASE-A FAIL-BY-UNREACHABLE 2026-07-13: shouldSuppressNudge logic is correct in utils/focus-mode-check.ts but its only consumer (dispatchNudges) is never called by anything (FIX-011)."
     },
     {
       "id": "US-032",
@@ -478,7 +478,7 @@
       ],
       "priority": 32,
       "passes": true,
-      "notes": "Created notify-slack.ts with sendSlackNudge. Posts to SLACK_WEBHOOK_URL with formatted message. Checks user slackEnabled."
+      "notes": "Created notify-slack.ts with sendSlackNudge. Posts to SLACK_WEBHOOK_URL with formatted message. Checks user slackEnabled. | PHASE-A VERIFIED-IN-CODE 2026-07-13: Slack utility gated on slackEnabled + webhook URL. Unreachable in practice via FIX-011."
     },
     {
       "id": "US-033",
@@ -490,7 +490,7 @@
       ],
       "priority": 33,
       "passes": true,
-      "notes": "Created notify-sms.ts using Twilio REST API via fetch. Checks user smsEnabled."
+      "notes": "Created notify-sms.ts using Twilio REST API via fetch. Checks user smsEnabled. | PHASE-A VERIFIED-IN-CODE 2026-07-13: SMS utility gated on smsEnabled + encrypted phone. Unreachable via FIX-011."
     },
     {
       "id": "US-034",
@@ -503,7 +503,7 @@
       ],
       "priority": 34,
       "passes": true,
-      "notes": "Created notify-push.ts with web-push pattern. Created POST /api/push/subscribe to save PushSubscription."
+      "notes": "Created notify-push.ts with web-push pattern. Created POST /api/push/subscribe to save PushSubscription. | PHASE-A VERIFIED 2026-07-13: POST /api/push/subscribe persists PushSubscription row (verified in DB); notify-push gated on pushEnabled + VAPID keys."
     },
     {
       "id": "US-035",
@@ -516,7 +516,7 @@
       ],
       "priority": 35,
       "passes": true,
-      "notes": "Created public/sw.js for push notification handling. Created ServiceWorkerRegistration component."
+      "notes": "Created public/sw.js for push notification handling. Created ServiceWorkerRegistration component. | PHASE-A VERIFIED 2026-07-13: /sw.js serves as application/javascript."
     },
     {
       "id": "US-036",
@@ -529,7 +529,7 @@
       ],
       "priority": 36,
       "passes": true,
-      "notes": "Created POST /api/nudge/digest route for daily email digest compilation via Resend."
+      "notes": "Created POST /api/nudge/digest route for daily email digest compilation via Resend. | PHASE-A PARTIAL 2026-07-13: digest route exists, cron registered, POST-only (FIX-010). Live send not tested (would hit real Resend)."
     },
     {
       "id": "US-037",
@@ -545,8 +545,8 @@
         "Typecheck passes"
       ],
       "priority": 37,
-      "passes": true,
-      "notes": "Created nudge-dispatcher.ts. Checks shouldSuppressNudge, then dispatches via Slack/SMS/Push/Email based on user prefs."
+      "passes": false,
+      "notes": "Created nudge-dispatcher.ts. Checks shouldSuppressNudge, then dispatches via Slack/SMS/Push/Email based on user prefs. | PHASE-A FAIL 2026-07-13: dispatchNudges has ZERO callers; /api/nudge/dispatch fans out to ITSELF infinitely and never reads the userId body (FIX-011). Notification pipeline is dead code."
     },
     {
       "id": "US-038",
@@ -729,7 +729,7 @@
       ],
       "priority": 48,
       "passes": true,
-      "notes": "Created Notification settings page. Toggles for slack/sms/push/emailDigest with conditional inputs."
+      "notes": "Created Notification settings page. Toggles for slack/sms/push/emailDigest with conditional inputs. | PHASE-A BLOCKED 2026-07-13: panel UI behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-049",
@@ -824,7 +824,7 @@
       ],
       "priority": 54,
       "passes": true,
-      "notes": "Created FocusModeBanner component below top nav. Shows active focus mode with disable button."
+      "notes": "Created FocusModeBanner component below top nav. Shows active focus mode with disable button. | PHASE-A BLOCKED 2026-07-13: banner needs mail UI with real tokens."
     },
     {
       "id": "US-055",
@@ -1103,7 +1103,7 @@
       ],
       "priority": 70,
       "passes": true,
-      "notes": "Cron endpoint at /api/cron/email-digest. Digest utility generates Bntly-branded HTML with high-priority contacts. Scheduled by emailDigestTimeUtc."
+      "notes": "Cron endpoint at /api/cron/email-digest. Digest utility generates Bntly-branded HTML with high-priority contacts. Scheduled by emailDigestTimeUtc. | PHASE-A PARTIAL 2026-07-13: digest channel code present; end-to-end send needs real pass."
     },
     {
       "id": "US-071",
@@ -1324,6 +1324,34 @@
       "priority": 88,
       "passes": false,
       "notes": "Found Phase A Group 4 2026-07-13. Local verification used CRON_SECRET override."
+    },
+    {
+      "id": "FIX-010",
+      "title": "Four cron routes are POST-only but Vercel cron invokes with GET",
+      "description": "nudge/detect, nudge/digest, junk/purge, labels/suggest export only POST; Vercel scheduled crons send GET, so these four jobs 405 on every scheduled run (contact-scoring/run and tone-profile/scan correctly export GET+POST).",
+      "acceptanceCriteria": [
+        "All six cron routes accept the method Vercel cron uses (add GET handlers mirroring POST)",
+        "curl GET with cron secret returns success on all six",
+        "Schedules in vercel.json unchanged"
+      ],
+      "priority": 87,
+      "passes": false,
+      "notes": "Found Phase A Group 6 2026-07-13."
+    },
+    {
+      "id": "FIX-011",
+      "title": "Notification dispatcher never runs: /api/nudge/dispatch loops to itself and dispatchNudges has no callers",
+      "description": "app/api/nudge/dispatch/route.ts always fans out and QStash-publishes back to /api/nudge/dispatch; the {userId} body is never read and dispatchNudges() is never invoked anywhere in the codebase. Consequences: no Slack/SMS/push/digest nudge notifications can ever send, Focus Mode enforcement (shouldSuppressNudge) is unreachable, and the queue self-amplifies indefinitely.",
+      "acceptanceCriteria": [
+        "Route distinguishes fan-out (no body) from worker mode (userId in body) or a separate worker route is added",
+        "Worker path calls dispatchNudges(userId)",
+        "Focus suppression observed: pending nudge below breakthroughThreshold on a non-focused account is suppressed; above-threshold one dispatches",
+        "No self-amplifying publish loop (worker never re-publishes)",
+        "Also fix /api/nudge/detect response to not report failed publishes as dispatched"
+      ],
+      "priority": 86,
+      "passes": false,
+      "notes": "Found Phase A Group 6 2026-07-13. Highest-impact finding so far."
     }
   ],
   "projectConfig": {
