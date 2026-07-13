@@ -54,51 +54,89 @@ export function List({
   const { emailAccountId } = useAccount();
   const [selectedTab] = useQueryState("tab", { defaultValue: "all" });
 
-  const categories = useMemo(() => {
-    return countBy(
-      emails,
-      (email) => email.category?.category || "Uncategorized",
+  const planned = useMemo(() => {
+    return emails.filter(
+      (email) =>
+        email.plan?.rule &&
+        email.plan?.status !== "APPLIED" &&
+        email.plan?.status !== "REJECTED",
     );
   }, [emails]);
 
-  const planned = useMemo(() => {
-    return emails.filter((email) => email.plan?.rule);
+  const handled = useMemo(() => {
+    return emails.filter(
+      (email) =>
+        email.plan?.rule &&
+        (email.plan?.status === "APPLIED" || email.plan?.status === "REJECTED"),
+    );
   }, [emails]);
 
-  const tabs = useMemo(
-    () => [
+  const emailsWithPlanIds = useMemo(
+    () => new Set([...planned, ...handled].map((email) => email.id)),
+    [planned, handled],
+  );
+
+  const categories = useMemo(() => {
+    return countBy(
+      emails.filter((email) => !emailsWithPlanIds.has(email.id)),
+      (email) => email.category?.category || "Uncategorized",
+    );
+  }, [emails, emailsWithPlanIds]);
+
+  const tabs = useMemo(() => {
+    const result = [
       {
         label: "All",
         value: "all",
-        href: "/mail?tab=all",
+        href: prefixPath(emailAccountId, "/mail?tab=all"),
       },
-      {
-        label: `Planned${planned.length ? ` (${planned.length})` : ""}`,
+    ];
+    if (planned.length) {
+      result.push({
+        label: `Planned (${planned.length})`,
         value: "planned",
-        href: "/mail?tab=planned",
-      },
-      ...Object.entries(categories).map(([category, count]) => ({
+        href: prefixPath(emailAccountId, "/mail?tab=planned"),
+      });
+    }
+    if (handled.length) {
+      result.push({
+        label: `Handled (${handled.length})`,
+        value: "handled",
+        href: prefixPath(emailAccountId, "/mail?tab=handled"),
+      });
+    }
+    for (const [category, count] of Object.entries(categories)) {
+      result.push({
         label: `${capitalCase(category)} (${count})`,
         value: category,
-        href: `/mail?tab=${category}`,
-      })),
-    ],
-    [categories, planned],
-  );
+        href: prefixPath(emailAccountId, `/mail?tab=${category}`),
+      });
+    }
+    return result;
+  }, [categories, planned, handled, emailAccountId]);
 
-  // only show tabs if there are planned emails or categorized emails
-  const showTabs = !!(planned.length || emails.find((email) => email.category));
+  // only show tabs if there are planned/handled emails or categorized emails
+  const showTabs = !!(
+    planned.length ||
+    handled.length ||
+    emails.find((email) => email.category)
+  );
 
   const filteredEmails = useMemo(() => {
     if (selectedTab === "planned") return planned;
 
+    if (selectedTab === "handled") return handled;
+
     if (selectedTab === "all") return emails;
 
     if (selectedTab === "Uncategorized")
-      return emails.filter((email) => !email.category?.category);
+      return emails.filter(
+        (email) =>
+          !email.category?.category && !emailsWithPlanIds.has(email.id),
+      );
 
     return emails.filter((email) => email.category?.category === selectedTab);
-  }, [emails, selectedTab, planned]);
+  }, [emails, selectedTab, planned, handled, emailsWithPlanIds]);
 
   return (
     <>
@@ -214,12 +252,18 @@ export function EmailList({
 
   const onPlanAiAction = useCallback(
     (thread: Thread) => {
-      toast.promise(() => runAiRules(emailAccountId, [thread], true), {
-        success: "Running...",
-        error: "There was an error running the AI rules :(",
-      });
+      toast.promise(
+        async () => {
+          await runAiRules(emailAccountId, [thread], true);
+          refetch();
+        },
+        {
+          success: "Running...",
+          error: "There was an error running the AI rules :(",
+        },
+      );
     },
-    [emailAccountId],
+    [emailAccountId, refetch],
   );
 
   const onArchive = useCallback(
@@ -380,15 +424,15 @@ export function EmailList({
           .filter(([, selected]) => selected)
           .map(([id]) => threads.find((t) => t.id === id)!);
 
-        runAiRules(emailAccountId, selectedThreads, false);
-        // runAiRules(threadIds, () => refetch(threadIds));
+        await runAiRules(emailAccountId, selectedThreads, false);
+        refetch();
       },
       {
         success: "Running AI rules...",
         error: "There was an error running the AI rules :(",
       },
     );
-  }, [emailAccountId, selectedRows, threads]);
+  }, [emailAccountId, selectedRows, threads, refetch]);
 
   const isEmpty = threads.length === 0;
 

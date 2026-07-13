@@ -1,5 +1,9 @@
+> **SUPERSEDED (2026-07-13):** This is the original draft PRD. The live backlog is `prd.json` at the repo root (76 stories). Key design change: features extend the existing `EmailAccount` model instead of adding a `ConnectedAccount` table. Kept for historical context only.
+
 # PRD: LB Personal Email Assistant
+
 ### Built on top of `lbwalton/inbox-zero` (fork of elie222/inbox-zero)
+
 ### Target Repo: `github.com/lbwalton/inbox-zero` (same fork, Ralph branch)
 
 ---
@@ -9,6 +13,7 @@
 This project extends the existing open-source Inbox Zero codebase with a personalized intelligence layer. The base app already handles AI draft replies, spam blocking, contact categorization, and reply tracking. What it lacks is a continuous learning engine that understands the user specifically — their tone, relationships, priorities, and communication patterns — across multiple Gmail accounts.
 
 **Key decisions:**
+
 - Multi-Gmail-account support from day one; each account has its own tone profile, scores, labels, and filters
 - On connecting a new account, the system immediately runs a full contact scoring scan and tone profile scan
 - Notifications show nudges from all accounts combined by default; user can choose combined or per-account view
@@ -37,9 +42,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ## 3. User Stories
 
 ### US-001: Add ConnectedAccount table
+
 **Description:** As a developer, I need to store multiple Gmail accounts per user.
 
 **Acceptance Criteria:**
+
 - [ ] Add `ConnectedAccount` table: id, userId, gmailAddress (String), accessToken (String), refreshToken (String), tokenExpiry (DateTime), accountLabel (String nullable), isDefault (Boolean default false), createdAt (DateTime)
 - [ ] Relation from User to ConnectedAccount (one-to-many)
 - [ ] Generate migration and apply successfully
@@ -48,9 +55,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-002: Add ContactScore table
+
 **Description:** As a developer, I need to store contact priority scores scoped to each connected account.
 
 **Acceptance Criteria:**
+
 - [ ] Add `ContactScore` table: id, connectedAccountId, contactEmail (String), priorityScore (Float 0-100), replyRate (Float), avgReplyTimeHours (Float), manualOverride (Boolean default false), autoDraftEnabled (Boolean default true), lastUpdated (DateTime)
 - [ ] Relation from ConnectedAccount to ContactScore
 - [ ] Unique constraint on (connectedAccountId, contactEmail)
@@ -60,9 +69,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-003: Add EmailSignal table
+
 **Description:** As a developer, I need to store manual Important/Not Important tags per email thread.
 
 **Acceptance Criteria:**
+
 - [ ] Add `EmailSignal` table: id, connectedAccountId, threadId (String), senderEmail (String), signal (enum: IMPORTANT | NOT_IMPORTANT), taggedAt (DateTime)
 - [ ] Relation from ConnectedAccount to EmailSignal
 - [ ] Generate migration and apply successfully
@@ -71,9 +82,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-004: Add ToneProfile table
+
 **Description:** As a developer, I need to store a writing tone fingerprint per connected account.
 
 **Acceptance Criteria:**
+
 - [ ] Add `ToneProfile` table: id, connectedAccountId (unique), avgSentenceLength (Float), commonOpeners (Json), commonSignoffs (Json), formalityScore (Int 1-5), commonPhrases (Json), lastScanned (DateTime)
 - [ ] Relation from ConnectedAccount to ToneProfile
 - [ ] Generate migration and apply successfully
@@ -82,9 +95,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-005: Add NudgeLog table
+
 **Description:** As a developer, I need to track nudge events per account to prevent duplicates.
 
 **Acceptance Criteria:**
+
 - [ ] Add `NudgeLog` table: id, connectedAccountId, threadId (String), nudgeType (enum: OUTBOUND | INBOUND), sentAt (DateTime), status (enum: PENDING | DISMISSED | SNOOZED | ACTIONED default PENDING), snoozeUntil (DateTime nullable)
 - [ ] Relation from ConnectedAccount to NudgeLog
 - [ ] Generate migration and apply successfully
@@ -93,9 +108,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-006: Add TrustedSender table
+
 **Description:** As a developer, I need to store trusted contacts and domains per account, including AI-suggested client domains.
 
 **Acceptance Criteria:**
+
 - [ ] Add `TrustedSender` table: id, connectedAccountId, type (enum: CONTACT | TEAM_DOMAIN | CLIENT_DOMAIN), value (String), addedManually (Boolean default true), addedAt (DateTime)
 - [ ] Relation from ConnectedAccount to TrustedSender
 - [ ] Generate migration and apply successfully
@@ -104,9 +121,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-007: Add SuggestedLabel and PushSubscription tables
+
 **Description:** As a developer, I need to store AI-suggested labels per account and browser push subscriptions per user.
 
 **Acceptance Criteria:**
+
 - [ ] Add `SuggestedLabel` table: id, connectedAccountId, labelName (String), reasoning (String), status (enum: PENDING | APPROVED | DISMISSED default PENDING), gmailLabelId (String nullable), createdAt (DateTime)
 - [ ] Add `PushSubscription` table: id, userId, endpoint (String), p256dhKey (String), authKey (String), createdAt (DateTime)
 - [ ] Relations from ConnectedAccount to SuggestedLabel; User to PushSubscription
@@ -116,9 +135,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-008: Add FocusMode table
+
 **Description:** As a developer, I need to store Focus Mode configuration per user, including which account is focused, schedule, and the priority threshold for cross-account breakthrough alerts.
 
 **Acceptance Criteria:**
+
 - [ ] Add `FocusMode` table: id, userId, focusedAccountId (ConnectedAccount relation, nullable), isActive (Boolean default false), scheduleEnabled (Boolean default false), scheduleStartHour (Int nullable, 0-23), scheduleEndHour (Int nullable, 0-23), scheduleTimezone (String nullable, e.g. "America/Los_Angeles"), breakthroughThreshold (Int default 80), updatedAt (DateTime)
 - [ ] Relation from User to FocusMode (one-to-one)
 - [ ] Generate migration and apply successfully
@@ -127,9 +148,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-009: Add user personalization and Junk settings fields
+
 **Description:** As a developer, I need per-user settings for notifications, nudge thresholds, Junk auto-purge, and auto-draft.
 
 **Acceptance Criteria:**
+
 - [ ] Add to User or UserSettings model: slackEnabled (Boolean default false), slackWebhookUrl (String nullable), smsEnabled (Boolean default false), smsPhoneEncrypted (String nullable), emailDigestEnabled (Boolean default true), emailDigestTimeUtc (Int default 14), pushEnabled (Boolean default false), autoDraftEnabled (Boolean default true), autoDraftThreshold (Int default 70), outboundNudgeDays (Int default 3), inboundNudgeDays (Int default 2), junkAutoPurge (Boolean default false), junkAutoPurgeDays (Int default 30), notificationView (enum: COMBINED | PER_ACCOUNT default COMBINED)
 - [ ] Generate migration and apply successfully
 - [ ] Typecheck passes
@@ -137,9 +160,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-010: Connect Gmail account API + immediate onboarding scan
+
 **Description:** As a developer, I need a route that adds a new Gmail account and immediately triggers a contact scoring and tone scan.
 
 **Acceptance Criteria:**
+
 - [ ] Create `POST /api/accounts/connect` initiating Google OAuth for an additional Gmail account
 - [ ] On OAuth callback, store new ConnectedAccount with encrypted tokens
 - [ ] If first account, set isDefault = true
@@ -150,9 +175,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-011: Active account switcher API route
+
 **Description:** As a developer, I need a route to set the user's active Gmail account.
 
 **Acceptance Criteria:**
+
 - [ ] Create `PUT /api/accounts/:id/activate` storing active connectedAccountId in session
 - [ ] Returns { success: true }
 - [ ] Typecheck passes
@@ -160,9 +187,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-012: Account switcher UI in header
+
 **Description:** As LB, I want a quick dropdown in the app header to switch between Gmail accounts.
 
 **Acceptance Criteria:**
+
 - [ ] Dropdown in header lists all ConnectedAccount records with label and Gmail address
 - [ ] Active account shown with a checkmark indicator
 - [ ] Selecting calls PUT /api/accounts/:id/activate and refreshes current page
@@ -174,9 +203,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-013: Contact scoring service with EmailSignal weighting
+
 **Description:** As a developer, I need a service scoring contacts 0-100 using behavioral history and manual tags.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/contact-scoring.ts` accepting connectedAccountId
 - [ ] Base score: reply rate (35%) + inverted avg reply time normalized (25%) + thread frequency normalized (25%)
 - [ ] Signal adjustment: IMPORTANT tag = +5 per tag max +15 total; NOT_IMPORTANT = -10 per tag floor 0
@@ -188,9 +219,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-014: Contact scoring API route and weekly cron
+
 **Description:** As a developer, I need the scoring service callable on-demand and on a weekly schedule.
 
 **Acceptance Criteria:**
+
 - [ ] Create `POST /api/contact-scoring/run` dispatching calculateContactScores for all connectedAccounts of the authenticated user via QStash
 - [ ] Add weekly cron to `vercel.json`: `{ "path": "/api/contact-scoring/run", "schedule": "0 2 * * 0" }`
 - [ ] Returns { queued: true } immediately
@@ -199,9 +232,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-015: Manual email tagging API route
+
 **Description:** As a developer, I need a route that saves a manual signal tag and re-triggers scoring.
 
 **Acceptance Criteria:**
+
 - [ ] Create `POST /api/emails/signal` accepting { threadId, senderEmail, signal: 'IMPORTANT' | 'NOT_IMPORTANT', connectedAccountId }
 - [ ] Upserts EmailSignal record
 - [ ] Dispatches calculateContactScores for that connectedAccountId via QStash
@@ -211,9 +246,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-016: Manual tag UI on email list and thread view
+
 **Description:** As LB, I want thumbs-up/down buttons on every email to train the scoring system.
 
 **Acceptance Criteria:**
+
 - [ ] Add thumbs-up and thumbs-down icon buttons to each email row in inbox list
 - [ ] Add same buttons to email thread/detail view
 - [ ] Clicking calls POST /api/emails/signal with correct signal
@@ -225,9 +262,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-017: Tone profile scanner service
+
 **Description:** As a developer, I need a service that extracts a tone fingerprint from 90 days of sent mail.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/tone-scanner.ts` accepting connectedAccountId
 - [ ] Reads last 90 days of sent mail via Gmail API using that account's credentials
 - [ ] Uses configured LLM to extract: avgSentenceLength, top 5 openers, top 5 sign-offs, formalityScore 1-5, top 10 common phrases
@@ -238,9 +277,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-018: Tone profile API routes and monthly cron
+
 **Description:** As a developer, I need routes to get, update, and trigger tone scans.
 
 **Acceptance Criteria:**
+
 - [ ] `GET /api/tone-profile` returns ToneProfile for active connectedAccountId
 - [ ] `PUT /api/tone-profile` accepts partial updates for active account
 - [ ] `POST /api/tone-profile/scan` dispatches scan for all connected accounts via QStash
@@ -250,9 +291,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-019: Auto-draft generation service
+
 **Description:** As a developer, I need a service that silently creates Gmail draft replies for high-priority emails in the user's voice.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/auto-draft.ts` accepting connectedAccountId, threadId, inboundEmailBody
 - [ ] Returns early if ContactScore for sender is below autoDraftThreshold or autoDraftEnabled = false
 - [ ] Builds LLM prompt using ToneProfile as system context + full thread history
@@ -264,9 +307,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-020: Hook auto-draft and inbox filter into PubSub webhook
+
 **Description:** As a developer, I need the PubSub webhook to identify the correct ConnectedAccount and dispatch all per-email jobs.
 
 **Acceptance Criteria:**
+
 - [ ] In existing `/api/google/webhook`, identify ConnectedAccount by matching Gmail address from PubSub message
 - [ ] Dispatch generateAutoDraft via QStash if user autoDraftEnabled = true
 - [ ] Dispatch filterInboundEmail via QStash for every inbound email
@@ -276,9 +321,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-021: Outbound nudge detection service
+
 **Description:** As a developer, I need a service that finds sent emails awaiting replies.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/outbound-nudge.ts` accepting connectedAccountId
 - [ ] Scans sent mail for phrases: "let me know", "please confirm", "can you", "do you have", "following up", "waiting to hear", "please respond", "your thoughts"
 - [ ] Checks for replies in each matching thread
@@ -289,9 +336,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-022: Inbound nudge detection service
+
 **Description:** As a developer, I need a service that finds unreplied inbound emails expecting a response.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/inbound-nudge.ts` accepting connectedAccountId
 - [ ] Scans inbox for unreplied emails older than inboundNudgeDays
 - [ ] Uses LLM to classify: "Does this email expect a reply from the recipient? Answer yes or no."
@@ -302,9 +351,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-023: Nudge detection daily cron
+
 **Description:** As a developer, I need nudge detection to run daily across all connected accounts.
 
 **Acceptance Criteria:**
+
 - [ ] Create `POST /api/nudge/detect` dispatching both detect functions for every ConnectedAccount across all users via QStash
 - [ ] Add daily cron: `{ "path": "/api/nudge/detect", "schedule": "0 12 * * *" }`
 - [ ] Typecheck passes
@@ -312,9 +363,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-024: Focus Mode enforcement in nudge dispatcher
+
 **Description:** As a developer, I need the nudge dispatcher to suppress cross-account notifications when Focus Mode is active, except for senders scoring 80+.
 
 **Acceptance Criteria:**
+
 - [ ] Before dispatching any notification, check if FocusMode.isActive = true for the user
 - [ ] If Focus Mode is active and the nudge's connectedAccountId is NOT the focusedAccountId: only dispatch if ContactScore for the nudge's sender is >= breakthroughThreshold (default 80)
 - [ ] If Focus Mode is active and nudge IS for the focused account: dispatch normally
@@ -324,9 +377,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-025: Focus Mode API routes
+
 **Description:** As a developer, I need API routes to get, toggle, and configure Focus Mode.
 
 **Acceptance Criteria:**
+
 - [ ] `GET /api/focus-mode` returns the user's FocusMode record or null
 - [ ] `PUT /api/focus-mode` accepts { isActive, focusedAccountId, scheduleEnabled, scheduleStartHour, scheduleEndHour, scheduleTimezone, breakthroughThreshold } and upserts
 - [ ] Returns updated FocusMode record
@@ -335,9 +390,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-026: Nudge delivery utilities — Slack, SMS, email digest, Web Push
+
 **Description:** As a developer, I need all four notification delivery utilities.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/notify-slack.ts`: POST to SLACK_WEBHOOK_URL; message includes account label, nudge type, sender, subject, date, link. Only if slackEnabled = true.
 - [ ] Create `/apps/web/utils/notify-sms.ts`: Twilio SDK; decrypts phone; message "📬 [Work/Personal] [sender] is waiting on you — [subject max 60 chars]. Open: [url]". Only if smsEnabled = true.
 - [ ] Create `POST /api/nudge/digest`: fetches PENDING NudgeLogs across all accounts (or per-account if notificationView = PER_ACCOUNT), groups by account label + nudge type, sends via Resend. Cron: `{ "path": "/api/nudge/digest", "schedule": "0 14 * * *" }`. Only if emailDigestEnabled = true.
@@ -348,9 +405,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-027: Nudge dispatcher orchestrator
+
 **Description:** As a developer, I need a single orchestrator reading pending NudgeLogs and routing to all enabled channels with Focus Mode enforcement.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/nudge-dispatcher.ts`
 - [ ] Reads all PENDING NudgeLog records across all user accounts
 - [ ] Applies Focus Mode logic (US-024) before each dispatch
@@ -362,9 +421,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-028: Trusted sender inbox filter with EmailSignal support
+
 **Description:** As a developer, I need logic that archives unknown-sender emails and routes spam to Junk.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/inbox-filter.ts` accepting connectedAccountId and sender email
 - [ ] Trusted if: in TrustedSender (case-insensitive contact or domain) OR in ContactScore OR EmailSignal has IMPORTANT for sender
 - [ ] NOT_IMPORTANT signal overrides trust — treat as unknown
@@ -376,9 +437,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-029: Junk auto-purge service and cron
+
 **Description:** As a developer, I need a service that permanently deletes Junk emails older than X days when enabled.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/junk-purge.ts` accepting connectedAccountId
 - [ ] Only runs if user junkAutoPurge = true
 - [ ] Queries Gmail for emails with "Junk" label older than junkAutoPurgeDays
@@ -390,9 +453,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-030: Smart label suggestion + client domain detection service
+
 **Description:** As a developer, I need a monthly job that suggests labels and detects client domains.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/label-suggester.ts` accepting connectedAccountId
 - [ ] LLM prompt 1: suggest 3-5 Gmail labels based on email patterns. Creates SuggestedLabel records status PENDING.
 - [ ] LLM prompt 2: detect company domains appearing frequently. Creates TrustedSender records type CLIENT_DOMAIN, addedManually = false.
@@ -403,9 +468,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-031: Smart label approve/dismiss API routes
+
 **Description:** As a developer, I need routes to approve or dismiss suggested labels.
 
 **Acceptance Criteria:**
+
 - [ ] `POST /api/labels/approve/:id`: APPROVED status, create Gmail label, store gmailLabelId, apply to past 30 days
 - [ ] `PATCH /api/labels/:id` with { status: DISMISSED }: dismiss
 - [ ] `GET /api/labels/suggested`: returns PENDING records for active account
@@ -414,9 +481,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-032: Settings hub layout and sidebar
+
 **Description:** As LB, I want a settings hub with sidebar nav for all personalization panels.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/app/settings/personalization/layout.tsx` with sidebar nav
 - [ ] Links: Connected Accounts, Focus Mode, Tone Profile, Contact Intelligence, Trusted Senders, Notifications, Auto-Draft Rules, Nudge Rules, Junk Settings, Suggested Labels
 - [ ] Active link highlighted; layout consistent with existing /settings design
@@ -426,9 +495,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-033: Connected Accounts settings panel
+
 **Description:** As LB, I want to manage all connected Gmail accounts.
 
 **Acceptance Criteria:**
+
 - [ ] `/settings/personalization/accounts` lists all ConnectedAccount records with label, Gmail address, default badge
 - [ ] Each row: "Set as Default", inline label editor, "Disconnect" button
 - [ ] "Add Gmail Account" opens OAuth connect flow
@@ -439,9 +510,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-034: Focus Mode settings panel
+
 **Description:** As LB, I want to configure Focus Mode — which account to focus, when to activate it on a schedule, and the priority threshold for breakthrough alerts.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/settings/personalization/focus` panel
 - [ ] Global Focus Mode toggle (maps to FocusMode.isActive)
 - [ ] Account selector: dropdown of connected accounts to focus on
@@ -455,9 +528,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-035: Tone Profile settings panel
+
 **Description:** As LB, I want to view and edit my tone fingerprint per account and trigger re-scans.
 
 **Acceptance Criteria:**
+
 - [ ] `/settings/personalization/tone` shows ToneProfile for active account
 - [ ] Editable: avg sentence length, common openers, sign-offs, formality score (1-5 select), common phrases
 - [ ] Save calls PUT /api/tone-profile, success toast
@@ -469,9 +544,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-036: Contact Intelligence settings panel
+
 **Description:** As LB, I want to view, override, and configure contacts per account.
 
 **Acceptance Criteria:**
+
 - [ ] `/settings/personalization/contacts` shows top 50 contacts for active account sorted by priorityScore
 - [ ] Columns: Email, Score (color badge 0-39 gray / 40-69 amber / 70-100 green), Reply Rate, Avg Reply Time, Auto-Draft toggle, Manual Override lock icon
 - [ ] Score editable inline; saving sets manualOverride = true
@@ -483,9 +560,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-037: Trusted Senders settings panel with AI-suggested client domains
+
 **Description:** As LB, I want to manage trusted contacts and domains including AI-suggested ones.
 
 **Acceptance Criteria:**
+
 - [ ] `/settings/personalization/trusted` with three sections: Contacts, Team Domains, Client Domains
 - [ ] Client Domains shows AI-suggested entries (addedManually = false) with "Suggested" badge
 - [ ] User can confirm (sets addedManually = true) or remove suggested entries
@@ -498,9 +577,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-038: Notification settings panel
+
 **Description:** As LB, I want to configure all notification channels and choose combined vs per-account notification view.
 
 **Acceptance Criteria:**
+
 - [ ] `/settings/personalization/notifications` with toggles for: Slack, SMS, Email Digest, Browser Push
 - [ ] Notification view toggle: "Combined (all accounts)" or "Per account" — maps to user notificationView setting
 - [ ] Slack: toggle + webhook URL input
@@ -514,9 +595,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-039: Auto-Draft and Nudge Rules settings panel
+
 **Description:** As LB, I want to configure draft generation and nudge timing thresholds.
 
 **Acceptance Criteria:**
+
 - [ ] `/settings/personalization/rules` with:
   - Global Auto-Draft toggle
   - Priority threshold slider 0-100 (default 70) with helper text "X% of your contacts qualify"
@@ -529,9 +612,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-040: Junk Settings panel
+
 **Description:** As LB, I want to control Junk label behavior.
 
 **Acceptance Criteria:**
+
 - [ ] `/settings/personalization/junk` with:
   - Toggle "Auto-purge Junk after X days" (default off)
   - Number input for days (default 30, only active when toggle is on)
@@ -543,9 +628,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-041: Suggested Labels settings panel
+
 **Description:** As LB, I want to review, approve, or dismiss AI-suggested Gmail labels.
 
 **Acceptance Criteria:**
+
 - [ ] `/settings/personalization/labels` shows PENDING SuggestedLabel records for active account
 - [ ] Each row: label name, AI reasoning, Approve and Dismiss buttons
 - [ ] Approve calls POST /api/labels/approve/:id; row updates to "Created in Gmail ✓"
@@ -557,9 +644,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-038: Enable pgvector and add ContactEmbedding and ContactAlias tables
+
 **Description:** As a developer, I need vector storage and alias storage in Supabase to power semantic contact resolution.
 
 **Acceptance Criteria:**
+
 - [ ] Enable the `pgvector` extension in Supabase via SQL: `CREATE EXTENSION IF NOT EXISTS vector;`
 - [ ] Add `ContactEmbedding` table via Prisma (using Unsupported type for vector column): id, connectedAccountId, contactEmail (String), contactName (String nullable), embedding (Unsupported("vector(1536)")), updatedAt (DateTime). Unique on (connectedAccountId, contactEmail).
 - [ ] Add `ContactAlias` table: id, userId, phrase (String), resolvedEmail (String), resolvedName (String nullable), connectedAccountId, confirmedAt (DateTime). Unique on (userId, phrase).
@@ -570,9 +659,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-039: Contact embedding generation service
+
 **Description:** As a developer, I need a service that generates vector embeddings for all contacts in a connected account so they can be searched semantically.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/contact-embedder.ts` accepting connectedAccountId
 - [ ] Fetches all contacts from Gmail Contacts API for that account (name + email)
 - [ ] Also pulls top 100 ContactScore records (includes senders who aren't in Contacts)
@@ -586,9 +677,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-040: Semantic alias resolution service
+
 **Description:** As a developer, I need a service that takes a natural language phrase and returns the best-matching contact using vector similarity search.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/apps/web/utils/alias-resolver.ts`
 - [ ] First checks `ContactAlias` table for exact phrase match (case-insensitive) — if found, return immediately without vector search
 - [ ] If no confirmed alias: embeds the input phrase using the same embedding model as US-039
@@ -600,9 +693,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-041: Alias confirmation API routes
+
 **Description:** As a developer, I need API routes to resolve a phrase, confirm an alias, and manage stored aliases.
 
 **Acceptance Criteria:**
+
 - [ ] `POST /api/alias/resolve` accepting { phrase } — calls resolveAlias and returns top 3 matches. If exact alias exists, returns it with confirmed: true.
 - [ ] `POST /api/alias/confirm` accepting { phrase, resolvedEmail, resolvedName, connectedAccountId } — upserts a `ContactAlias` record. Returns { saved: true }.
 - [ ] `GET /api/alias` — returns all ContactAlias records for the authenticated user
@@ -613,9 +708,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-042: Alias resolution inline UI in email compose
+
 **Description:** As LB, I want the email compose To: field to automatically suggest a real contact when I type a natural language phrase like "my wife", and remember my choice going forward.
 
 **Acceptance Criteria:**
+
 - [ ] In the compose/reply To: field, after the user pauses typing (300ms debounce), call POST /api/alias/resolve with the current input if it doesn't look like an email address
 - [ ] If a confirmed alias is returned: silently replace the typed phrase with the resolved contact chip (name + email) — no confirmation needed
 - [ ] If unconfirmed matches are returned: render an inline confirmation chip directly below the To: field showing: contact avatar initial, resolved name, email address, "✓ Use this" button, and "Not right" link
@@ -628,9 +725,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-043: Alias Manager settings panel
+
 **Description:** As LB, I want to view, edit, and delete all my confirmed contact aliases in one place.
 
 **Acceptance Criteria:**
+
 - [ ] Create `/settings/personalization/aliases` panel
 - [ ] Add "Aliases" link to the Intelligence section of the settings sidebar (between Contact Intelligence and Trusted Senders)
 - [ ] Fetches all ContactAlias records via GET /api/alias
@@ -644,9 +743,11 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 ---
 
 ### US-042: Priority score badge, manual tag UI, and Focus Mode indicator on inbox
+
 **Description:** As LB, I want priority badges, thumbs-up/down tags, and a Focus Mode status bar visible in my inbox.
 
 **Acceptance Criteria:**
+
 - [ ] Colored priority badge on each inbox email row next to sender: gray (0-39), amber (40-69), green (70-100)
 - [ ] Numeric score in badge; tooltip "Priority score: X"
 - [ ] Thumbs-up/down icon buttons on each email row (hover-visible desktop, always-visible mobile) and in thread view
@@ -692,7 +793,7 @@ This project extends the existing open-source Inbox Zero codebase with a persona
 
 ## 6. Design Considerations
 
-*Informed by the elite-saas-designer framework. This is a productivity-first, power-user tool for someone who spends significant time in email daily. Design philosophy: dark-first, keyboard-driven, zero cognitive overhead, sub-100ms perceived interactions.*
+_Informed by the elite-saas-designer framework. This is a productivity-first, power-user tool for someone who spends significant time in email daily. Design philosophy: dark-first, keyboard-driven, zero cognitive overhead, sub-100ms perceived interactions._
 
 ### 6.1 Design Philosophy
 
@@ -709,6 +810,7 @@ This is a **productivity/power-user tool** — not a consumer app. Design princi
 Build on the existing shadcn/ui + Tailwind system but layer these semantic tokens on top:
 
 **Color (Oklch space for perceptual uniformity):**
+
 - `--color-base`: near-black (`oklch(12% 0 0)`) — page and sidebar background
 - `--color-surface`: dark card surface (`oklch(17% 0 0)`) — email rows, panels
 - `--color-surface-hover`: slightly lighter (`oklch(21% 0 0)`)
@@ -720,6 +822,7 @@ Build on the existing shadcn/ui + Tailwind system but layer these semantic token
 - `--color-destructive`: red (`oklch(58% 0.22 25)`) — destructive actions only
 
 **Typography — Geist (developer/technical aesthetic, matches the productivity positioning):**
+
 - Display: Geist, tight letter-spacing (-0.02em), weights 600-700
 - Body/labels: Geist, normal tracking, weight 400-500, 14px minimum for UI labels
 - Monospace (email addresses, scores): Geist Mono
@@ -733,6 +836,7 @@ Build on the existing shadcn/ui + Tailwind system but layer these semantic token
 The inbox is the primary surface. It should feel like a high-signal terminal, not a cluttered email client.
 
 **Email list row anatomy (left to right):**
+
 1. Account color dot (2px left border, color-coded per connected account — subtle but scannable)
 2. Sender name (weight 500, 14px)
 3. Priority badge (score chip — only shown when score exists; color-coded per tokens above)
@@ -768,6 +872,7 @@ Focus Mode is a first-class feature — it deserves prominent, clear visual feed
 ### 6.6 Settings Hub
 
 The settings hub at `/settings/personalization` follows a two-column layout:
+
 - Left: 240px fixed sidebar with nav links, grouped into sections:
   - **Accounts:** Connected Accounts, Focus Mode
   - **Intelligence:** Tone Profile, Contact Intelligence, Trusted Senders, Suggested Labels
@@ -776,6 +881,7 @@ The settings hub at `/settings/personalization` follows a two-column layout:
 - Right: content panel with 640px max-width, centered
 
 Each settings panel:
+
 - Opens with a clear H2 title + one-sentence description of what this panel controls
 - Uses card-sectioned layout (surface background, 6px radius, 16px padding) per logical group
 - Save feedback: inline success state on the button itself ("Saved ✓") that reverts to "Save" after 2s — no toast for routine saves
@@ -784,6 +890,7 @@ Each settings panel:
 ### 6.7 Priority Badge Component
 
 The priority badge is the most-seen custom component. It must be:
+
 - **Size:** 20px height, min-width 28px, monospace digit(s), 4px horizontal padding
 - **States:** scored (shows number with color), unscored (not rendered — no empty badge)
 - **Tooltip:** on hover "Priority score: X / 100 · Based on reply history + your tags"
@@ -801,6 +908,7 @@ The priority badge is the most-seen custom component. It must be:
 ### 6.9 Keyboard Navigation
 
 At minimum, the following shortcuts must work in the inbox:
+
 - `I` — mark selected email as Important (thumbs-up signal)
 - `N` — mark selected email as Not Important (thumbs-down signal)
 - `F` — toggle Focus Mode on/off
@@ -810,6 +918,7 @@ At minimum, the following shortcuts must work in the inbox:
 ### 6.10 Motion Spec
 
 All custom animated components use spring physics (never duration-based easing):
+
 - **Row interactions** (hover, select): mass 0.5 / stiffness 500 / damping 30 — instant, no delay
 - **Badge mount** (score appears for first time): scale from 0.7 to 1.0, mass 0.4 / stiffness 600 / damping 25
 - **Focus Mode banner** slide-in: translate Y from -32px to 0, mass 0.6 / stiffness 380 / damping 32
@@ -846,20 +955,20 @@ Think of it as the same memory system that makes Siri understand "call home" —
 
 1. When a new account is connected, the system generates a vector embedding for every contact (name + email + any known labels/aliases)
 2. When the user types a natural language reference — in the compose window, a search bar, or a future chat interface — the system embeds that phrase and runs a similarity search against all contact embeddings
-3. The top match is surfaced as an inline suggestion: *"Did you mean Laura Walton (laura@...)?"*
+3. The top match is surfaced as an inline suggestion: _"Did you mean Laura Walton (laura@...)?"_
 4. User confirms once — the alias is stored permanently
 5. All future references to that phrase resolve silently — no confirmation prompt again
 
 ### Alias Types the System Learns
 
-| What you say | What it resolves to |
-|---|---|
-| "my wife" | Laura (from contacts + past email patterns) |
-| "my boss" | Most-emailed person with manager-signal in email history |
-| "the client" | Context-dependent — most recent active client thread |
-| "my team" | All contacts sharing the user's company domain |
-| "Jackson's school" | Domain that sends school-related emails to LB |
-| "Tinuiti" | All `@tinuiti.com` contacts |
+| What you say       | What it resolves to                                      |
+| ------------------ | -------------------------------------------------------- |
+| "my wife"          | Laura (from contacts + past email patterns)              |
+| "my boss"          | Most-emailed person with manager-signal in email history |
+| "the client"       | Context-dependent — most recent active client thread     |
+| "my team"          | All contacts sharing the user's company domain           |
+| "Jackson's school" | Domain that sends school-related emails to LB            |
+| "Tinuiti"          | All `@tinuiti.com` contacts                              |
 
 ### User Stories (US-038 through US-043)
 
@@ -879,6 +988,7 @@ See Section 3 user stories.
 **Base (already in repo):** Next.js App Router, Tailwind CSS, shadcn/ui, Prisma ORM, Upstash Redis, Google OAuth + Gmail API + PubSub, Resend, multi-LLM abstraction, Turborepo
 
 **New env vars:**
+
 - `DATABASE_URL` — Supabase Postgres connection string
 - `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`
 - `SLACK_WEBHOOK_URL`
@@ -886,12 +996,14 @@ See Section 3 user stories.
 - `QSTASH_URL`, `QSTASH_TOKEN`
 
 **New npm packages:**
+
 - `web-push` — Web Push notifications
 - `twilio` — SMS
 - `framer-motion` — spring physics animations (if not already in base app)
 - `openai` — embedding generation via `text-embedding-3-small` (or use existing LLM provider if it supports embeddings)
 
 **Vector database:**
+
 - **pgvector** — Supabase built-in Postgres extension, zero additional cost. Enable with `CREATE EXTENSION IF NOT EXISTS vector;`. Prisma uses `Unsupported("vector(1536)")` type for the embedding column. Similarity search runs directly in SQL via the `<=>` cosine distance operator.
 
 ---

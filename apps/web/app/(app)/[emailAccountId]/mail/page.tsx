@@ -56,24 +56,28 @@ export default function Mail(props: {
   // TODO is this the best way to do this?
   const refetch = useCallback(
     (options?: { removedThreadIds?: string[] }) => {
-      mutate(
-        (currentData) => {
-          if (!currentData) return currentData;
-          if (!options?.removedThreadIds) return currentData;
-
-          return currentData.map((page) => ({
-            ...page,
-            threads: page.threads.filter(
-              (t) => !options?.removedThreadIds?.includes(t.id),
-            ),
-          }));
-        },
-        {
-          rollbackOnError: true,
-          populateCache: true,
-          revalidate: false,
-        },
-      );
+      if (options?.removedThreadIds) {
+        // Optimistically remove threads from local cache
+        mutate(
+          (currentData) => {
+            if (!currentData) return currentData;
+            return currentData.map((page) => ({
+              ...page,
+              threads: page.threads.filter(
+                (t) => !options.removedThreadIds?.includes(t.id),
+              ),
+            }));
+          },
+          {
+            rollbackOnError: true,
+            populateCache: true,
+            revalidate: false,
+          },
+        );
+      } else {
+        // Revalidate from server to pick up status changes
+        mutate();
+      }
     },
     [mutate],
   );
