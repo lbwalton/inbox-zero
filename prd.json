@@ -15,7 +15,7 @@
       ],
       "priority": 1,
       "passes": true,
-      "notes": "Added accountLabel and isDefault fields to EmailAccount model. Prisma client generated successfully. Pre-existing test file TS errors unrelated to this change."
+      "notes": "Added accountLabel and isDefault fields to EmailAccount model. Prisma client generated successfully. Pre-existing test file TS errors unrelated to this change. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-002",
@@ -30,7 +30,7 @@
       ],
       "priority": 2,
       "passes": true,
-      "notes": "Added ContactScore model with unique constraint on (emailAccountId, contactEmail). Relation added to EmailAccount."
+      "notes": "Added ContactScore model with unique constraint on (emailAccountId, contactEmail). Relation added to EmailAccount. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-003",
@@ -44,7 +44,7 @@
       ],
       "priority": 3,
       "passes": true,
-      "notes": "Added EmailSignal model with EmailSignalType enum (IMPORTANT/NOT_IMPORTANT)."
+      "notes": "Added EmailSignal model with EmailSignalType enum (IMPORTANT/NOT_IMPORTANT). | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-004",
@@ -58,7 +58,7 @@
       ],
       "priority": 4,
       "passes": true,
-      "notes": "Added ToneProfile model with unique emailAccountId constraint."
+      "notes": "Added ToneProfile model with unique emailAccountId constraint. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-005",
@@ -72,7 +72,7 @@
       ],
       "priority": 5,
       "passes": true,
-      "notes": "Added NudgeLog model with NudgeType and NudgeStatus enums."
+      "notes": "Added NudgeLog model with NudgeType and NudgeStatus enums. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-006",
@@ -86,7 +86,7 @@
       ],
       "priority": 6,
       "passes": true,
-      "notes": "Added TrustedSender model with TrustedSenderType enum."
+      "notes": "Added TrustedSender model with TrustedSenderType enum. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-007",
@@ -99,7 +99,7 @@
       ],
       "priority": 7,
       "passes": true,
-      "notes": "Added SuggestedLabel model with SuggestedLabelStatus enum."
+      "notes": "Added SuggestedLabel model with SuggestedLabelStatus enum. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-008",
@@ -112,7 +112,7 @@
       ],
       "priority": 8,
       "passes": true,
-      "notes": "Added PushSubscription model related to User."
+      "notes": "Added PushSubscription model related to User. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-009",
@@ -125,7 +125,7 @@
       ],
       "priority": 9,
       "passes": true,
-      "notes": "Added FocusMode model with one-to-one User relation and optional EmailAccount FK."
+      "notes": "Added FocusMode model with one-to-one User relation and optional EmailAccount FK. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-010",
@@ -138,7 +138,7 @@
       ],
       "priority": 10,
       "passes": true,
-      "notes": "Added 14 personalization fields and NotificationView enum to User model."
+      "notes": "Added 14 personalization fields and NotificationView enum to User model. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-011",
@@ -155,7 +155,7 @@
       ],
       "priority": 11,
       "passes": true,
-      "notes": "Rebranded 42 files: metadata, landing pages, app pages, components, config. All Inbox Zero/getinboxzero.com references replaced with Bntly/getbntly.com."
+      "notes": "Rebranded 42 files: metadata, landing pages, app pages, components, config. All Inbox Zero/getinboxzero.com references replaced with Bntly/getbntly.com. | PHASE-A VERIFIED 2026-07-13: app + landing show Bntly everywhere; 0 user-facing 'Inbox Zero' strings (internal @inboxzero package names remain, not user-visible)."
     },
     {
       "id": "US-012",
@@ -171,7 +171,7 @@
       ],
       "priority": 12,
       "passes": true,
-      "notes": "Replaced SVG wordmark in Logo.tsx, updated email template logos in digest.tsx and summary.tsx."
+      "notes": "Replaced SVG wordmark in Logo.tsx, updated email template logos in digest.tsx and summary.tsx. | PHASE-A VERIFIED 2026-07-13: Bntly wordmark in sidebar + favicon icon.png served. needsHumanEye: logo aesthetics."
     },
     {
       "id": "US-013",
@@ -188,7 +188,7 @@
       ],
       "priority": 13,
       "passes": true,
-      "notes": "Defined 5 theme palettes (Linen, Ember, Soleil, Stone, Terra) with full CSS variable sets in globals.css."
+      "notes": "Defined 5 theme palettes (Linen, Ember, Soleil, Stone, Terra) with full CSS variable sets in globals.css. | PHASE-A VERIFIED 2026-07-13: all 5 palettes (light/dark/bright/monochromatic/earth) present in globals.css; each applies distinct --background/--primary tokens, verified via computed styles in browser."
     },
     {
       "id": "US-014",
@@ -204,7 +204,7 @@
       ],
       "priority": 14,
       "passes": true,
-      "notes": "Added themePreference to User model. Created GET/PUT /api/user/theme routes. Updated ThemeProvider with 5 themes and ThemeSync component."
+      "notes": "Added themePreference to User model. Created GET/PUT /api/user/theme routes. Updated ThemeProvider with 5 themes and ThemeSync component. | PHASE-A VERIFIED 2026-07-13: theme persists to DB (GET /api/user/theme returned selected theme) and localStorage."
     },
     {
       "id": "US-015",
@@ -221,7 +221,7 @@
       ],
       "priority": 15,
       "passes": true,
-      "notes": "Created ThemePicker component with 5 swatches, keyboard a11y, and PUT /api/user/theme integration. Added AppearanceSection to settings page."
+      "notes": "Created ThemePicker component with 5 swatches, keyboard a11y, and PUT /api/user/theme integration. Added AppearanceSection to settings page. | PHASE-A VERIFIED 2026-07-13: picker renders 5 options (Linen/Ember/Soleil/Stone/Terra), clicking each switches the html class live. BUG: React hydration mismatch on SSR (see FIX-003)."
     },
     {
       "id": "US-016",
@@ -236,7 +236,7 @@
       ],
       "priority": 16,
       "passes": true,
-      "notes": "Updated email templates with warm amber/cream colors. Replaced blue tones with #C96B16 amber. Updated URLs to getbntly.com."
+      "notes": "Updated email templates with warm amber/cream colors. Replaced blue tones with #C96B16 amber. Updated URLs to getbntly.com. | PHASE-A VERIFIED 2026-07-13: digest.tsx + summary.tsx carry Bntly branding, no stale strings."
     },
     {
       "id": "US-017",
@@ -252,7 +252,7 @@
       ],
       "priority": 17,
       "passes": true,
-      "notes": "Rebranded Header (simplified nav, removed Solutions dropdown), Hero (warm personal copy), HeroAB variants, Footer (personal use cases, removed enterprise/OSS links), CTAButtons."
+      "notes": "Rebranded Header (simplified nav, removed Solutions dropdown), Hero (warm personal copy), HeroAB variants, Footer (personal use cases, removed enterprise/OSS links), CTAButtons. | PHASE-A PARTIAL 2026-07-13: hero text/nav/footer rebranded (Bntly, getbntly.com, bntlyapp). FAIL: hero product screenshot asset still shows INBOX ZERO app UI (see FIX-004)."
     },
     {
       "id": "US-018",
@@ -268,7 +268,7 @@
       ],
       "priority": 18,
       "passes": true,
-      "notes": "Rewrote FAQs (7 Bntly-relevant), testimonials (warm placeholders with initial avatars), features, CTA, privacy, and pricing copy with personal assistant brand voice."
+      "notes": "Rewrote FAQs (7 Bntly-relevant), testimonials (warm placeholders with initial avatars), features, CTA, privacy, and pricing copy with personal assistant brand voice. | PHASE-A PARTIAL 2026-07-13: content sections text rebranded. FAIL: inherited false social proof - 'Trusted by 10,000+ productive users' + Resend/ByteDance/Zendesk/Netflix/DOAC logos, and CASA Tier 2 / Google-approval claims not true for Bntly (see FIX-004)."
     },
     {
       "id": "US-019",
@@ -283,7 +283,7 @@
       ],
       "priority": 19,
       "passes": true,
-      "notes": "Modified linkAccount in utils/auth.ts to check existing EmailAccount count and set isDefault=true for first account. EmailAccount model already has accountLabel (String?) field from US-001 for optional labeling. Created utils/onboarding/dispatch-scans.ts that dispatches calculateContactScores and scanToneProfile via QStash publishToQstash. The upsert returns EmailAccount record (no raw tokens exposed). Pre-existing test TS errors only."
+      "notes": "Modified linkAccount in utils/auth.ts to check existing EmailAccount count and set isDefault=true for first account. EmailAccount model already has accountLabel (String?) field from US-001 for optional labeling. Created utils/onboarding/dispatch-scans.ts that dispatches calculateContactScores and scanToneProfile via QStash publishToQstash. The upsert returns EmailAccount record (no raw tokens exposed). Pre-existing test TS errors only. | PHASE-A VERIFIED-IN-CODE 2026-07-13: dispatchOnboardingScans wired into auth.ts linkAccount (line ~153), isDefault-if-first logic present. Full E2E needs a real Gmail OAuth connect - do one live connect and confirm QStash dispatch fires (needs-lb-review)."
     },
     {
       "id": "US-020",
@@ -297,7 +297,7 @@
       ],
       "priority": 20,
       "passes": true,
-      "notes": "Created PUT /api/accounts/[id]/activate (transaction-based default switching), GET/PUT /api/focus-mode (Zod validation, upsert)."
+      "notes": "Created PUT /api/accounts/[id]/activate (transaction-based default switching), GET/PUT /api/focus-mode (Zod validation, upsert). | PHASE-A VERIFIED 2026-07-13: /api/user/email-accounts returns accounts with accountLabel/isDefault; /api/focus-mode GET/PUT round-trips and persists to FocusMode table (verified in DB)."
     },
     {
       "id": "US-021",
@@ -314,7 +314,7 @@
       ],
       "priority": 21,
       "passes": true,
-      "notes": "Enhanced AccountSwitcher in SideNav header with: accountLabel/isDefault display, checkmark on active account, violet dot on focused account when Focus Mode active, PUT /api/user/email-accounts/[id]/activate stub route, Add account link to /accounts. DropdownMenu from shadcn/ui provides full keyboard accessibility. Updated email-accounts API to return accountLabel, isDefault, and focusMode data."
+      "notes": "Enhanced AccountSwitcher in SideNav header with: accountLabel/isDefault display, checkmark on active account, violet dot on focused account when Focus Mode active, PUT /api/user/email-accounts/[id]/activate stub route, Add account link to /accounts. DropdownMenu from shadcn/ui provides full keyboard accessibility. Updated email-accounts API to return accountLabel, isDefault, and focusMode data. | PHASE-A VERIFIED 2026-07-13: header switcher lists both fixture accounts with labels + active check; clicking the other account navigates to its emailAccountId path and persists as active."
     },
     {
       "id": "US-022",
@@ -330,8 +330,8 @@
         "Typecheck passes"
       ],
       "priority": 22,
-      "passes": true,
-      "notes": "Created contact-scoring.ts with weighted scoring (reply rate 35%, reply time 25%, frequency 25%, signals +/-). Skips manual overrides. Upserts ContactScore."
+      "passes": false,
+      "notes": "Created contact-scoring.ts with weighted scoring (reply rate 35%, reply time 25%, frequency 25%, signals +/-). Skips manual overrides. Upserts ContactScore. | PHASE-A FAIL 2026-07-13: engine runs, preserves manualOverride rows, applies signal bonus/penalty - BUT thread-frequency uses signal count as proxy, so one NOT_IMPORTANT tag nets +15 vs identical untagged contact (56.8 vs 41.8, verified in DB). Weighting inverts user intent (FIX-008)."
     },
     {
       "id": "US-023",
@@ -345,7 +345,7 @@
       ],
       "priority": 23,
       "passes": true,
-      "notes": ""
+      "notes": "PHASE-A VERIFIED 2026-07-13: /api/contact-scoring/score runs with cron secret ({success:true}, scores recomputed in DB); /run queues accounts ({queued:true}); weekly cron registered in vercel.json (0 2 * * 0). CAVEAT: CRON_SECRET missing from .env - if also missing in Vercel, no cron ever runs (FIX-009)."
     },
     {
       "id": "US-024",
@@ -360,7 +360,7 @@
       ],
       "priority": 24,
       "passes": true,
-      "notes": "Created POST /api/emails/signal with upsert and QStash scoring dispatch."
+      "notes": "Created POST /api/emails/signal with upsert and QStash scoring dispatch. | PHASE-A VERIFIED 2026-07-13: signal POST creates EmailSignal with priorityContext, upsert flips signal on re-tag (verified in DB). BUG: await publishToQstash throws after successful save -> route 500s despite saved data (FIX-007)."
     },
     {
       "id": "US-025",
@@ -376,7 +376,7 @@
       ],
       "priority": 25,
       "passes": true,
-      "notes": "Created tone-scanner.ts using Gmail API + LLM abstraction. Extracts openers, signoffs, formality, phrases. Upserts ToneProfile."
+      "notes": "Created tone-scanner.ts using Gmail API + LLM abstraction. Extracts openers, signoffs, formality, phrases. Upserts ToneProfile. | PHASE-A PARTIAL 2026-07-13: scanner service exists, worker route cron-protected, fails safe (500 -> QStash retry) on dead Gmail tokens. Real scan needs real tokens."
     },
     {
       "id": "US-026",
@@ -391,7 +391,7 @@
       ],
       "priority": 26,
       "passes": true,
-      "notes": "Created GET/PUT /api/tone-profile routes. Created /api/tone-profile/scan cron dispatcher + worker via QStash. Added monthly cron to vercel.json."
+      "notes": "Created GET/PUT /api/tone-profile routes. Created /api/tone-profile/scan cron dispatcher + worker via QStash. Added monthly cron to vercel.json. | PHASE-A VERIFIED 2026-07-13: GET /api/tone-profile returns seeded profile (openers/signoffs/formality); scan + worker routes require cron secret; monthly cron registered (0 3 1 * *)."
     },
     {
       "id": "US-027",
@@ -408,7 +408,7 @@
       ],
       "priority": 27,
       "passes": true,
-      "notes": "Created auto-draft.ts with generateAutoDraft. Checks user.autoDraftEnabled, ContactScore threshold, ToneProfile for LLM context, creates Gmail draft."
+      "notes": "Created auto-draft.ts with generateAutoDraft. Checks user.autoDraftEnabled, ContactScore threshold, ToneProfile for LLM context, creates Gmail draft. | PHASE-A VERIFIED-IN-CODE 2026-07-13: threshold + per-contact + per-user gates present; creates via gmail.drafts.create; no send call anywhere in the path. Live draft creation needs real tokens + LLM (needs-lb-review)."
     },
     {
       "id": "US-028",
@@ -423,7 +423,7 @@
       ],
       "priority": 28,
       "passes": true,
-      "notes": "Modified /api/google/webhook/route.ts to look up EmailAccount by email, dispatch auto-draft (if autoDraftEnabled) and filter-inbound via QStash using Promise.allSettled fire-and-forget pattern. Webhook returns 200 immediately."
+      "notes": "Modified /api/google/webhook/route.ts to look up EmailAccount by email, dispatch auto-draft (if autoDraftEnabled) and filter-inbound via QStash using Promise.allSettled fire-and-forget pattern. Webhook returns 200 immediately. | PHASE-A VERIFIED-IN-CODE 2026-07-13: webhook dispatches BOTH generateAutoDraft (gated on autoDraftEnabled) and filterInboundEmail, non-blocking with logged failures."
     },
     {
       "id": "US-029",
@@ -436,7 +436,7 @@
       ],
       "priority": 29,
       "passes": true,
-      "notes": "Created outbound-nudge.ts using ThreadTracker (unresolved threads past outboundNudgeDays) and inbound-nudge.ts using EmailMessage (unread inbox messages past inboundNudgeDays with LLM classification via chatCompletionObject). Both enforce 24hr NudgeLog deduplication."
+      "notes": "Created outbound-nudge.ts using ThreadTracker (unresolved threads past outboundNudgeDays) and inbound-nudge.ts using EmailMessage (unread inbox messages past inboundNudgeDays with LLM classification via chatCompletionObject). Both enforce 24hr NudgeLog deduplication. | PHASE-A VERIFIED 2026-07-13: outbound detection works end to end on DB fixtures (5-day-old AWAITING ThreadTracker -> NudgeLog OUTBOUND PENDING). Inbound route exists; needs real data pass."
     },
     {
       "id": "US-030",
@@ -449,7 +449,7 @@
       ],
       "priority": 30,
       "passes": true,
-      "notes": "Created POST /api/nudge/detect cron dispatcher + /api/nudge/outbound and /api/nudge/inbound worker routes. Added daily cron to vercel.json."
+      "notes": "Created POST /api/nudge/detect cron dispatcher + /api/nudge/outbound and /api/nudge/inbound worker routes. Added daily cron to vercel.json. | PHASE-A PARTIAL 2026-07-13: /api/nudge/detect runs with cron secret and fans out per account; daily cron registered. BUG: response reports dispatched count even when every QStash publish failed (attempts counted as successes). Also POST-only (FIX-010)."
     },
     {
       "id": "US-031",
@@ -465,8 +465,8 @@
         "Typecheck passes"
       ],
       "priority": 31,
-      "passes": true,
-      "notes": "Created focus-mode-check.ts with shouldSuppressNudge. Checks FocusMode.isActive, schedule window, focused account, and breakthrough threshold."
+      "passes": false,
+      "notes": "Created focus-mode-check.ts with shouldSuppressNudge. Checks FocusMode.isActive, schedule window, focused account, and breakthrough threshold. | PHASE-A FAIL-BY-UNREACHABLE 2026-07-13: shouldSuppressNudge logic is correct in utils/focus-mode-check.ts but its only consumer (dispatchNudges) is never called by anything (FIX-011)."
     },
     {
       "id": "US-032",
@@ -478,7 +478,7 @@
       ],
       "priority": 32,
       "passes": true,
-      "notes": "Created notify-slack.ts with sendSlackNudge. Posts to SLACK_WEBHOOK_URL with formatted message. Checks user slackEnabled."
+      "notes": "Created notify-slack.ts with sendSlackNudge. Posts to SLACK_WEBHOOK_URL with formatted message. Checks user slackEnabled. | PHASE-A VERIFIED-IN-CODE 2026-07-13: Slack utility gated on slackEnabled + webhook URL. Unreachable in practice via FIX-011."
     },
     {
       "id": "US-033",
@@ -490,7 +490,7 @@
       ],
       "priority": 33,
       "passes": true,
-      "notes": "Created notify-sms.ts using Twilio REST API via fetch. Checks user smsEnabled."
+      "notes": "Created notify-sms.ts using Twilio REST API via fetch. Checks user smsEnabled. | PHASE-A VERIFIED-IN-CODE 2026-07-13: SMS utility gated on smsEnabled + encrypted phone. Unreachable via FIX-011."
     },
     {
       "id": "US-034",
@@ -503,7 +503,7 @@
       ],
       "priority": 34,
       "passes": true,
-      "notes": "Created notify-push.ts with web-push pattern. Created POST /api/push/subscribe to save PushSubscription."
+      "notes": "Created notify-push.ts with web-push pattern. Created POST /api/push/subscribe to save PushSubscription. | PHASE-A VERIFIED 2026-07-13: POST /api/push/subscribe persists PushSubscription row (verified in DB); notify-push gated on pushEnabled + VAPID keys."
     },
     {
       "id": "US-035",
@@ -516,7 +516,7 @@
       ],
       "priority": 35,
       "passes": true,
-      "notes": "Created public/sw.js for push notification handling. Created ServiceWorkerRegistration component."
+      "notes": "Created public/sw.js for push notification handling. Created ServiceWorkerRegistration component. | PHASE-A VERIFIED 2026-07-13: /sw.js serves as application/javascript."
     },
     {
       "id": "US-036",
@@ -529,7 +529,7 @@
       ],
       "priority": 36,
       "passes": true,
-      "notes": "Created POST /api/nudge/digest route for daily email digest compilation via Resend."
+      "notes": "Created POST /api/nudge/digest route for daily email digest compilation via Resend. | PHASE-A PARTIAL 2026-07-13: digest route exists, cron registered, POST-only (FIX-010). Live send not tested (would hit real Resend)."
     },
     {
       "id": "US-037",
@@ -545,8 +545,8 @@
         "Typecheck passes"
       ],
       "priority": 37,
-      "passes": true,
-      "notes": "Created nudge-dispatcher.ts. Checks shouldSuppressNudge, then dispatches via Slack/SMS/Push/Email based on user prefs."
+      "passes": false,
+      "notes": "Created nudge-dispatcher.ts. Checks shouldSuppressNudge, then dispatches via Slack/SMS/Push/Email based on user prefs. | PHASE-A FAIL 2026-07-13: dispatchNudges has ZERO callers; /api/nudge/dispatch fans out to ITSELF infinitely and never reads the userId body (FIX-011). Notification pipeline is dead code."
     },
     {
       "id": "US-038",
@@ -563,7 +563,7 @@
       ],
       "priority": 38,
       "passes": true,
-      "notes": "Created inbox-filter.ts (trusted sender filter) and modified webhook to call it for inbound emails."
+      "notes": "Created inbox-filter.ts (trusted sender filter) and modified webhook to call it for inbound emails. | PHASE-A VERIFIED-IN-CODE 2026-07-13: inbox-filter.ts exists with trust hierarchy; wired into webhook (US-028). Gmail label ops need real-token pass."
     },
     {
       "id": "US-039",
@@ -577,7 +577,7 @@
       ],
       "priority": 39,
       "passes": true,
-      "notes": "Created junk-purge.ts and POST /api/junk/purge cron route. Trashes junk older than junkRetentionDays."
+      "notes": "Created junk-purge.ts and POST /api/junk/purge cron route. Trashes junk older than junkRetentionDays. | PHASE-A PARTIAL 2026-07-13: purge route runs with cron secret and fans out; POST-only (FIX-010); Gmail deletion needs real pass."
     },
     {
       "id": "US-040",
@@ -590,7 +590,7 @@
       ],
       "priority": 40,
       "passes": true,
-      "notes": "Created label-suggester.ts. Uses LLM to analyze email patterns and create SuggestedLabel entries."
+      "notes": "Created label-suggester.ts. Uses LLM to analyze email patterns and create SuggestedLabel entries. | PHASE-A PARTIAL 2026-07-13: suggester exists, cron registered, POST-only (FIX-010); LLM+Gmail path needs real pass."
     },
     {
       "id": "US-041",
@@ -605,7 +605,7 @@
       ],
       "priority": 41,
       "passes": true,
-      "notes": "Created GET /api/labels and PUT /api/labels/[id] routes. Approve creates Gmail label, dismiss updates status."
+      "notes": "Created GET /api/labels and PUT /api/labels/[id] routes. Approve creates Gmail label, dismiss updates status. | PHASE-A VERIFIED 2026-07-13: PUT /api/labels/:id DISMISSED persists to DB; APPROVED correctly fails without valid Gmail tokens and stays PENDING (no false state)."
     },
     {
       "id": "US-042",
@@ -621,7 +621,7 @@
       ],
       "priority": 42,
       "passes": true,
-      "notes": "Created bntly settings layout with sidebar nav linking to 10 sub-sections. Uses lucide icons, cn() for active state."
+      "notes": "Created bntly settings layout with sidebar nav linking to 10 sub-sections. Uses lucide icons, cn() for active state. | PHASE-A VERIFIED 2026-07-13: hub layout renders with all 10 sidebar items and active-state highlighting at /settings/bntly/*."
     },
     {
       "id": "US-043",
@@ -638,7 +638,7 @@
       ],
       "priority": 43,
       "passes": true,
-      "notes": "Created Connected Accounts settings page. Shows EmailAccount list with inline label editing."
+      "notes": "Created Connected Accounts settings page. Shows EmailAccount list with inline label editing. | PHASE-A VERIFIED 2026-07-13: Connected Accounts panel lists both accounts with editable labels and Default badge."
     },
     {
       "id": "US-044",
@@ -657,7 +657,7 @@
       ],
       "priority": 44,
       "passes": true,
-      "notes": "Created Focus Mode settings page. Toggle on/off, schedule hours, breakthrough threshold via /api/focus-mode."
+      "notes": "Created Focus Mode settings page. Toggle on/off, schedule hours, breakthrough threshold via /api/focus-mode. | PHASE-A VERIFIED 2026-07-13: Focus Mode panel renders and reflects API-set state (toggle on, threshold 80); PUT persists to DB."
     },
     {
       "id": "US-045",
@@ -675,7 +675,7 @@
       ],
       "priority": 45,
       "passes": true,
-      "notes": "Created Tone Profile settings page. Read-only display of openers, signoffs, formality. Re-scan button."
+      "notes": "Created Tone Profile settings page. Read-only display of openers, signoffs, formality. Re-scan button. | PHASE-A BLOCKED 2026-07-13: panel UI behind Gmail permissions guard with fixture tokens; API read path verified in US-026."
     },
     {
       "id": "US-046",
@@ -693,7 +693,7 @@
       ],
       "priority": 46,
       "passes": true,
-      "notes": "Created Contact Intelligence settings page. Top contacts by priority score with replyRate and avgReplyTime."
+      "notes": "Created Contact Intelligence settings page. Top contacts by priority score with replyRate and avgReplyTime. | PHASE-A BLOCKED 2026-07-13: panel route serves 200 but in-browser render blocked by Gmail permissions guard with fixture tokens. Needs one real Google sign-in to verify UI."
     },
     {
       "id": "US-047",
@@ -710,7 +710,7 @@
       ],
       "priority": 47,
       "passes": true,
-      "notes": "Created Trusted Senders settings page with CRUD. New API routes: GET/POST/DELETE /api/trusted-senders."
+      "notes": "Created Trusted Senders settings page with CRUD. New API routes: GET/POST/DELETE /api/trusted-senders. | PHASE-A BLOCKED 2026-07-13: panel behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-048",
@@ -729,7 +729,7 @@
       ],
       "priority": 48,
       "passes": true,
-      "notes": "Created Notification settings page. Toggles for slack/sms/push/emailDigest with conditional inputs."
+      "notes": "Created Notification settings page. Toggles for slack/sms/push/emailDigest with conditional inputs. | PHASE-A BLOCKED 2026-07-13: panel UI behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-049",
@@ -747,7 +747,7 @@
       ],
       "priority": 49,
       "passes": true,
-      "notes": "Created Auto-Draft & Nudge settings page. Toggle autoDraft, threshold slider, nudge day inputs."
+      "notes": "Created Auto-Draft & Nudge settings page. Toggle autoDraft, threshold slider, nudge day inputs. | PHASE-A BLOCKED 2026-07-13: panel UI behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-050",
@@ -764,7 +764,7 @@
       ],
       "priority": 50,
       "passes": true,
-      "notes": "Created Junk Settings page. Retention days, auto-delete toggle, manual purge button."
+      "notes": "Created Junk Settings page. Retention days, auto-delete toggle, manual purge button. | PHASE-A BLOCKED 2026-07-13: panel behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-051",
@@ -782,7 +782,7 @@
       ],
       "priority": 51,
       "passes": true,
-      "notes": "Created Suggested Labels settings page. Lists with PENDING/APPROVED/DISMISSED badges. Approve/Dismiss actions."
+      "notes": "Created Suggested Labels settings page. Lists with PENDING/APPROVED/DISMISSED badges. Approve/Dismiss actions. | PHASE-A BLOCKED 2026-07-13: panel behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-052",
@@ -796,7 +796,7 @@
       ],
       "priority": 52,
       "passes": true,
-      "notes": "Created PriorityBadge component showing colored dot based on ContactScore priority level."
+      "notes": "Created PriorityBadge component showing colored dot based on ContactScore priority level. | PHASE-A BLOCKED 2026-07-13: mail-list UI requires real Gmail data; needs real-token pass."
     },
     {
       "id": "US-053",
@@ -810,7 +810,7 @@
       ],
       "priority": 53,
       "passes": true,
-      "notes": "Created SignalButtons component with thumbs-up/down calling POST /api/emails/signal."
+      "notes": "Created SignalButtons component with thumbs-up/down calling POST /api/emails/signal. | PHASE-A BLOCKED 2026-07-13: mail-list UI requires real Gmail data; needs real-token pass. Backend tagging API verified in US-024."
     },
     {
       "id": "US-054",
@@ -824,7 +824,7 @@
       ],
       "priority": 54,
       "passes": true,
-      "notes": "Created FocusModeBanner component below top nav. Shows active focus mode with disable button."
+      "notes": "Created FocusModeBanner component below top nav. Shows active focus mode with disable button. | PHASE-A BLOCKED 2026-07-13: banner needs mail UI with real tokens."
     },
     {
       "id": "US-055",
@@ -840,7 +840,7 @@
       ],
       "priority": 55,
       "passes": true,
-      "notes": "Added pgvector extension, ContactEmbedding model with vector(1536) embedding, ContactAlias model with unique userId+phrase."
+      "notes": "Added pgvector extension, ContactEmbedding model with vector(1536) embedding, ContactAlias model with unique userId+phrase. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-056",
@@ -859,7 +859,7 @@
       ],
       "priority": 56,
       "passes": true,
-      "notes": "Created contact-embedder.ts. Generates vector embeddings for contacts using OpenAI text-embedding-3-small. Uses prisma.$executeRaw for vector upserts."
+      "notes": "Created contact-embedder.ts. Generates vector embeddings for contacts using OpenAI text-embedding-3-small. Uses prisma.$executeRaw for vector upserts. | PHASE-A PARTIAL 2026-07-13: embedder service exists; embedding generation needs LLM + real contacts pass."
     },
     {
       "id": "US-057",
@@ -876,7 +876,7 @@
       ],
       "priority": 57,
       "passes": true,
-      "notes": "Created alias-resolver.ts. Cosine similarity search via prisma.$queryRaw on ContactEmbedding vectors. Returns top match above 0.7 threshold."
+      "notes": "Created alias-resolver.ts. Cosine similarity search via prisma.$queryRaw on ContactEmbedding vectors. Returns top match above 0.7 threshold. | PHASE-A VERIFIED 2026-07-13: /api/alias/resolve returns exact-phrase match with similarity 1. Semantic (embedding) matching needs LLM pass."
     },
     {
       "id": "US-058",
@@ -892,7 +892,7 @@
       ],
       "priority": 58,
       "passes": true,
-      "notes": "Created alias API routes: GET/POST/DELETE /api/alias, PUT /api/alias/[id], GET /api/alias/resolve, POST /api/alias/regenerate-embeddings."
+      "notes": "Created alias API routes: GET/POST/DELETE /api/alias, PUT /api/alias/[id], GET /api/alias/resolve, POST /api/alias/regenerate-embeddings. | PHASE-A VERIFIED 2026-07-13: POST upserts with confirmedAt (DB-verified), GET lists, PATCH updates contact, DELETE removes. All round-tripped."
     },
     {
       "id": "US-059",
@@ -910,7 +910,7 @@
       ],
       "priority": 59,
       "passes": true,
-      "notes": "Created AliasAutocomplete component. Debounced search with dropdown, integrated into ComposeEmailForm To: field."
+      "notes": "Created AliasAutocomplete component. Debounced search with dropdown, integrated into ComposeEmailForm To: field. | PHASE-A BLOCKED 2026-07-13: compose UI needs real-token pass."
     },
     {
       "id": "US-060",
@@ -929,7 +929,7 @@
       ],
       "priority": 60,
       "passes": true,
-      "notes": "Created Alias Manager settings page under bntly/aliases. Lists aliases with confirmed/unconfirmed badges. Add/delete/regenerate embeddings."
+      "notes": "Created Alias Manager settings page under bntly/aliases. Lists aliases with confirmed/unconfirmed badges. Add/delete/regenerate embeddings. | PHASE-A BLOCKED 2026-07-13: panel behind permissions guard; needs real-token pass."
     },
     {
       "id": "US-061",
@@ -946,7 +946,7 @@
       ],
       "priority": 61,
       "passes": true,
-      "notes": "RLS migration at supabase/migrations/20260328000001_enable_rls.sql. Apply via supabase db push."
+      "notes": "RLS migration at supabase/migrations/20260328000001_enable_rls.sql. Apply via supabase db push. | PHASE-A VERIFIED-AS-WRITTEN 2026-07-13: migration applies cleanly, RLS enabled+policies on all 10 declared tables + AuditLog. GAPS: 4 user-scoped tables not covered (FIX-012); policies never enforced for the role the app connects with (FIX-014)."
     },
     {
       "id": "US-062",
@@ -963,7 +963,7 @@
       ],
       "priority": 62,
       "passes": true,
-      "notes": "Created utils/prisma-rls.ts with createRlsClient(). RLS enforced when RLS_DATABASE_URL is set. Graceful fallback to default client otherwise."
+      "notes": "Created utils/prisma-rls.ts with createRlsClient(). RLS enforced when RLS_DATABASE_URL is set. Graceful fallback to default client otherwise. | PHASE-A PARTIAL 2026-07-13: extension sets app.user_id/app.user_role via parameterized set_config. But app connects as table owner so policies do not apply (FIX-014)."
     },
     {
       "id": "US-063",
@@ -980,7 +980,7 @@
       ],
       "priority": 63,
       "passes": true,
-      "notes": "GET /api/google/messages/unread-count endpoint. useUnreadCount hook with 60s SWR refresh. Badge on Inbox in both sidebar views."
+      "notes": "GET /api/google/messages/unread-count endpoint. useUnreadCount hook with 60s SWR refresh. Badge on Inbox in both sidebar views. | PHASE-A BLOCKED 2026-07-13: unread badge needs real Gmail data pass."
     },
     {
       "id": "US-064",
@@ -997,7 +997,7 @@
       ],
       "priority": 64,
       "passes": true,
-      "notes": "Horizontal category tab bar on mail page. Uses existing Gmail category labels via ?type= param. Active tab highlighted with primary color."
+      "notes": "Horizontal category tab bar on mail page. Uses existing Gmail category labels via ?type= param. Active tab highlighted with primary color. | PHASE-A BLOCKED 2026-07-13: category sub-nav needs real Gmail data pass."
     },
     {
       "id": "US-065",
@@ -1015,8 +1015,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 65,
-      "passes": true,
-      "notes": "Onboarding page at /onboarding/importance. Top senders API + bulk update API. Thumbs up/down UI with save/skip."
+      "passes": false,
+      "notes": "Onboarding page at /onboarding/importance. Top senders API + bulk update API. Thumbs up/down UI with save/skip. | PHASE-A FAIL 2026-07-13: page renders top senders from ContactScore correctly with thumbs buttons; BUT Done button's save is broken (see FIX-005): fetch to /api/contact-scoring/bulk-update lacks X-Email-Account-Id header, server rejects, and missing response.ok check shows a success toast anyway (silent failure). Backend verified working with header."
     },
     {
       "id": "US-066",
@@ -1034,7 +1034,7 @@
       ],
       "priority": 66,
       "passes": true,
-      "notes": "AdminUserTable component with paginated user list, search, role/tier badges. GET /api/admin/users endpoint."
+      "notes": "AdminUserTable component with paginated user list, search, role/tier badges. GET /api/admin/users endpoint. | PHASE-A VERIFIED 2026-07-13: /api/admin/users returns paginated users for ADMIN; dashboard renders Users table with fixture row in browser."
     },
     {
       "id": "US-067",
@@ -1050,8 +1050,8 @@
         "Typecheck passes"
       ],
       "priority": 67,
-      "passes": true,
-      "notes": "AuditLog model added to schema. logAdminAction() utility in utils/audit.ts. RLS migration for admin-only read."
+      "passes": false,
+      "notes": "AuditLog model added to schema. logAdminAction() utility in utils/audit.ts. RLS migration for admin-only read. | PHASE-A FAIL 2026-07-13: utils/audit.ts exists but has ZERO callers - no admin action writes an AuditLog row (FIX-013)."
     },
     {
       "id": "US-068",
@@ -1068,7 +1068,7 @@
       ],
       "priority": 68,
       "passes": true,
-      "notes": "AdminAuditLog component with paginated table. GET /api/admin/audit-logs endpoint. Tabbed admin page (Users, Audit Log, Admin Tools)."
+      "notes": "AdminAuditLog component with paginated table. GET /api/admin/audit-logs endpoint. Tabbed admin page (Users, Audit Log, Admin Tools). | PHASE-A PARTIAL 2026-07-13: Audit Log tab + API render/return empty list correctly; nothing to display because US-067 never writes (FIX-013)."
     },
     {
       "id": "US-069",
@@ -1085,7 +1085,7 @@
       ],
       "priority": 69,
       "passes": true,
-      "notes": "Replaced binary theme toggle with 5-theme picker dropdown. Shows color swatches for Linen, Ember, Soleil, Stone, Terra. Persists via /api/user/theme."
+      "notes": "Replaced binary theme toggle with 5-theme picker dropdown. Shows color swatches for Linen, Ember, Soleil, Stone, Terra. Persists via /api/user/theme. | PHASE-A VERIFIED 2026-07-13: all 5 themes switch live from the picker with correct palette classes; persistence confirmed."
     },
     {
       "id": "US-070",
@@ -1103,7 +1103,7 @@
       ],
       "priority": 70,
       "passes": true,
-      "notes": "Cron endpoint at /api/cron/email-digest. Digest utility generates Bntly-branded HTML with high-priority contacts. Scheduled by emailDigestTimeUtc."
+      "notes": "Cron endpoint at /api/cron/email-digest. Digest utility generates Bntly-branded HTML with high-priority contacts. Scheduled by emailDigestTimeUtc. | PHASE-A PARTIAL 2026-07-13: digest channel code present; end-to-end send needs real pass."
     },
     {
       "id": "US-071",
@@ -1119,7 +1119,7 @@
       ],
       "priority": 71,
       "passes": true,
-      "notes": "Rich tooltips added to PlanActions (Execute/Reject), SignalButtons (Important/Not Important), EmailMessage (Reply/Forward). All respect showHelpfulTips preference."
+      "notes": "Rich tooltips added to PlanActions (Execute/Reject), SignalButtons (Important/Not Important), EmailMessage (Reply/Forward). All respect showHelpfulTips preference. | PHASE-A BLOCKED 2026-07-13: tooltip sweep needs real-token UI pass."
     },
     {
       "id": "US-072",
@@ -1136,7 +1136,7 @@
       ],
       "priority": 72,
       "passes": true,
-      "notes": "Scan Inbox button with SparklesIcon in toolbar. Filters unprocessed threads, runs runAiRules(). Toast feedback for progress/completion/empty states."
+      "notes": "Scan Inbox button with SparklesIcon in toolbar. Filters unprocessed threads, runs runAiRules(). Toast feedback for progress/completion/empty states. | PHASE-A BLOCKED 2026-07-13: Scan Inbox button needs real Gmail data pass."
     },
     {
       "id": "US-073",
@@ -1149,7 +1149,7 @@
       ],
       "priority": 73,
       "passes": true,
-      "notes": "Added priorityContext String? field to EmailSignal model. Apply via prisma db push."
+      "notes": "Added priorityContext String? field to EmailSignal model. Apply via prisma db push. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-074",
@@ -1166,7 +1166,7 @@
       ],
       "priority": 74,
       "passes": true,
-      "notes": "Priority context popover on thumbs-up. API accepts priorityContext field. Save/Skip buttons in popover. Textarea with 500 char limit."
+      "notes": "Priority context popover on thumbs-up. API accepts priorityContext field. Save/Skip buttons in popover. Textarea with 500 char limit. | PHASE-A PARTIAL 2026-07-13: backend verified (EmailSignal accepts priorityContext, max 500 chars). Modal UI needs real-token pass."
     },
     {
       "id": "US-075",
@@ -1183,7 +1183,7 @@
       ],
       "priority": 75,
       "passes": true,
-      "notes": "Priority view at ?type=priority. getPriorityThreads() fetches from EmailSignal IMPORTANT records. Priority link in sidebar with StarIcon."
+      "notes": "Priority view at ?type=priority. getPriorityThreads() fetches from EmailSignal IMPORTANT records. Priority link in sidebar with StarIcon. | PHASE-A PARTIAL 2026-07-13: getPriorityThreads exists in threads controller. UI needs real-token pass."
     },
     {
       "id": "US-076",
@@ -1201,7 +1201,204 @@
       ],
       "priority": 76,
       "passes": true,
-      "notes": "Suggestion engine uses sender patterns + ContactScore to suggest priority emails. Accept/dismiss API. SuggestedPriorityBadge with inline accept/dismiss buttons. SUGGESTED_PRIORITY and DISMISSED_SUGGESTION signal types added."
+      "notes": "Suggestion engine uses sender patterns + ContactScore to suggest priority emails. Accept/dismiss API. SuggestedPriorityBadge with inline accept/dismiss buttons. SUGGESTED_PRIORITY and DISMISSED_SUGGESTION signal types added. | PHASE-A PARTIAL 2026-07-13: SUGGESTED_PRIORITY/DISMISSED_SUGGESTION enum values present in DB. Suggestion flow needs real-token + LLM pass."
+    },
+    {
+      "id": "FIX-001",
+      "title": "Create baseline Prisma migration for all Bntly tables",
+      "description": "Schema stories claimed 'generate migration and apply' but no migrations exist for ContactScore, EmailSignal, ToneProfile, NudgeLog, TrustedSender, SuggestedLabel, PushSubscription, FocusMode, ContactEmbedding, ContactAlias, AuditLog, or the EmailAccount/User field additions (applied via prisma db push). Without migrations, a fresh deploy cannot reproduce the schema.",
+      "acceptanceCriteria": [
+        "A migration (or baseline) exists under prisma/migrations covering every Bntly table and field addition",
+        "prisma migrate deploy on an empty pgvector database produces the full schema (verify with prisma migrate status: up to date)",
+        "Existing database can be baselined without data loss (prisma migrate resolve)",
+        "Typecheck passes (app code)"
+      ],
+      "priority": 90,
+      "passes": false,
+      "notes": "Found during Phase A Group 1 verification 2026-07-13."
+    },
+    {
+      "id": "FIX-002",
+      "title": "Fix pre-existing TypeScript errors in test files",
+      "description": "npx tsc --noEmit reports 26 errors, all in __tests__/ and *.test.ts (ai-detect-recurring-pattern, find-matching-group, ai-process-user-request, helpers, ai-extract-from-email-history, ai-choose-args). App code is clean. These predate Bntly work but make the 'typecheck passes' criterion ambiguous for every story.",
+      "acceptanceCriteria": [
+        "npx tsc --noEmit exits 0 with zero errors",
+        "No test logic weakened; fixes are type-level only"
+      ],
+      "priority": 95,
+      "passes": false,
+      "notes": "Found during Phase A Group 1 verification 2026-07-13."
+    },
+    {
+      "id": "FIX-003",
+      "title": "Fix ThemePicker SSR hydration mismatch",
+      "description": "React hydration error on /settings?tab=user: server renders ThemePicker radios unchecked (aria-checked=false, tabIndex=-1) while client renders the persisted theme as checked. next-themes state is unavailable during SSR; picker must render theme-dependent attributes only after mount (mounted-state gate) or suppress hydration warning correctly.",
+      "acceptanceCriteria": [
+        "Loading /settings?tab=user with a non-default theme produces zero hydration errors in the browser console",
+        "Theme picker still shows the persisted theme as selected after reload",
+        "All 5 themes still switch live"
+      ],
+      "priority": 91,
+      "passes": false,
+      "notes": "Found during Phase A Group 2 browser verification 2026-07-13."
+    },
+    {
+      "id": "FIX-004",
+      "title": "Landing page content integrity: hero screenshot + false claims",
+      "description": "Landing page ships inherited Inbox Zero marketing assets and claims that are false for Bntly: (1) hero product screenshot shows INBOX ZERO app UI; (2) 'Trusted by 10,000+ productive users' with Resend/ByteDance/Zendesk/Netflix/DOAC logos; (3) home Privacy section claims Google security review approval and CASA Tier 2 (also blocks OAuth verification honesty); privacy policy lacks Google Limited Use disclosure.",
+      "acceptanceCriteria": [
+        "Hero screenshot replaced with a real Bntly app screenshot (or removed)",
+        "Trusted-by logo wall and 10,000+ users claim removed or replaced with truthful content",
+        "CASA Tier 2 / Google-approval claims removed or softened until actually obtained",
+        "Privacy policy contains the Google API Services User Data Policy Limited Use disclosure",
+        "No testimonial or stat on the landing page refers to Inbox Zero users"
+      ],
+      "priority": 92,
+      "passes": false,
+      "notes": "Found during Phase A Group 2 browser verification 2026-07-13. Ties into OAuth verification prep."
+    },
+    {
+      "id": "FIX-005",
+      "title": "Importance training Done button saves nothing (missing account header + silent failure)",
+      "description": "onboarding/importance page POSTs /api/contact-scoring/bulk-update via raw fetch without the X-Email-Account-Id header the account middleware requires; server returns 'Email account ID is required' but the page never checks response.ok, so it toasts success and redirects with zero rows saved.",
+      "acceptanceCriteria": [
+        "Done button's request includes the email account context (header or scoped route) and persists updates",
+        "Non-2xx response shows the error toast, not the success toast",
+        "Browser-verified: tag two senders, click Done, ContactScore rows show priorityScore 90/10 with manualOverride=true",
+        "Audit other raw fetch() calls in Bntly pages for the same missing-header pattern"
+      ],
+      "priority": 93,
+      "passes": false,
+      "notes": "Found during Phase A Group 3 browser verification 2026-07-13. Backend verified OK via curl with header."
+    },
+    {
+      "id": "FIX-006",
+      "title": "Graceful degradation when Redis is unreachable",
+      "description": "With Upstash Redis unresolvable, account-validation middleware throws (fetch failed in utils/redis/account-validation.ts) and core account-scoped API routes return 500 after multi-second timeouts. Redis is a cache here; an outage should fall back to the DB lookup, not take the app down.",
+      "acceptanceCriteria": [
+        "With UPSTASH_REDIS_URL pointing at a dead host, account-scoped API routes still respond correctly (DB fallback), possibly slower",
+        "Redis errors are logged once, not thrown to the request path",
+        "Verified by stopping the local redis container and driving the app"
+      ],
+      "priority": 96,
+      "passes": false,
+      "notes": "Found during Phase A Group 3 2026-07-13 when the real Upstash instance (growing-eft-70064.upstash.io) stopped resolving."
+    },
+    {
+      "id": "FIX-007",
+      "title": "Signal API 500s after successful save when QStash dispatch fails",
+      "description": "app/api/emails/signal/route.ts awaits publishToQstash after upserting the EmailSignal; a QStash failure throws, returning 500 even though the tag saved. Dispatch is best-effort: catch, log, and still return success.",
+      "acceptanceCriteria": [
+        "QStash publish failure does not change the API response for a successful save",
+        "Failure is logged with context",
+        "Verified with unreachable QStash: POST returns success and row exists"
+      ],
+      "priority": 94,
+      "passes": false,
+      "notes": "Found Phase A Group 4 2026-07-13."
+    },
+    {
+      "id": "FIX-008",
+      "title": "Contact scoring: NOT_IMPORTANT tag raises score via signal-count frequency proxy",
+      "description": "utils/contact-scoring.ts uses per-contact signal count as the thread-frequency component (normalized to max). Any signal maxes frequency (+25) which outweighs NOT_IMPORTANT_PENALTY (-10), so a single not-important tag nets +15 vs untagged contacts. Verified in DB: identical contacts scored 56.8 (1 NOT_IMPORTANT signal) vs 41.8 (no signals).",
+      "acceptanceCriteria": [
+        "Thread frequency derives from actual email volume (e.g. EmailMessage counts), not manual signal count",
+        "A NOT_IMPORTANT tag strictly lowers a contact's score relative to their untagged baseline",
+        "An IMPORTANT tag strictly raises it",
+        "Unit test covering both directions",
+        "Re-run scorer on fixtures shows correct ordering"
+      ],
+      "priority": 89,
+      "passes": false,
+      "notes": "Found Phase A Group 4 2026-07-13 with DB evidence."
+    },
+    {
+      "id": "FIX-009",
+      "title": "CRON_SECRET missing: all 6 Bntly crons silently unauthorized",
+      "description": "CRON_SECRET is absent from apps/web/.env and unverified in Vercel. hasCronSecret() then never matches, so every cron route (contact-scoring/run, tone-profile/scan, nudge/detect, nudge/digest, junk/purge, labels/suggest) returns 401 on every scheduled run - the learning loops never execute.",
+      "acceptanceCriteria": [
+        "CRON_SECRET set in .env.example docs, local .env, and Vercel project env",
+        "A failed cron auth alerts (Sentry captureException already wired) - confirm it is visible",
+        "One production cron observed executing successfully end to end"
+      ],
+      "priority": 88,
+      "passes": false,
+      "notes": "Found Phase A Group 4 2026-07-13. Local verification used CRON_SECRET override."
+    },
+    {
+      "id": "FIX-010",
+      "title": "Four cron routes are POST-only but Vercel cron invokes with GET",
+      "description": "nudge/detect, nudge/digest, junk/purge, labels/suggest export only POST; Vercel scheduled crons send GET, so these four jobs 405 on every scheduled run (contact-scoring/run and tone-profile/scan correctly export GET+POST).",
+      "acceptanceCriteria": [
+        "All six cron routes accept the method Vercel cron uses (add GET handlers mirroring POST)",
+        "curl GET with cron secret returns success on all six",
+        "Schedules in vercel.json unchanged"
+      ],
+      "priority": 87,
+      "passes": false,
+      "notes": "Found Phase A Group 6 2026-07-13."
+    },
+    {
+      "id": "FIX-011",
+      "title": "Notification dispatcher never runs: /api/nudge/dispatch loops to itself and dispatchNudges has no callers",
+      "description": "app/api/nudge/dispatch/route.ts always fans out and QStash-publishes back to /api/nudge/dispatch; the {userId} body is never read and dispatchNudges() is never invoked anywhere in the codebase. Consequences: no Slack/SMS/push/digest nudge notifications can ever send, Focus Mode enforcement (shouldSuppressNudge) is unreachable, and the queue self-amplifies indefinitely.",
+      "acceptanceCriteria": [
+        "Route distinguishes fan-out (no body) from worker mode (userId in body) or a separate worker route is added",
+        "Worker path calls dispatchNudges(userId)",
+        "Focus suppression observed: pending nudge below breakthroughThreshold on a non-focused account is suppressed; above-threshold one dispatches",
+        "No self-amplifying publish loop (worker never re-publishes)",
+        "Also fix /api/nudge/detect response to not report failed publishes as dispatched"
+      ],
+      "priority": 86,
+      "passes": false,
+      "notes": "Found Phase A Group 6 2026-07-13. Highest-impact finding so far."
+    },
+    {
+      "id": "FIX-012",
+      "title": "Extend RLS to remaining user-scoped Bntly tables",
+      "description": "EmailSignal, TrustedSender, SuggestedLabel, PushSubscription are user/account-scoped but have no RLS enabled (relrowsecurity=f). US-061's list omitted them.",
+      "acceptanceCriteria": [
+        "RLS enabled + policies for the 4 tables in a new supabase migration",
+        "Migration applies cleanly on a DB with existing data"
+      ],
+      "priority": 80,
+      "passes": false,
+      "notes": "Found Phase A Group 9 2026-07-13."
+    },
+    {
+      "id": "FIX-013",
+      "title": "Admin actions never write audit logs (utils/audit.ts has no callers)",
+      "description": "US-067's audit helper exists but no admin mutation (role change, premium upgrade, user deletion) invokes it, so AuditLog stays empty and the US-068 viewer is decorative.",
+      "acceptanceCriteria": [
+        "Every admin mutation route/action writes an AuditLog row with actor, action, target, metadata",
+        "Audit Log tab shows entries after performing an admin action (browser-verified)"
+      ],
+      "priority": 79,
+      "passes": false,
+      "notes": "Found Phase A Group 9 2026-07-13."
+    },
+    {
+      "id": "FIX-014",
+      "title": "RLS policies are never enforced: app connects as table owner, app_user is NOLOGIN",
+      "description": "The Prisma connection uses the postgres (owner) role which bypasses RLS; app_user (the role policies target) is NOLOGIN and unused; no FORCE ROW LEVEL SECURITY. The entire RLS layer currently provides zero runtime protection.",
+      "acceptanceCriteria": [
+        "Decide enforcement model: connect via a non-owner role that honors RLS, or ALTER TABLE ... FORCE ROW LEVEL SECURITY with owner-safe policies, or explicitly document RLS as future defense-in-depth",
+        "If enforced: verify cross-user query with app.user_id set to another user returns zero rows through the app's actual connection",
+        "Prisma queries still function for the legitimate user"
+      ],
+      "priority": 78,
+      "passes": false,
+      "notes": "Found Phase A Group 9 2026-07-13. Security-relevant."
     }
-  ]
+  ],
+  "projectConfig": {
+    "testCommand": "pnpm --filter inbox-zero-ai test",
+    "typecheckCommand": "cd apps/web && npx tsc --noEmit",
+    "devServer": {
+      "note": "Throwaway verification stack. Never point at the real Supabase DB.",
+      "db": "docker run -d --name bntly-verify-db -e POSTGRES_USER=verify -e POSTGRES_PASSWORD=verify -e POSTGRES_DB=bntly_verify -p 54329:5432 pgvector/pgvector:pg16",
+      "web": "cd apps/web && DATABASE_URL=postgresql://verify:verify@localhost:54329/bntly_verify DIRECT_URL=postgresql://verify:verify@localhost:54329/bntly_verify pnpm dev",
+      "port": 3000
+    }
+  }
 }
