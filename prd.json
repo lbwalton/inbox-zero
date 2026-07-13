@@ -283,7 +283,7 @@
       ],
       "priority": 19,
       "passes": true,
-      "notes": "Modified linkAccount in utils/auth.ts to check existing EmailAccount count and set isDefault=true for first account. EmailAccount model already has accountLabel (String?) field from US-001 for optional labeling. Created utils/onboarding/dispatch-scans.ts that dispatches calculateContactScores and scanToneProfile via QStash publishToQstash. The upsert returns EmailAccount record (no raw tokens exposed). Pre-existing test TS errors only."
+      "notes": "Modified linkAccount in utils/auth.ts to check existing EmailAccount count and set isDefault=true for first account. EmailAccount model already has accountLabel (String?) field from US-001 for optional labeling. Created utils/onboarding/dispatch-scans.ts that dispatches calculateContactScores and scanToneProfile via QStash publishToQstash. The upsert returns EmailAccount record (no raw tokens exposed). Pre-existing test TS errors only. | PHASE-A VERIFIED-IN-CODE 2026-07-13: dispatchOnboardingScans wired into auth.ts linkAccount (line ~153), isDefault-if-first logic present. Full E2E needs a real Gmail OAuth connect - do one live connect and confirm QStash dispatch fires (needs-lb-review)."
     },
     {
       "id": "US-020",
@@ -297,7 +297,7 @@
       ],
       "priority": 20,
       "passes": true,
-      "notes": "Created PUT /api/accounts/[id]/activate (transaction-based default switching), GET/PUT /api/focus-mode (Zod validation, upsert)."
+      "notes": "Created PUT /api/accounts/[id]/activate (transaction-based default switching), GET/PUT /api/focus-mode (Zod validation, upsert). | PHASE-A VERIFIED 2026-07-13: /api/user/email-accounts returns accounts with accountLabel/isDefault; /api/focus-mode GET/PUT round-trips and persists to FocusMode table (verified in DB)."
     },
     {
       "id": "US-021",
@@ -314,7 +314,7 @@
       ],
       "priority": 21,
       "passes": true,
-      "notes": "Enhanced AccountSwitcher in SideNav header with: accountLabel/isDefault display, checkmark on active account, violet dot on focused account when Focus Mode active, PUT /api/user/email-accounts/[id]/activate stub route, Add account link to /accounts. DropdownMenu from shadcn/ui provides full keyboard accessibility. Updated email-accounts API to return accountLabel, isDefault, and focusMode data."
+      "notes": "Enhanced AccountSwitcher in SideNav header with: accountLabel/isDefault display, checkmark on active account, violet dot on focused account when Focus Mode active, PUT /api/user/email-accounts/[id]/activate stub route, Add account link to /accounts. DropdownMenu from shadcn/ui provides full keyboard accessibility. Updated email-accounts API to return accountLabel, isDefault, and focusMode data. | PHASE-A VERIFIED 2026-07-13: header switcher lists both fixture accounts with labels + active check; clicking the other account navigates to its emailAccountId path and persists as active."
     },
     {
       "id": "US-022",
@@ -638,7 +638,7 @@
       ],
       "priority": 43,
       "passes": true,
-      "notes": "Created Connected Accounts settings page. Shows EmailAccount list with inline label editing."
+      "notes": "Created Connected Accounts settings page. Shows EmailAccount list with inline label editing. | PHASE-A VERIFIED 2026-07-13: Connected Accounts panel lists both accounts with editable labels and Default badge."
     },
     {
       "id": "US-044",
@@ -1015,8 +1015,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 65,
-      "passes": true,
-      "notes": "Onboarding page at /onboarding/importance. Top senders API + bulk update API. Thumbs up/down UI with save/skip."
+      "passes": false,
+      "notes": "Onboarding page at /onboarding/importance. Top senders API + bulk update API. Thumbs up/down UI with save/skip. | PHASE-A FAIL 2026-07-13: page renders top senders from ContactScore correctly with thumbs buttons; BUT Done button's save is broken (see FIX-005): fetch to /api/contact-scoring/bulk-update lacks X-Email-Account-Id header, server rejects, and missing response.ok check shows a success toast anyway (silent failure). Backend verified working with header."
     },
     {
       "id": "US-066",
@@ -1256,6 +1256,33 @@
       "priority": 92,
       "passes": false,
       "notes": "Found during Phase A Group 2 browser verification 2026-07-13. Ties into OAuth verification prep."
+    },
+    {
+      "id": "FIX-005",
+      "title": "Importance training Done button saves nothing (missing account header + silent failure)",
+      "description": "onboarding/importance page POSTs /api/contact-scoring/bulk-update via raw fetch without the X-Email-Account-Id header the account middleware requires; server returns 'Email account ID is required' but the page never checks response.ok, so it toasts success and redirects with zero rows saved.",
+      "acceptanceCriteria": [
+        "Done button's request includes the email account context (header or scoped route) and persists updates",
+        "Non-2xx response shows the error toast, not the success toast",
+        "Browser-verified: tag two senders, click Done, ContactScore rows show priorityScore 90/10 with manualOverride=true",
+        "Audit other raw fetch() calls in Bntly pages for the same missing-header pattern"
+      ],
+      "priority": 93,
+      "passes": false,
+      "notes": "Found during Phase A Group 3 browser verification 2026-07-13. Backend verified OK via curl with header."
+    },
+    {
+      "id": "FIX-006",
+      "title": "Graceful degradation when Redis is unreachable",
+      "description": "With Upstash Redis unresolvable, account-validation middleware throws (fetch failed in utils/redis/account-validation.ts) and core account-scoped API routes return 500 after multi-second timeouts. Redis is a cache here; an outage should fall back to the DB lookup, not take the app down.",
+      "acceptanceCriteria": [
+        "With UPSTASH_REDIS_URL pointing at a dead host, account-scoped API routes still respond correctly (DB fallback), possibly slower",
+        "Redis errors are logged once, not thrown to the request path",
+        "Verified by stopping the local redis container and driving the app"
+      ],
+      "priority": 96,
+      "passes": false,
+      "notes": "Found during Phase A Group 3 2026-07-13 when the real Upstash instance (growing-eft-70064.upstash.io) stopped resolving."
     }
   ],
   "projectConfig": {
