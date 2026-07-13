@@ -15,7 +15,7 @@
       ],
       "priority": 1,
       "passes": true,
-      "notes": "Added accountLabel and isDefault fields to EmailAccount model. Prisma client generated successfully. Pre-existing test file TS errors unrelated to this change."
+      "notes": "Added accountLabel and isDefault fields to EmailAccount model. Prisma client generated successfully. Pre-existing test file TS errors unrelated to this change. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-002",
@@ -30,7 +30,7 @@
       ],
       "priority": 2,
       "passes": true,
-      "notes": "Added ContactScore model with unique constraint on (emailAccountId, contactEmail). Relation added to EmailAccount."
+      "notes": "Added ContactScore model with unique constraint on (emailAccountId, contactEmail). Relation added to EmailAccount. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-003",
@@ -44,7 +44,7 @@
       ],
       "priority": 3,
       "passes": true,
-      "notes": "Added EmailSignal model with EmailSignalType enum (IMPORTANT/NOT_IMPORTANT)."
+      "notes": "Added EmailSignal model with EmailSignalType enum (IMPORTANT/NOT_IMPORTANT). | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-004",
@@ -58,7 +58,7 @@
       ],
       "priority": 4,
       "passes": true,
-      "notes": "Added ToneProfile model with unique emailAccountId constraint."
+      "notes": "Added ToneProfile model with unique emailAccountId constraint. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-005",
@@ -72,7 +72,7 @@
       ],
       "priority": 5,
       "passes": true,
-      "notes": "Added NudgeLog model with NudgeType and NudgeStatus enums."
+      "notes": "Added NudgeLog model with NudgeType and NudgeStatus enums. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-006",
@@ -86,7 +86,7 @@
       ],
       "priority": 6,
       "passes": true,
-      "notes": "Added TrustedSender model with TrustedSenderType enum."
+      "notes": "Added TrustedSender model with TrustedSenderType enum. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-007",
@@ -99,7 +99,7 @@
       ],
       "priority": 7,
       "passes": true,
-      "notes": "Added SuggestedLabel model with SuggestedLabelStatus enum."
+      "notes": "Added SuggestedLabel model with SuggestedLabelStatus enum. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-008",
@@ -112,7 +112,7 @@
       ],
       "priority": 8,
       "passes": true,
-      "notes": "Added PushSubscription model related to User."
+      "notes": "Added PushSubscription model related to User. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-009",
@@ -125,7 +125,7 @@
       ],
       "priority": 9,
       "passes": true,
-      "notes": "Added FocusMode model with one-to-one User relation and optional EmailAccount FK."
+      "notes": "Added FocusMode model with one-to-one User relation and optional EmailAccount FK. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-010",
@@ -138,7 +138,7 @@
       ],
       "priority": 10,
       "passes": true,
-      "notes": "Added 14 personalization fields and NotificationView enum to User model."
+      "notes": "Added 14 personalization fields and NotificationView enum to User model. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-011",
@@ -840,7 +840,7 @@
       ],
       "priority": 55,
       "passes": true,
-      "notes": "Added pgvector extension, ContactEmbedding model with vector(1536) embedding, ContactAlias model with unique userId+phrase."
+      "notes": "Added pgvector extension, ContactEmbedding model with vector(1536) embedding, ContactAlias model with unique userId+phrase. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-056",
@@ -1149,7 +1149,7 @@
       ],
       "priority": 73,
       "passes": true,
-      "notes": "Added priorityContext String? field to EmailSignal model. Apply via prisma db push."
+      "notes": "Added priorityContext String? field to EmailSignal model. Apply via prisma db push. | PHASE-A VERIFIED 2026-07-13: structure confirmed against fresh pgvector DB via SQL (all columns/constraints/enums present, prisma db push clean, app-code typecheck clean). CAVEAT: 'generate migration' criterion NOT met - no Prisma migrations exist for Bntly tables (see FIX-001). Prod Supabase DB unreachable (project paused) - prod state unverified."
     },
     {
       "id": "US-074",
@@ -1202,6 +1202,42 @@
       "priority": 76,
       "passes": true,
       "notes": "Suggestion engine uses sender patterns + ContactScore to suggest priority emails. Accept/dismiss API. SuggestedPriorityBadge with inline accept/dismiss buttons. SUGGESTED_PRIORITY and DISMISSED_SUGGESTION signal types added."
+    },
+    {
+      "id": "FIX-001",
+      "title": "Create baseline Prisma migration for all Bntly tables",
+      "description": "Schema stories claimed 'generate migration and apply' but no migrations exist for ContactScore, EmailSignal, ToneProfile, NudgeLog, TrustedSender, SuggestedLabel, PushSubscription, FocusMode, ContactEmbedding, ContactAlias, AuditLog, or the EmailAccount/User field additions (applied via prisma db push). Without migrations, a fresh deploy cannot reproduce the schema.",
+      "acceptanceCriteria": [
+        "A migration (or baseline) exists under prisma/migrations covering every Bntly table and field addition",
+        "prisma migrate deploy on an empty pgvector database produces the full schema (verify with prisma migrate status: up to date)",
+        "Existing database can be baselined without data loss (prisma migrate resolve)",
+        "Typecheck passes (app code)"
+      ],
+      "priority": 90,
+      "passes": false,
+      "notes": "Found during Phase A Group 1 verification 2026-07-13."
+    },
+    {
+      "id": "FIX-002",
+      "title": "Fix pre-existing TypeScript errors in test files",
+      "description": "npx tsc --noEmit reports 26 errors, all in __tests__/ and *.test.ts (ai-detect-recurring-pattern, find-matching-group, ai-process-user-request, helpers, ai-extract-from-email-history, ai-choose-args). App code is clean. These predate Bntly work but make the 'typecheck passes' criterion ambiguous for every story.",
+      "acceptanceCriteria": [
+        "npx tsc --noEmit exits 0 with zero errors",
+        "No test logic weakened; fixes are type-level only"
+      ],
+      "priority": 95,
+      "passes": false,
+      "notes": "Found during Phase A Group 1 verification 2026-07-13."
     }
-  ]
+  ],
+  "projectConfig": {
+    "testCommand": "pnpm --filter inbox-zero-ai test",
+    "typecheckCommand": "cd apps/web && npx tsc --noEmit",
+    "devServer": {
+      "note": "Throwaway verification stack. Never point at the real Supabase DB.",
+      "db": "docker run -d --name bntly-verify-db -e POSTGRES_USER=verify -e POSTGRES_PASSWORD=verify -e POSTGRES_DB=bntly_verify -p 54329:5432 pgvector/pgvector:pg16",
+      "web": "cd apps/web && DATABASE_URL=postgresql://verify:verify@localhost:54329/bntly_verify DIRECT_URL=postgresql://verify:verify@localhost:54329/bntly_verify pnpm dev",
+      "port": 3000
+    }
+  }
 }
