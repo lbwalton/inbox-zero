@@ -7,7 +7,7 @@ const faqs = [
   {
     question: "Is my email data private and secure?",
     answer:
-      "Absolutely. Bntly has been approved by Google through a thorough security review. Your data is never used to train AI models, and we're CASA Tier 2 certified. Your privacy isn't an afterthought — it's foundational to how we built this.",
+      "Yes. Bntly only requests the Gmail permissions it needs, your data is never used to train AI models, and you can disconnect your account and delete your data at any time. Your privacy isn't an afterthought — it's foundational to how we built this.",
   },
   {
     question: "How does the AI drafting work?",

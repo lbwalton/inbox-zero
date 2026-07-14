@@ -10,14 +10,12 @@ export function Privacy() {
             Your email is personal. We treat it that way.
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Bntly has been approved by Google through a thorough security review
-            to ensure the protection of your emails. Your data stays yours —
-            always.
+            Bntly only requests the Gmail permissions it needs to organize your
+            inbox, and your data stays yours — always.
           </p>
           <p className="mt-2 text-lg leading-8 text-gray-600">
-            We{"'"}re CASA Tier 2 approved and your data is never used to train
-            AI models. We{"'"}re also pursuing SOC2 compliance to further
-            strengthen our security and privacy standards.
+            Your email content is never used to train AI models, and you can
+            disconnect your account and delete your data at any time.
           </p>
         </div>
       </div>

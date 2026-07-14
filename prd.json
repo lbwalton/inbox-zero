@@ -1255,7 +1255,7 @@
       ],
       "priority": 92,
       "passes": false,
-      "notes": "Found during Phase A Group 2 browser verification 2026-07-13. Ties into OAuth verification prep."
+      "notes": "Found during Phase A Group 2 browser verification 2026-07-13. Ties into OAuth verification prep. PARTIAL 2026-07-14 (fix/strip-casa-claims): false Google-security-review/CASA Tier 2 claims removed from home/Privacy.tsx and home/FAQs.tsx ahead of first prod deploy. Still outstanding: hero screenshot, trusted-by logo wall + 10,000+ users claim, Limited Use disclosure in privacy/content.mdx."
     },
     {
       "id": "FIX-005",
