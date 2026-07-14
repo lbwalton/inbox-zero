@@ -10,8 +10,8 @@ import { AdminSyncStripe } from "@/app/(app)/admin/AdminSyncStripe";
 import prisma from "@/utils/prisma";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// NOTE: Turn on Fluid Compute on Vercel to allow for 800 seconds max duration
-export const maxDuration = 800;
+// Hobby plan caps serverless maxDuration at 300s (800 needs Fluid Compute on a paid plan)
+export const maxDuration = 300;
 
 export default async function AdminPage() {
   const session = await auth();
