@@ -1350,8 +1350,9 @@
         "Also fix /api/nudge/detect response to not report failed publishes as dispatched"
       ],
       "priority": 86,
-      "passes": false,
-      "notes": "Found Phase A Group 6 2026-07-13. Highest-impact finding so far."
+      "passes": true,
+      "notes": "Found Phase A Group 6 2026-07-13. FIXED 2026-07-15 (fix/fix-011-nudge-dispatch): dispatch route now dual-mode (fan-out publishes {userId} worker calls; worker calls dispatchNudges and never publishes); detect counts successful publishes only. Evidence: live on throwaway stack (localhost:3005 + bntly-verify-db): 401 without secret; worker mode ACTIONED the score-90 nudge and left the score-10 nudge PENDING under FocusMode threshold 50 (server logs: 'Nudge suppressed by Focus Mode' + 'Nudge dispatched'); fan-out returned {published:0,failed:1} against dead QStash (accurate failure counting, no recursion). Plus 7 unit tests in app/api/nudge/dispatch/route.test.ts covering both modes, 400 validation, no-publish-in-worker, and detect dispatched/failed counts. Pre-existing repo debt (not this story): utils/schedule.test.ts 2 date-flaky failures, 24 test files fail collection, find-matching-group.test.ts type errors \u2014 all present before this change. NOTE: /api/nudge/dispatch still needs a Vercel cron entry + GET handler to run on schedule \u2014 folded into FIX-010.",
+      "status": "passed"
     },
     {
       "id": "FIX-012",

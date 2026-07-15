@@ -35,6 +35,7 @@ export const POST = withError(async (request) => {
   const baseUrl = env.NEXT_PUBLIC_BASE_URL;
   const headers = getCronSecretHeader();
 
+  let dispatched = 0;
   for (const account of emailAccounts) {
     try {
       // Dispatch outbound nudge detection
@@ -55,6 +56,7 @@ export const POST = withError(async (request) => {
         headers,
       });
 
+      dispatched++;
       logger.info("Dispatched nudge detection", {
         emailAccountId: account.id,
         email: account.email,
@@ -69,6 +71,7 @@ export const POST = withError(async (request) => {
 
   return NextResponse.json({
     ok: true,
-    dispatched: emailAccounts.length,
+    dispatched,
+    failed: emailAccounts.length - dispatched,
   });
 });
