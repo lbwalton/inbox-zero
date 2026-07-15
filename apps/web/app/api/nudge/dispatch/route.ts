@@ -93,3 +93,6 @@ export const POST = withError(async (request) => {
     failed: userIds.length - published,
   });
 });
+
+// Vercel cron invokes scheduled jobs via GET
+export const GET = POST;

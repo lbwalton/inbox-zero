@@ -1335,8 +1335,9 @@
         "Schedules in vercel.json unchanged"
       ],
       "priority": 87,
-      "passes": false,
-      "notes": "Found Phase A Group 6 2026-07-13."
+      "passes": true,
+      "notes": "Found Phase A Group 6 2026-07-13. FIXED 2026-07-15 (fix/fix-010-cron-get-handlers): GET = POST alias added to nudge/detect, nudge/digest, junk/purge, labels/suggest, and nudge/dispatch (all header-authed, none read the body; dispatch GET is inherently fan-out). Also added the missing /api/nudge/dispatch cron (30 12 * * *) completing FIX-011; the six original schedules unchanged. Evidence: 10 unit tests (app/api/cron-get-handlers.test.ts) assert GET exists on all 7 cron routes, 401s without secret, and success responses with secret for dispatch (fan-out) and detect (accurate counts) with mocked prisma; live dev-server curls show all 7 routes answer GET with 401 instead of the old 405. CAVEAT: live GET-with-secret success curls on the four aliased fan-outs were blocked by the local Docker updater being wedged (DB container down); risk is minimal since GET is the identical function object as the Phase-A-verified POST handlers. Post-deploy check: Vercel project should now register 7 crons.",
+      "status": "passed"
     },
     {
       "id": "FIX-011",
