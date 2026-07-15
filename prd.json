@@ -1323,7 +1323,8 @@
       ],
       "priority": 88,
       "passes": false,
-      "notes": "Found Phase A Group 4 2026-07-13. Local verification used CRON_SECRET override."
+      "notes": "Found Phase A Group 4 2026-07-13. IN PROGRESS 2026-07-15: CRON_SECRET set in Vercel production env (generated fresh during first deploy), added to local apps/web/.env (uncommitted), and .env.example now documents how to generate it. Criterion 2 finding: Sentry is NOT configured (no DSN anywhere), so captureException on failed cron auth is a no-op; visibility today is Vercel runtime logs via hasCronSecret's logger.error. Criterion 3 pending: observing today's scheduled 12:00 UTC nudge/detect run in production (read-only observation, no manual trigger against real data).",
+      "status": "in-progress"
     },
     {
       "id": "FIX-010",
