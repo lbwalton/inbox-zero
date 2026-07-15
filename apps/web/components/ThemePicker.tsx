@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { CheckIcon } from "lucide-react";
 import { cn } from "@/utils";
@@ -55,6 +55,13 @@ export function ThemePicker() {
   const { theme: currentTheme, setTheme } = useTheme();
   const [saving, setSaving] = useState(false);
   const groupRef = useRef<HTMLDivElement>(null);
+
+  // next-themes has no theme during SSR, so the server renders every radio
+  // unchecked. Gate theme-dependent attributes behind mount so the first
+  // client render matches the server (no hydration mismatch), then reflect
+  // the persisted theme once mounted.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const handleSelect = useCallback(
     async (themeId: ThemeId) => {
@@ -142,7 +149,7 @@ export function ThemePicker() {
       onKeyDown={handleKeyDown}
     >
       {THEMES.map((t) => {
-        const isActive = currentTheme === t.id;
+        const isActive = mounted && currentTheme === t.id;
 
         return (
           <button

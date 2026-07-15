@@ -1240,8 +1240,9 @@
         "All 5 themes still switch live"
       ],
       "priority": 91,
-      "passes": false,
-      "notes": "Found during Phase A Group 2 browser verification 2026-07-13."
+      "passes": true,
+      "notes": "Found Phase A Group 2 2026-07-13. FIXED 2026-07-15 (fix/fix-003-themepicker-hydration): added a mounted-state gate (useEffect setMounted) and made isActive = mounted && currentTheme === t.id \u2014 the exact remedy the story prescribes. Server (no next-themes theme) and the client's first render now both produce all-unchecked radios (aria-checked=false, tabIndex=-1); after mount the picker reflects the persisted theme. Post-mount behavior (selected state, live switching) is unchanged by construction. tsc exit 0. EVIDENCE GAP / LB-REVIEW: could not drive the picker interactively on the throwaway stack \u2014 the PermissionsCheck guard (fake Google tokens fail tokeninfo) redirects /<account>/settings to /permissions/consent before the client-rendered ThemePicker finishes mounting (Turbopack first-compile loses the race). No hydration errors appeared in the pre-redirect window across several loads. On PRODUCTION (real tokens, ~60s): open /<account>/settings with a non-default theme, confirm DevTools console shows zero hydration errors, the persisted theme shows selected, and all 5 themes switch live.",
+      "status": "needs-lb-review"
     },
     {
       "id": "FIX-004",
