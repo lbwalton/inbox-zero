@@ -1296,8 +1296,9 @@
         "Verified with unreachable QStash: POST returns success and row exists"
       ],
       "priority": 94,
-      "passes": false,
-      "notes": "Found Phase A Group 4 2026-07-13."
+      "passes": true,
+      "notes": "Found Phase A Group 4 2026-07-13. FIXED 2026-07-15 (fix/fix-007-signal-route): publishToQstash after the EmailSignal upsert is now best-effort \u2014 caught and logged with emailAccountId/threadId/error context, response unchanged. Evidence: live drive on throwaway stack with a QStash token whose publish throws (rejected loopback destination): POST /api/emails/signal returned 200 {saved:true}, row fix007-thread-1 IMPORTANT exists in EmailSignal, server log shows 'Failed to dispatch calculateContactScores after saving signal' with full context. Plus 2 unit tests (success and dispatch-failure paths both return saved:true). tsc exit 0.",
+      "status": "passed"
     },
     {
       "id": "FIX-008",

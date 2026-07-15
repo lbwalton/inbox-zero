@@ -65,14 +65,27 @@ export const POST = withAuth(async (request) => {
     signal: body.signal,
   });
 
-  // Dispatch calculateContactScores via QStash
-  await publishToQstash("/api/onboarding/calculate-contact-scores", {
-    emailAccountId: body.emailAccountId,
-  });
+  // Dispatch calculateContactScores via QStash. Best-effort: the signal is
+  // already saved, so a failed dispatch must not fail the request — the
+  // weekly scoring cron recomputes scores regardless.
+  try {
+    await publishToQstash("/api/onboarding/calculate-contact-scores", {
+      emailAccountId: body.emailAccountId,
+    });
 
-  logger.info("Dispatched calculateContactScores", {
-    emailAccountId: body.emailAccountId,
-  });
+    logger.info("Dispatched calculateContactScores", {
+      emailAccountId: body.emailAccountId,
+    });
+  } catch (error) {
+    logger.error(
+      "Failed to dispatch calculateContactScores after saving signal",
+      {
+        emailAccountId: body.emailAccountId,
+        threadId: body.threadId,
+        error: error instanceof Error ? error.message : error,
+      },
+    );
+  }
 
   return NextResponse.json({ saved: true });
 });
