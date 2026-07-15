@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import { NextRequest } from "next/server";
 
 vi.mock("server-only", () => ({}));
 
@@ -55,6 +56,8 @@ const cronRoutes = {
   "tone-profile/scan": toneProfileScan,
 } as const;
 
+const ctx = { params: Promise.resolve({}) };
+
 describe("cron routes accept GET", () => {
   for (const [name, mod] of Object.entries(cronRoutes)) {
     it(`${name} exports a GET handler`, () => {
@@ -65,7 +68,8 @@ describe("cron routes accept GET", () => {
   it("GET without the cron secret is rejected on all cron routes", async () => {
     for (const [name, mod] of Object.entries(cronRoutes)) {
       const res = await mod.GET(
-        new Request(`http://test/api/${name}`, { method: "GET" }),
+        new NextRequest(`http://test/api/${name}`, { method: "GET" }),
+        ctx,
       );
       expect(res.status, `${name} should 401 without secret`).toBe(401);
     }
@@ -73,10 +77,11 @@ describe("cron routes accept GET", () => {
 
   it("GET nudge/dispatch with the secret runs fan-out mode (no body on GET)", async () => {
     const res = await nudgeDispatch.GET(
-      new Request("http://test/api/nudge/dispatch", {
+      new NextRequest("http://test/api/nudge/dispatch", {
         method: "GET",
         headers: { authorization: "Bearer test-cron-secret" },
       }),
+      ctx,
     );
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({
@@ -89,10 +94,11 @@ describe("cron routes accept GET", () => {
 
   it("GET nudge/detect with the secret returns accurate dispatch counts", async () => {
     const res = await nudgeDetect.GET(
-      new Request("http://test/api/nudge/detect", {
+      new NextRequest("http://test/api/nudge/detect", {
         method: "GET",
         headers: { authorization: "Bearer test-cron-secret" },
       }),
+      ctx,
     );
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true, dispatched: 0, failed: 0 });

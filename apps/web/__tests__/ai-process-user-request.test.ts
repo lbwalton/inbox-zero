@@ -427,6 +427,7 @@ function getRule(rule: Partial<RuleWithRelations>): RuleWithRelations {
     conditionalOperator: LogicalOperator.AND,
     // ai instructions
     instructions: null,
+    promptText: null,
     // static conditions
     from: null,
     to: null,
@@ -500,6 +501,7 @@ function getGroupItem(item: Partial<GroupItem>): GroupItem {
   return {
     id: "id",
     value: "",
+    exclude: false,
     type: GroupItemType.FROM,
     createdAt: new Date(),
     updatedAt: new Date(),

@@ -17,6 +17,7 @@ export function getEmailAccount(): EmailAccountWithAI {
 
 export function getEmail({
   from = "user@test.com",
+  to = "recipient@test.com",
   subject = "Test Subject",
   content = "Test content",
   replyTo,
@@ -25,6 +26,7 @@ export function getEmail({
   return {
     id: "email-id",
     from,
+    to,
     subject,
     content,
     ...(replyTo && { replyTo }),

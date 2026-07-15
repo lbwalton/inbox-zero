@@ -8,8 +8,12 @@ import { GroupItemType } from "@prisma/client";
 describe("findMatchingGroupItem", () => {
   it("should match FROM rules", () => {
     const groupItems = [
-      { type: GroupItemType.FROM, value: "newsletter@company.com" },
-      { type: GroupItemType.FROM, value: "@company.com" },
+      {
+        type: GroupItemType.FROM,
+        exclude: false,
+        value: "newsletter@company.com",
+      },
+      { type: GroupItemType.FROM, exclude: false, value: "@company.com" },
     ];
 
     // Full email match
@@ -39,8 +43,8 @@ describe("findMatchingGroupItem", () => {
 
   it("should match SUBJECT rules", () => {
     const groupItems = [
-      { type: GroupItemType.SUBJECT, value: "Invoice" },
-      { type: GroupItemType.SUBJECT, value: "[GitHub]" },
+      { type: GroupItemType.SUBJECT, exclude: false, value: "Invoice" },
+      { type: GroupItemType.SUBJECT, exclude: false, value: "[GitHub]" },
     ];
 
     // Exact subject match
@@ -75,8 +79,8 @@ describe("findMatchingGroupItem", () => {
 
   it("should handle empty inputs", () => {
     const groupItems = [
-      { type: GroupItemType.FROM, value: "test@example.com" },
-      { type: GroupItemType.SUBJECT, value: "Test" },
+      { type: GroupItemType.FROM, exclude: false, value: "test@example.com" },
+      { type: GroupItemType.SUBJECT, exclude: false, value: "Test" },
     ];
 
     expect(
@@ -93,8 +97,8 @@ describe("findMatchingGroupItem", () => {
 
   it("should prioritize first matching rule", () => {
     const groupItems = [
-      { type: GroupItemType.SUBJECT, value: "Invoice" },
-      { type: GroupItemType.SUBJECT, value: "Company" },
+      { type: GroupItemType.SUBJECT, exclude: false, value: "Invoice" },
+      { type: GroupItemType.SUBJECT, exclude: false, value: "Company" },
     ];
 
     // Should return first matching rule even though both would match

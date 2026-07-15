@@ -14,6 +14,7 @@ function getMockMessage(overrides = {}): EmailForLLM {
   return {
     id: "msg1",
     from: "sender@test.com",
+    to: "user@test.com",
     subject: "Test Subject",
     content: "This is a test email content.",
     date: new Date("2024-03-20T10:00:00Z"),
