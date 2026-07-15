@@ -1309,8 +1309,9 @@
         "Re-run scorer on fixtures shows correct ordering"
       ],
       "priority": 89,
-      "passes": false,
-      "notes": "Found Phase A Group 4 2026-07-13 with DB evidence."
+      "passes": true,
+      "notes": "Found Phase A Group 4 2026-07-13 with DB evidence (56.8 tagged vs 41.8 untagged). FIXED 2026-07-15 (fix/fix-008-scoring-frequency): thread frequency now derives from actual email volume \u2014 distinct EmailMessage threads per contact via groupBy([from, threadId], sent:false) \u2014 never from signal counts. Scoring math extracted into pure exported computeContactScore(). Evidence: 7 unit tests in utils/contact-scoring.test.ts \u2014 NOT_IMPORTANT strictly lowers (exactly -10, including the regression case where a lone tag used to net +15), IMPORTANT strictly raises (+5, capped +15), frequency spans a 25-point band by volume, 0-100 clamp, and a mocked-prisma fixture re-run asserting ordering IMPORTANT > untagged > NOT_IMPORTANT for otherwise-identical contacts. CAVEAT: throwaway-DB re-run blocked by wedged Docker updater; the mocked fixture re-run covers the ordering criterion.",
+      "status": "passed"
     },
     {
       "id": "FIX-009",

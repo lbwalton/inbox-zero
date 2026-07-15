@@ -18,12 +18,59 @@ const NOT_IMPORTANT_PENALTY = 10;
 const MAX_REPLY_TIME_HOURS = 168; // 7 days
 
 /**
+ * Pure scoring formula (0-100):
+ *   base = replyRate * 35 + invertedReplyTime * 25 + threadFrequency * 25
+ *   signal adjustment: +5 per IMPORTANT tag (max +15), -10 per NOT_IMPORTANT tag
+ *   clamped to 0-100
+ *
+ * threadCount/maxThreadCount come from actual email volume (distinct
+ * EmailMessage threads per contact), never from signal counts — a manual
+ * importance tag must only move the score through its own bonus/penalty.
+ */
+export function computeContactScore({
+  replyRate,
+  avgReplyTimeHours,
+  threadCount,
+  maxThreadCount,
+  importantCount,
+  notImportantCount,
+}: {
+  replyRate: number;
+  avgReplyTimeHours: number;
+  threadCount: number;
+  maxThreadCount: number;
+  importantCount: number;
+  notImportantCount: number;
+}): number {
+  // Reply rate component (replyRate is 0-1)
+  const replyRateComponent = replyRate * 100 * REPLY_RATE_WEIGHT;
+
+  // Inverted reply time component: faster replies = higher score
+  const clampedReplyTime = Math.min(avgReplyTimeHours, MAX_REPLY_TIME_HOURS);
+  const invertedReplyTime = 1 - clampedReplyTime / MAX_REPLY_TIME_HOURS;
+  const replyTimeComponent = invertedReplyTime * 100 * REPLY_TIME_WEIGHT;
+
+  // Thread frequency component: normalized 0-1 against the most active contact
+  const normalizedFrequency = threadCount / Math.max(1, maxThreadCount);
+  const threadFrequencyComponent =
+    normalizedFrequency * 100 * THREAD_FREQUENCY_WEIGHT;
+
+  let score =
+    replyRateComponent + replyTimeComponent + threadFrequencyComponent;
+
+  const importantBonus = Math.min(
+    importantCount * IMPORTANT_BONUS,
+    IMPORTANT_MAX_BONUS,
+  );
+  const notImportantPenalty = notImportantCount * NOT_IMPORTANT_PENALTY;
+  score = score + importantBonus - notImportantPenalty;
+
+  return Math.max(0, Math.min(100, score));
+}
+
+/**
  * Calculates and upserts priority scores for every contact associated with
  * the given emailAccountId, weighted by EmailSignal tags.
- *
- * Scoring formula (0-100):
- *   base = replyRate * 35 + invertedReplyTime * 25 + threadFrequency * 25
- *   signal adjustment: +5 per IMPORTANT tag (max +15), -10 per NOT_IMPORTANT tag (floor 0)
  *
  * Contacts with manualOverride = true are skipped.
  */
@@ -76,25 +123,17 @@ export async function calculateContactScores(
     signalMap.set(key, entry);
   }
 
-  // 3. Compute thread frequency normalization.
-  //    We use the count of email signals per contact as a proxy for thread frequency.
-  //    Alternatively, we derive it from reply rate and reply time presence.
-  //    Thread frequency = number of signal entries per contact (proxy for interaction volume).
-  //    For contacts without signals we count them as having 1 interaction.
-  //
-  //    To normalize, we need the max thread count across all contacts.
-  const threadCountMap = new Map<string, number>();
-  for (const s of signals) {
-    const key = s.senderEmail.toLowerCase();
-    threadCountMap.set(key, (threadCountMap.get(key) ?? 0) + 1);
-  }
+  // 3. Thread frequency from actual email volume: distinct received threads
+  //    per contact. One groupBy row per (from, threadId) pair.
+  const threadGroups = await prisma.emailMessage.groupBy({
+    by: ["from", "threadId"],
+    where: { emailAccountId, sent: false },
+  });
 
-  // Also consider contacts with existing scores but no signals
-  for (const score of existingScores) {
-    const key = score.contactEmail.toLowerCase();
-    if (!threadCountMap.has(key)) {
-      threadCountMap.set(key, 0);
-    }
+  const threadCountMap = new Map<string, number>();
+  for (const g of threadGroups) {
+    const key = g.from.toLowerCase();
+    threadCountMap.set(key, (threadCountMap.get(key) ?? 0) + 1);
   }
 
   const maxThreadCount = Math.max(1, ...threadCountMap.values());
@@ -102,48 +141,20 @@ export async function calculateContactScores(
   // 4. Calculate and upsert scores
   const upsertPromises = existingScores.map((contact) => {
     const contactKey = contact.contactEmail.toLowerCase();
-
-    // Reply rate component (0-100 scale already since replyRate is 0-1)
-    const replyRateComponent = contact.replyRate * 100 * REPLY_RATE_WEIGHT;
-
-    // Inverted reply time component: faster replies = higher score
-    const clampedReplyTime = Math.min(
-      contact.avgReplyTimeHours,
-      MAX_REPLY_TIME_HOURS,
-    );
-    const invertedReplyTime = 1 - clampedReplyTime / MAX_REPLY_TIME_HOURS;
-    const replyTimeComponent = invertedReplyTime * 100 * REPLY_TIME_WEIGHT;
-
-    // Thread frequency component: normalized 0-1 against the most active contact
-    const threadCount = threadCountMap.get(contactKey) ?? 0;
-    const normalizedFrequency = threadCount / maxThreadCount;
-    const threadFrequencyComponent =
-      normalizedFrequency * 100 * THREAD_FREQUENCY_WEIGHT;
-
-    // Base score (max theoretical = 35 + 25 + 25 = 85)
-    let score =
-      replyRateComponent + replyTimeComponent + threadFrequencyComponent;
-
-    // Signal adjustments
     const signalData = signalMap.get(contactKey);
-    if (signalData) {
-      const importantBonus = Math.min(
-        signalData.importantCount * IMPORTANT_BONUS,
-        IMPORTANT_MAX_BONUS,
-      );
-      const notImportantPenalty =
-        signalData.notImportantCount * NOT_IMPORTANT_PENALTY;
-      score = score + importantBonus - notImportantPenalty;
-    }
 
-    // Clamp to 0-100
-    const finalScore = Math.max(0, Math.min(100, score));
+    const finalScore = computeContactScore({
+      replyRate: contact.replyRate,
+      avgReplyTimeHours: contact.avgReplyTimeHours,
+      threadCount: threadCountMap.get(contactKey) ?? 0,
+      maxThreadCount,
+      importantCount: signalData?.importantCount ?? 0,
+      notImportantCount: signalData?.notImportantCount ?? 0,
+    });
 
     logger.info("Computed contact score", {
       contactEmail: contact.contactEmail,
-      replyRateComponent,
-      replyTimeComponent,
-      threadFrequencyComponent,
+      threadCount: threadCountMap.get(contactKey) ?? 0,
       signalData,
       finalScore,
     });
