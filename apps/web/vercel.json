@@ -13,6 +13,10 @@
       "schedule": "0 12 * * *"
     },
     {
+      "path": "/api/nudge/dispatch",
+      "schedule": "30 12 * * *"
+    },
+    {
       "path": "/api/nudge/digest",
       "schedule": "0 14 * * *"
     },

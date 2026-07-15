@@ -62,3 +62,6 @@ export const POST = withError(async (request) => {
     dispatched: emailAccounts.length,
   });
 });
+
+// Vercel cron invokes scheduled jobs via GET
+export const GET = POST;
