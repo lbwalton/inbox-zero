@@ -7,6 +7,7 @@ import { ThumbsUpIcon, ThumbsDownIcon, SkipForwardIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LoadingContent } from "@/components/LoadingContent";
 import { useAccount } from "@/providers/EmailAccountProvider";
+import { fetchWithAccount } from "@/utils/fetch";
 import { prefixPath } from "@/utils/path";
 import { toastError, toastSuccess } from "@/components/Toast";
 
@@ -51,11 +52,23 @@ export default function ImportanceOnboardingPage() {
         manualOverride: true,
       }));
 
-      await fetch("/api/contact-scoring/bulk-update", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ updates }),
+      const response = await fetchWithAccount({
+        url: "/api/contact-scoring/bulk-update",
+        emailAccountId,
+        init: {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ updates }),
+        },
       });
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        toastError({
+          description: body?.error ?? "Failed to save preferences.",
+        });
+        return;
+      }
 
       toastSuccess({ description: `Saved ${entries.length} preference(s).` });
       router.push(prefixPath(emailAccountId, "/mail"));

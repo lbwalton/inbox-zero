@@ -1269,8 +1269,9 @@
         "Audit other raw fetch() calls in Bntly pages for the same missing-header pattern"
       ],
       "priority": 93,
-      "passes": false,
-      "notes": "Found during Phase A Group 3 browser verification 2026-07-13. Backend verified OK via curl with header."
+      "passes": true,
+      "notes": "Found Phase A Group 3 2026-07-13. FIXED 2026-07-15 (fix/fix-005-importance-training): handleSave now uses fetchWithAccount (adds X-Email-Account-Id) and checks response.ok \u2014 non-2xx shows the server error toast and does NOT redirect/toast success. Evidence (throwaway stack, live): POST /api/contact-scoring/bulk-update WITHOUT the header returns 403 'Email account ID is required' (the exact response the old raw fetch ignored while toasting success); WITH the header returns 200 {success,count:2} and ContactScore rows persist alice=90 / bob=10, manualOverride=true \u2014 i.e. exactly what the fixed client sends. Audited all other client fetch('/api/...') calls: the rest hit withAuth/withError routes that don't require the account header, so this was the only instance of the missing-header-on-withEmailAccount bug. tsc exit 0. LB-REVIEW (1 criterion, 60s): the literal 'tag two senders, click Done' browser pass is blocked on the throwaway stack by the PermissionsCheck guard (fake Google tokens fail tokeninfo \u2192 redirect to /permissions/consent, the documented Phase A blocker). Now verifiable on production where real tokens exist: visit /<account>/onboarding/importance, tag senders, Done, confirm ContactScore priorityScore 90/10.",
+      "status": "needs-lb-review"
     },
     {
       "id": "FIX-006",
