@@ -1281,8 +1281,9 @@
         "Verified by stopping the local redis container and driving the app"
       ],
       "priority": 96,
-      "passes": false,
-      "notes": "Found during Phase A Group 3 2026-07-13 when the real Upstash instance (growing-eft-70064.upstash.io) stopped resolving."
+      "passes": true,
+      "notes": "Found Phase A Group 3 2026-07-13. FIXED 2026-07-15 (fix/fix-006-redis-degradation): utils/redis/account-validation.ts now treats Redis strictly as a cache \u2014 get/set/del wrapped with a 1s timeout + try/catch, DB fallback on any failure, error logged once per 60s window (throttled). Evidence: live drive on throwaway stack with Redis containers STOPPED (brew Postgres up, UPSTASH_REDIS_URL dead): GET /api/user/rules/prompt with fixture session + X-Email-Account-Id returned 200 on both accounts, exactly 1 'Redis unavailable, falling back to database' log line across 2 requests / 4 redis ops, zero 500s. Plus 7 unit tests (cache hit skips DB, miss caches, reject falls back, hang times out at 1s, owned/non-owned results, del never rejects, log throttling). NOTE: other Redis consumers (reply-tracker-analyzing, clean progress, etc.) still throw on dead Redis \u2014 only the account-validation critical path is hardened; acceptable since middleware guards every account-scoped route.",
+      "status": "passed"
     },
     {
       "id": "FIX-007",
@@ -1400,7 +1401,7 @@
     "typecheckCommand": "cd apps/web && npx tsc --noEmit",
     "devServer": {
       "note": "Throwaway verification stack. Never point at the real Supabase DB.",
-      "db": "docker run -d --name bntly-verify-db -e POSTGRES_USER=verify -e POSTGRES_PASSWORD=verify -e POSTGRES_DB=bntly_verify -p 54329:5432 pgvector/pgvector:pg16",
+      "db": "Docker-free since 2026-07-15: brew postgresql@17 + pgvector, data dir ~/.local/share/bntly-verify-pg. Start: /opt/homebrew/opt/postgresql@17/bin/pg_ctl -D ~/.local/share/bntly-verify-pg -o '-p 54329' -l ~/.local/share/bntly-verify-pg/server.log start. User verify, db bntly_verify (pgvector installed), schema via prisma db push (baseline migration pending FIX-001). Old docker containers (bntly-verify-*) superseded.",
       "web": "cd apps/web && DATABASE_URL=postgresql://verify:verify@localhost:54329/bntly_verify DIRECT_URL=postgresql://verify:verify@localhost:54329/bntly_verify pnpm dev",
       "port": 3000
     }
