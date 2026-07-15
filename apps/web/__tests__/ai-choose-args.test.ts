@@ -182,6 +182,7 @@ function getRule(
 ): RuleWithActions {
   return {
     instructions,
+    promptText: null,
     name: "Test Rule",
     actions,
     id: "r123",

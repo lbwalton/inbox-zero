@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NextRequest } from "next/server";
 
 vi.mock("server-only", () => ({}));
 
@@ -36,8 +37,10 @@ import { POST as detectPOST } from "../detect/route";
 
 const AUTH = { authorization: "Bearer test-cron-secret" };
 
+const ctx = { params: Promise.resolve({}) };
+
 function post(url: string, body?: unknown) {
-  return new Request(url, {
+  return new NextRequest(url, {
     method: "POST",
     headers: { ...AUTH, "Content-Type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
@@ -51,7 +54,8 @@ describe("POST /api/nudge/dispatch", () => {
 
   it("rejects requests without the cron secret", async () => {
     const res = await dispatchPOST(
-      new Request("http://test/api/nudge/dispatch", { method: "POST" }),
+      new NextRequest("http://test/api/nudge/dispatch", { method: "POST" }),
+      ctx,
     );
     expect(res.status).toBe(401);
   });
@@ -59,6 +63,7 @@ describe("POST /api/nudge/dispatch", () => {
   it("worker mode: calls dispatchNudges and never publishes", async () => {
     const res = await dispatchPOST(
       post("http://test/api/nudge/dispatch", { userId: "user-1" }),
+      ctx,
     );
 
     expect(res.status).toBe(200);
@@ -74,6 +79,7 @@ describe("POST /api/nudge/dispatch", () => {
   it("worker mode: rejects a non-string userId", async () => {
     const res = await dispatchPOST(
       post("http://test/api/nudge/dispatch", { userId: 123 }),
+      ctx,
     );
     expect(res.status).toBe(400);
     expect(dispatchNudges).not.toHaveBeenCalled();
@@ -87,7 +93,7 @@ describe("POST /api/nudge/dispatch", () => {
     ] as never);
     vi.mocked(publishToQstashQueue).mockResolvedValue(undefined as never);
 
-    const res = await dispatchPOST(post("http://test/api/nudge/dispatch"));
+    const res = await dispatchPOST(post("http://test/api/nudge/dispatch"), ctx);
 
     expect(await res.json()).toEqual({
       ok: true,
@@ -114,7 +120,7 @@ describe("POST /api/nudge/dispatch", () => {
       .mockResolvedValueOnce(undefined as never)
       .mockRejectedValueOnce(new Error("qstash down"));
 
-    const res = await dispatchPOST(post("http://test/api/nudge/dispatch"));
+    const res = await dispatchPOST(post("http://test/api/nudge/dispatch"), ctx);
 
     expect(await res.json()).toEqual({
       ok: true,
@@ -141,7 +147,7 @@ describe("POST /api/nudge/detect", () => {
       .mockResolvedValueOnce(undefined as never)
       .mockRejectedValueOnce(new Error("qstash down"));
 
-    const res = await detectPOST(post("http://test/api/nudge/detect"));
+    const res = await detectPOST(post("http://test/api/nudge/detect"), ctx);
 
     expect(await res.json()).toEqual({ ok: true, dispatched: 1, failed: 1 });
   });
@@ -153,7 +159,7 @@ describe("POST /api/nudge/detect", () => {
     ] as never);
     vi.mocked(publishToQstashQueue).mockResolvedValue(undefined as never);
 
-    const res = await detectPOST(post("http://test/api/nudge/detect"));
+    const res = await detectPOST(post("http://test/api/nudge/detect"), ctx);
 
     expect(await res.json()).toEqual({ ok: true, dispatched: 2, failed: 0 });
   });

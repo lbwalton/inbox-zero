@@ -1226,8 +1226,9 @@
         "No test logic weakened; fixes are type-level only"
       ],
       "priority": 95,
-      "passes": false,
-      "notes": "Found during Phase A Group 1 verification 2026-07-13."
+      "passes": true,
+      "notes": "Found Phase A Group 1 2026-07-13. FIXED 2026-07-15 (fix/fix-002-test-ts-errors): npx tsc --noEmit now exits 0 (observed). All fixes type-level fixture completions: EmailForLLM fixtures gained required 'to' (helpers.ts getEmail + ai-detect-recurring-pattern + ai-extract-from-email-history), GroupItem fixtures gained 'exclude: false' (find-matching-group, ai-process-user-request), Rule fixtures gained 'promptText: null' (ai-process-user-request, ai-choose-args), and the Phase B route tests now pass a NextRequest + route context matching NextHandler's real signature. Full suite baseline unchanged: same 24 pre-existing collection failures ('Invalid environment variables' \u2014 tests importing @/env unmocked, separate debt) and same 2 date-flaky utils/schedule.test.ts failures; 325 tests pass vs 294 before (31 new Phase B tests). No test logic weakened.",
+      "status": "passed"
     },
     {
       "id": "FIX-003",
